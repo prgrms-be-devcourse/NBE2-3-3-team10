@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
+    kotlin("plugin.serialization") version "1.6.21"
 }
 
 group = "org.washcode"
@@ -69,6 +70,9 @@ dependencies {
 
     // Json (Jackson)
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // logger
+    implementation ("org.springframework.boot:spring-boot-starter-logging")
 }
 
 kotlin {

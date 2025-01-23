@@ -1,6 +1,7 @@
 # WashPang
 프로그래머스 백엔드 데브코스 2회차 프로젝트 2(리펙토링) Team10의 repository
-https://github.com/prgrms-be-devcourse/NBE2-3-2-team10
+
+Java SpringBoot 프로젝트 -> [Java SpringBoot](https://github.com/prgrms-be-devcourse/NBE2-3-2-team10)
 
 # 📖
 

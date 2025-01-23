@@ -2,7 +2,7 @@ package org.washcode.washpang.domain.handledItems.dto
 
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 
-data class HandledItemsResDto(
+data class HandledItemsResDTO(
     var itemName: String = "",
     var category: LaundryCategory,
     var price: Int = 0,

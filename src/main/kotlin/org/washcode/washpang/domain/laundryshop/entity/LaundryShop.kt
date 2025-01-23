@@ -28,7 +28,7 @@ class LaundryShop (
     var nonOperatingDays: String?,
 
     var latitude: Double?,
-    var longtitude: Double?,
+    var longitude: Double?,
 
     @CreationTimestamp
     var createdAt: Timestamp?

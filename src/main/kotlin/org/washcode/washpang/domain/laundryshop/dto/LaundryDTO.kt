@@ -3,7 +3,7 @@ package org.washcode.washpang.domain.laundryshop.dto
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 
-class LaundryDto private constructor() {
+class LaundryDTO private constructor() {
     data class LaundryDetailResDTO(
         val shopName: String?,
         val phone: String?,

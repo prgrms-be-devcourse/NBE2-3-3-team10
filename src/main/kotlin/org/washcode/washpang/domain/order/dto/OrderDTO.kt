@@ -1,6 +1,5 @@
 package org.washcode.washpang.domain.order.dto
 
-import org.washcode.washpang.domain.handledItems.dto.ItemInfoResDTO
 import java.sql.Timestamp
 
 

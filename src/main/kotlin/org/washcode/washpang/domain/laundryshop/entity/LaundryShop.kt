@@ -2,6 +2,7 @@ package org.washcode.washpang.domain.laundryshop.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import org.washcode.washpang.domain.user.entity.User
 import java.sql.Timestamp
 
@@ -23,7 +24,13 @@ class LaundryShop (
 
     var latitude: Double,
     var longitude: Double,
-
+//
+//    @CreationTimestamp
+//    var createdAt: Timestamp
+){
     @CreationTimestamp
-    var createdAt: Timestamp
-)
+    lateinit var createdAt: Timestamp
+
+    @UpdateTimestamp
+    lateinit var updateAt: Timestamp
+}

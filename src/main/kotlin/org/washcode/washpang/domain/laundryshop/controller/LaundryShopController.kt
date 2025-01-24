@@ -5,6 +5,7 @@ import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.service.HandledItemsService
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
+import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.service.LaundryShopService
 import org.washcode.washpang.global.comm.enums.LaundryCategory
@@ -40,17 +41,18 @@ class LaundryShopController(
     }
 
     //세탁소 정보 저장
-    //    @PostMapping("/")
-    //    public ResponseEntity<*> registerLaundry(@RequestBody LaundryDTO.ShopAddReqDTO to, /*@AuthenticationPrincipal int id*/) {
-    //        int id = 1;
-    //
-    //        int laundryId = laundryShopService.registerLaundryShop(to, id);
-    //
-    //        System.out.println(laundryId);
-    //
-    //        // 성공 응답 반환
-    //        return ResponseEntity.ok().body(Map.of("laundryId", laundryId));
-    //    }
+//    @PostMapping("/")
+//    fun ResponseEntity<*> registerLaundry(@RequestBody ShopAddReqDTO to, /*@AuthenticationPrincipal int id*/) {
+//        val id: Int = 1
+//
+//        int laundryId = laundryShopService.registerLaundryShop(to, id);
+//
+//        System.out.println(laundryId);
+//
+//        // 성공 응답 반환
+//        return ResponseEntity.ok().body(Map.of("laundryId", laundryId));
+//    }
+
     //가격표 저장
     @PostMapping("/handled-items")
     fun setHandledItems(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
@@ -59,18 +61,19 @@ class LaundryShopController(
         return laundryShopService.setHandledItems(itemsList)
     }
 
-    //세탁소 정보 수정
-    //    @PutMapping("/")
-    //    public ResponseEntity<*> modifyLaundry(@RequestBody LaundryDTO.ShopAddReqDTO to, /*@AuthenticationPrincipal int id*/) {
-    //        int id = 1;
-    //        //System.out.println(to.getUserName());
-    //
-    //        int laundryId = laundryShopService.registerLaundryShop(to, id);
-    //
-    //        System.out.println(laundryId);
-    //        // 성공 응답 반환
-    //        return ResponseEntity.ok().body(Map.of("laundryId", laundryId));
-    //    }
+//    세탁소 정보 수정
+//    @PutMapping("/")
+//    public ResponseEntity<*> modifyLaundry(@RequestBody LaundryDTO.ShopAddReqDTO to, /*@AuthenticationPrincipal int id*/) {
+//        int id = 1;
+//        //System.out.println(to.getUserName());
+//
+//        int laundryId = laundryShopService.registerLaundryShop(to, id);
+//
+//        System.out.println(laundryId);
+//        // 성공 응답 반환
+//        return ResponseEntity.ok().body(Map.of("laundryId", laundryId));
+//    }
+
     //가격표 수정
     @PutMapping("/handled-items")
     fun setHandledItemsModify(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {

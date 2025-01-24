@@ -25,5 +25,5 @@ interface HandledItemsRepository : JpaRepository<HandledItems?, Long?> {
     @Query("SELECT h.id, h.itemName, h.category,h.price FROM HandledItems h WHERE h.laundryshop.id = :laundryId")
     fun findHandledItemsByLaundryId(@Param("laundryId") laundryId: Int): List<ItemInfoResDTO>
 
-    fun findById(@Param("itemId") itemId: Int): Optional<HandledItems>
+    fun findById(@Param("itemId") itemId: Int): HandledItems?
 }

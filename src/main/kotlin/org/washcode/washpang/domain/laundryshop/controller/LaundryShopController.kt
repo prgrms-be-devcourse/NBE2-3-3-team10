@@ -57,7 +57,7 @@ class LaundryShopController(
     fun setHandledItems(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
         println("Received items list: $itemsList")
 
-        return laundryShopService!!.setHandledItems(itemsList)
+        return laundryShopService.setHandledItems(itemsList)
     }
 
     //세탁소 정보 수정
@@ -77,7 +77,7 @@ class LaundryShopController(
     fun setHandledItemsModify(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
         println("Received items list: $itemsList")
 
-        return laundryShopService!!.setHandledItems(itemsList)
+        return laundryShopService.setHandledItems(itemsList)
     }
 
     //세탁소 카테고리 가져오기

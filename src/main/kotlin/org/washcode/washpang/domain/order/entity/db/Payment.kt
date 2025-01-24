@@ -20,9 +20,9 @@ class Payment (
     val pickup: Pickup, // 요청 id
 
     @CreationTimestamp
-    val paymentDatetime: Timestamp,
-    val amount: Int,
-    val method: String,
+    var paymentDatetime: Timestamp,
+    var amount: Int,
+    var method: String,
 
     // 카카오페이 등 결제 데이터
     var aid: String? = null,

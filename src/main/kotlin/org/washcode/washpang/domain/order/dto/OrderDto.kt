@@ -1,15 +1,16 @@
 package org.washcode.washpang.domain.order.dto
 
+import org.washcode.washpang.domain.handledItems.dto.ItemInfoResDto
 import java.sql.Timestamp
 
 
 class OrderDto private constructor(){
 
     data class InfoRes (
-        var name: String? = "",
-        var address: String? = "",
-        var shopName: String? = "",
-        //var category: List<ItemInfoResDTO>? = emptyList()  // 빈 리스트로 초기화
+        var name: String,
+        var address: String,
+        var shopName: String,
+        var category: List<ItemInfoResDto>
     )
 
     data class ItemReq(
@@ -28,28 +29,28 @@ class OrderDto private constructor(){
     }
 
     data class OrderReq(
-        var laundryshopId: Int = 0,
-        var content: String? = "",
-        var itemId: Int = 0,
-        var quantity: Int = 0,
-        var paymentMethod: String? = ""
+        var laundryshopId: Int,
+        var content: String,
+        var itemId: Int,
+        var quantity: Int,
+        var paymentMethod: String
     )
 
     data class OrderRes(
-        var name: String? = "",
-        var address: String? = "",
-        var phone: String? = "",
-        var shopName: String? = "",
-        var content: String? = "",
-        var status: String? = "",
-        var createdAt: String? = "",
-        var updateAt: String? = "",
-        var paymentId: Int = 0,
-        var method: String? = "",
+        var name: String,
+        var address: String,
+        var phone: String,
+        var shopName: String,
+        var content: String,
+        var status: String,
+        var createdAt: String,
+        var updateAt: String,
+        var paymentId: Int,
+        var method: String,
         var amount: Int = 0,
-        var paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"), //
+        var paymentDatetime: Timestamp,
         var price: Int = 0,
-        var orderItems: List<OrderItem>? = emptyList()  // 빈 리스트로 초기화
+        var orderItems: List<OrderItem>  // 빈 리스트로 초기화
     ) {
         // OrderItem 클래스 정의
         data class OrderItem(
@@ -67,4 +68,12 @@ class OrderDto private constructor(){
         val approvedAt: String,          // 결제 승인 시각
         val payload: String
     )
+
+    data class KakaoPayReq(
+        val name: String,
+        val totalPrice: Int,
+        val quantity: Int,
+        val paymentId: Int
+    )
+
 }

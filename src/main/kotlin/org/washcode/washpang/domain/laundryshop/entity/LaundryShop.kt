@@ -1,11 +1,6 @@
 package org.washcode.washpang.domain.laundryshop.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
+import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.washcode.washpang.domain.user.entity.User
 import java.sql.Timestamp
@@ -14,12 +9,11 @@ import java.sql.Timestamp
 class LaundryShop (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    var id: Int,
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
     var user: User,
-
     var shopName: String,
     var businessNumber: String,
     var userName: String,

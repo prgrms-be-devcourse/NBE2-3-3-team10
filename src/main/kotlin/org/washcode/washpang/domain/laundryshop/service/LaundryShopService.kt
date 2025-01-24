@@ -5,6 +5,7 @@ import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
+import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.global.comm.enums.LaundryCategory
@@ -75,7 +76,7 @@ class LaundryShopService(
 
         //println("LaundryDetailResDTO: " + laundryShop.id)
 
-        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
+        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
             .map {entity ->
                 LaundryDetailResDTO.HandledItems(
                     id = entity.id,
@@ -105,7 +106,7 @@ class LaundryShopService(
         val laundryShop = laundryShopRepository.findByUserId(id)?: return null
         println("LaundryDetailResDTO: " + laundryShop.id)
 
-        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
+        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
             .map {entity ->
                 LaundryDetailResDTO.HandledItems(
                     id = entity.id,
@@ -133,13 +134,13 @@ class LaundryShopService(
     //카테고리로 세탁소 정보 찾기
     fun findLaundryShopsByCategory(category: LaundryCategory): List<LaundryShop> {
         // HandledItems에서 카테고리에 맞는 세탁소 ID 리스트 가져오기
-        val shopIds = handledItemsRepository.findLaundryShopIdsByCategory(category)
+        val shopIds: List<Int> = handledItemsRepository.findLaundryShopIdsByCategory(category)
 
         // 세탁소 정보 가져오기
         return laundryShopRepository.findByIdIn(shopIds)
     }
 
-//    //세탁소 저장하기
+    //세탁소 저장하기
 //    fun registerLaundryShop(to: ShopAddReqDTO, id: Int): Int {
 //        val user: User = userRepository.findById(id).orElse(null)
 //        val shop = laundryShopRepository.findByUserId(id)
@@ -164,14 +165,8 @@ class LaundryShopService(
 
     //가격표 정보 등록 및 수정
     fun setHandledItems(items: List<HandledItemsResDTO>): List<HandledItems> {
-        val laundryId = items[0].laundryId.toLong()
+        val laundryId = items[0].laundryId
         val laundryShop = laundryShopRepository.findById(laundryId)
-            .orElseThrow {
-                IllegalArgumentException(
-                    "LaundryShop not found with ID: $laundryId"
-                )
-            }
-
 
         //laundry_id로 이미 저장되어있는 가격표가 있다면 불러옴
         var handledItemsList = handledItemsRepository.findByLaundryshopId(laundryId).toMutableList()

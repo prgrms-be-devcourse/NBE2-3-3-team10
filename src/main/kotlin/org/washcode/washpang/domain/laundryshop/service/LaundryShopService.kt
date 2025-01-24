@@ -1,13 +1,10 @@
 package org.washcode.washpang.domain.laundryshop.service
 
 import org.springframework.stereotype.Service
-import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
-import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
-import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 import java.sql.Timestamp
 import java.util.stream.Collectors

@@ -8,7 +8,8 @@ class OrderDto private constructor(){
 
     data class InfoRes (
         val name: String,
-        val address: String,
+        val baseAddress: String,        //주소
+        val detailedAddress: String,    //상세주소
         val shopName: String,
         val category: List<ItemInfoResDTO>? = emptyList()  // 빈 리스트로 초기화
 

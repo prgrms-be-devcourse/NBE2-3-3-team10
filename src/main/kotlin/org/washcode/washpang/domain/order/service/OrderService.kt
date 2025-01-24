@@ -45,7 +45,8 @@ class OrderService(
     fun getInfo(id: Int, laundryId: Int): ResponseEntity<*> {
         val orderInfoResDTO = OrderDto.InfoRes(
             name = userRepository.findNameById(id).get(),
-            address = userRepository.findAddressById(id).get(),
+            baseAddress = userRepository.findAddressById(id).get(),
+            detailedAddress = userRepository.findAddressById(id).get(),
             shopName = laundryShopRepository.findNameById(laundryId).get(),
             category = handledItemsRepository.findHandledItemsByLaundryId(laundryId)
         )

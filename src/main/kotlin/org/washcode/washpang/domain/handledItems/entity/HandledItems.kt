@@ -6,7 +6,6 @@ import org.washcode.washpang.global.comm.enums.LaundryCategory
 
 @Entity
 class HandledItems (
-    // 가격표
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,

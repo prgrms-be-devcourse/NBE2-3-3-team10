@@ -11,31 +11,31 @@ class User ( // 클래스 'User'에는 [public, protected] no-arg 생성자가 �
     val id: Int,
 
     @Column(unique = true)
-    var kakao_id: Long,
+    val kakao_id: Long,
 
     @Column(nullable = false)
-    var name: String,
+    val name: String,
 
     @Column(nullable = false)
-    var password: String,
+    val password: String,
 
     @Column(unique = false)
-    var baseAddress: String,
+    val baseAddress: String,
 
     @Column(unique = false)
-    var detailedAddress: String,
+    val detailedAddress: String,
 
     @Column(nullable = false)
-    var phone: String,
+    val phone: String,
 
     @Column(nullable = false)
-    var email: String,
+    val email: String,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @ColumnDefault("USER")
-    var role: EnumType,
+    val role: EnumType,
 
     @CreationTimestamp
-    var created_at: Timestamp
+    val created_at: Timestamp
 )

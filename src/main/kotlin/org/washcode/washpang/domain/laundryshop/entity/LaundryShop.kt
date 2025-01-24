@@ -24,13 +24,7 @@ class LaundryShop (
 
     var latitude: Double,
     var longitude: Double,
-//
-//    @CreationTimestamp
-//    var createdAt: Timestamp
-){
-    @CreationTimestamp
-    lateinit var createdAt: Timestamp
 
-    @UpdateTimestamp
-    lateinit var updateAt: Timestamp
-}
+    @CreationTimestamp
+    var createdAt: Timestamp
+)

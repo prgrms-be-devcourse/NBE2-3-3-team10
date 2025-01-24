@@ -1,5 +1,6 @@
 package org.washcode.washpang.domain.order.dto
 
+import org.washcode.washpang.domain.handledItems.dto.ItemInfoResDto
 import java.sql.Timestamp
 
 
@@ -10,6 +11,7 @@ class OrderDto private constructor(){
         val address: String,
         val shopName: String,
         //val category: List<ItemInfoResDTO>? = emptyList()  // 빈 리스트로 초기화
+
     )
 
     data class ItemReq(
@@ -28,6 +30,7 @@ class OrderDto private constructor(){
     }
 
     data class OrderReq(
+
         val laundryshopId: Int,
         val content: String,
         val itemId: Int,
@@ -50,6 +53,7 @@ class OrderDto private constructor(){
         val paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"), //
         val price: Int,
         val orderItems: List<OrderItem>? = emptyList()  // 빈 리스트로 초기화
+
     ) {
         // OrderItem 클래스 정의
         data class OrderItem(
@@ -67,4 +71,12 @@ class OrderDto private constructor(){
         val approvedAt: String,          // 결제 승인 시각
         val payload: String
     )
+
+    data class KakaoPayReq(
+        val name: String,
+        val totalPrice: Int,
+        val quantity: Int,
+        val paymentId: Int
+    )
+
 }

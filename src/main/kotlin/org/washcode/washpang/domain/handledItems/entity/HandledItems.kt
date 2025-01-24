@@ -12,11 +12,11 @@ class HandledItems (
 
     @ManyToOne
     @JoinColumn(name = "laundryshop_id")
-    var laundryshop: LaundryShop?,
+    var laundryshop: LaundryShop,
 
     var itemName: String,
 
     @Enumerated(EnumType.STRING)
-    var category: LaundryCategory?,
+    var category: LaundryCategory,
     var price: Int
 )

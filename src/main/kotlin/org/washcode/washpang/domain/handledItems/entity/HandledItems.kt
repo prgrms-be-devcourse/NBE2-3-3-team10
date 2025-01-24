@@ -5,19 +5,18 @@ import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 
 @Entity
-class HandledItems {
-    // 가격표
+class HandledItems (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int = 0
+    val id: Int = 0,
 
     @ManyToOne
     @JoinColumn(name = "laundryshop_id")
-    var laundryshop: LaundryShop? = null
+    val laundryshop: LaundryShop,
 
-    var itemName: String? = null
+    val itemName: String,
 
     @Enumerated(EnumType.STRING)
-    var category: LaundryCategory? = null
-    var price: Int = 0
-}
+    val category: LaundryCategory,
+    val price: Int = 0
+)

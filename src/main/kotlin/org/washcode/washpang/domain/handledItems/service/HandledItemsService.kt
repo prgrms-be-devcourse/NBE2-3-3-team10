@@ -20,7 +20,7 @@ class HandledItemsService {
             }!!
     }
 
-    fun getAllHandledItems(laundryShopId: Long?): List<HandledItems?>? {
+    fun getAllHandledItems(laundryShopId: Long): List<HandledItems?>? {
         try {
             return handledItemsRepository!!.findByLaundryshopId(laundryShopId)
         } catch (e: Exception) {

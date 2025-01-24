@@ -105,33 +105,33 @@ class LaundryShopService(
 //    }
 
     //user_id로 세탁소 정보 찾기
-    fun getLaundryShopByUserId(id: Int): LaundryDetailResDTO? {
-        val laundryShop = laundryShopRepository.findByUserId(id)?: return null
-        println("LaundryDetailResDTO: " + laundryShop.id)
-
-        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
-            .map {entity ->
-                LaundryDetailResDTO.HandledItems(
-                    id = entity.id,
-                    itemName = entity.itemName,
-                    laundryshop = entity.laundryshop,
-                    category = entity.category,
-                    price = entity.price
-                )
-            }
-        val to = LaundryDetailResDTO(
-            shopName = laundryShop.shopName,
-            phone = laundryShop.phone,
-            address = laundryShop.address,
-            nonOperatingDays = laundryShop.nonOperatingDays,
-            businessNumber = laundryShop.businessNumber,
-            userName = laundryShop.userName,
-
-            handledItems = handledItems
-        )
-
-        return to
-    }
+//    fun getLaundryShopByUserId(id: Int): LaundryDetailResDTO? {
+//        val laundryShop = laundryShopRepository.findByUserId(id)?: return null
+//        println("LaundryDetailResDTO: " + laundryShop.id)
+//
+//        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
+//            .map {entity ->
+//                LaundryDetailResDTO.HandledItems(
+//                    id = entity.id,
+//                    itemName = entity.itemName,
+//                    laundryshop = entity.laundryshop,
+//                    category = entity.category,
+//                    price = entity.price
+//                )
+//            }
+//        val to = LaundryDetailResDTO(
+//            shopName = laundryShop.shopName,
+//            phone = laundryShop.phone,
+//            address = laundryShop.address,
+//            nonOperatingDays = laundryShop.nonOperatingDays,
+//            businessNumber = laundryShop.businessNumber,
+//            userName = laundryShop.userName,
+//
+//            handledItems = handledItems
+//        )
+//
+//        return to
+//    }
 
     //카테고리로 세탁소 정보 찾기
     fun findLaundryShopsByCategory(category: LaundryCategory): List<LaundryShop> {

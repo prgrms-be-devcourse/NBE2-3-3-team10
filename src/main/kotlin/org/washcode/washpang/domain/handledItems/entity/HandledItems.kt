@@ -8,7 +8,7 @@ import org.washcode.washpang.global.comm.enums.LaundryCategory
 class HandledItems (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    var id: Int,
 
     @ManyToOne
     @JoinColumn(name = "laundryshopId")

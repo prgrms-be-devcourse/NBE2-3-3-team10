@@ -185,5 +185,4 @@ class LaundryShopService(
         // 저장 및 반환
         return handledItemsRepository.saveAll(updatedItems)
     }
-
 }

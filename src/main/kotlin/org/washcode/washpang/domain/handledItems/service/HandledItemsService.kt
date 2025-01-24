@@ -1,5 +1,6 @@
 package org.washcode.washpang.domain.handledItems.service
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
@@ -19,12 +20,11 @@ class HandledItemsService(
 //            }
 //    }
 
-    fun getAllHandledItems(laundryShopId: Int): List<HandledItems> {
+    fun getAllHandledItems(laundryShopId: Long): List<HandledItems> {
         try {
             return handledItemsRepository.findByLaundryshopId(laundryShopId)
         } catch (e: Exception) {
             e.printStackTrace()
-
             throw RuntimeException("HandledItems 조회 중 오류 발생", e)
         }
     }

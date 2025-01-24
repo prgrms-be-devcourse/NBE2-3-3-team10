@@ -18,9 +18,9 @@ interface UserRepository: JpaRepository<User, Long> {
     fun findByPassword(@Param("email") email: String): String
 
     @Query("SELECT U FROM User U WHERE U.kakao_id = :kakao_id")
-    fun findIdByKakaoId(@Param("kakao_id") kakao_id: Long): User?
+    fun findByKakaoId(@Param("kakao_id") kakao_id: Long): User?
 
-    @Query("SELECT new org.washcode.washpang.domain.user.dto.UserDto.MyPageRes(U.role, U.name) FROM User U WHERE U.id = :id")
+    @Query("SELECT MyPageRes(U.role, U.name) FROM User U WHERE U.id = :id")
     fun findRoleAndNameById(id: Int): UserDto.MyPageRes?
 
     fun findByEmail(email: String): User?

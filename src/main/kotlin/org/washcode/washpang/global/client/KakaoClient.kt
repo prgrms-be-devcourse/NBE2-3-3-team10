@@ -1,9 +1,8 @@
 package org.washcode.washpang.global.client
 
-import ch.qos.logback.core.model.Model
+import org.springframework.ui.Model;
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import feign.FeignException
 import jakarta.servlet.http.HttpServletResponse
 import lombok.extern.slf4j.Slf4j
@@ -11,7 +10,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*;
-import org.springframework.http.ResponseCookie
+
 import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.domain.user.repository.UserRepository
 import org.washcode.washpang.global.client.Dto.KakaoDto
@@ -135,29 +134,29 @@ class KakaoClient (
         }
     }
 
-//    fun login(code: String, model: Model ,response: HttpServletResponse): String {
-//
-//        // 1. "인가 코드"로 "액세스 토큰" 요청
-//        val accessToken = getKakaoAccessToken(code)
-//
-//        if (accessToken == "") {
-//            return "glober/Login"
-//        }
-//
-//        // 2. "액세스 토큰"으로 "사용자 정보" 요청
-//        val result = getKakaoUserData(accessToken)
-//
-//        // 3. 카카오로 가입되어 있지 확인
-//        // 3-1 가입되어 있지 않다면 회원가입 페이지로 이동
-//        val user = userRepository.findIdByKakaoId(result.id);
-//        if (user.isEmpty()) {
-//            model.addAttribute("kakaoUserData", result);
-//            return "glober/register";
-//        }
-//
-//        // 3-2 가입이 되어 있으면 쿠키를 통해 토큰 발행 후, 로그인 진행
-//        model.addAttribute("AccessToken", createJwt(user.get(), response))
-//        return "glober/kakaoLoginWait";
-//
-//    }
+    fun login(code: String, model: Model ,response: HttpServletResponse): String {
+
+        // 1. "인가 코드"로 "액세스 토큰" 요청
+        val accessToken = getKakaoAccessToken(code)
+
+        if (accessToken == "") {
+            return "glober/Login"
+        }
+
+        // 2. "액세스 토큰"으로 "사용자 정보" 요청
+        val result = getKakaoUserData(accessToken)
+
+        // 3. 카카오로 가입되어 있지 확인
+        // 3-1 가입되어 있지 않다면 회원가입 페이지로 이동
+        val user = result?.let { userRepository.findByKakaoId(result.id) };
+        if (user == null) {
+            model.addAttribute("kakaoUserData", result);
+            return "glober/register";
+        }
+
+        // 3-2 가입이 되어 있으면 쿠키를 통해 토큰 발행 후, 로그인 진행
+        model.addAttribute("AccessToken", createJwt(user, response))
+        return "glober/kakaoLoginWait";
+
+    }
 }

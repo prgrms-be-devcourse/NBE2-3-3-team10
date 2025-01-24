@@ -14,7 +14,7 @@ import java.sql.Timestamp
 class LaundryShop (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    val id: Int,
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
@@ -27,8 +27,8 @@ class LaundryShop (
     var address: String?,
     var nonOperatingDays: String?,
 
-    var latitude: Double?,
-    var longtitude: Double?,
+    var latitude: Double,
+    var longitude: Double,
 
     @CreationTimestamp
     var createdAt: Timestamp?

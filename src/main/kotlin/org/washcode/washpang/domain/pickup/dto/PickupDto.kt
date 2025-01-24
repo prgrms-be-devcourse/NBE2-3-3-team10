@@ -5,6 +5,12 @@ import java.sql.Timestamp
 
 class PickupDto private constructor() {
 
+    data class OrderItem(
+        val itemName: String,
+        val quantity: Int,
+        val totalPrice: Int
+    )
+
     data class DeliveryRes(
         val pickupId: Int,
         val shopName: String,
@@ -12,14 +18,8 @@ class PickupDto private constructor() {
         val address: String,
         val phone: String,
         val content: String,
-        val orderItems: List<OrderItemDTO>
-    ) {
-        data class OrderItemDTO(
-            val itemName: String,
-            val quantity: Int,
-            val totalPrice: Int
-        )
-    }
+        val orderItems: List<OrderItem>
+    )
 
     data class DetailRes(
         val pickupId: Int,
@@ -28,16 +28,10 @@ class PickupDto private constructor() {
         val address: String,
         val phone: String,
         val content: String,
-        val orderItems: List<OrderItemDTO>,
+        val orderItems: List<OrderItem>,
         val paymentAmount: Int,
         val paymentMethod: String,
-    ) {
-        data class OrderItemDTO(
-            val itemName: String,
-            val quantity: Int,
-            val totalPrice: Int
-        )
-    }
+    )
 
     data class Res(
         val pickupId: Int,
@@ -45,28 +39,16 @@ class PickupDto private constructor() {
         val createdAt: Timestamp,
         val address: String,
         val content: String,
-        val orderItems: List<OrderItemDTO>,
-    ){
-        data class OrderItemDTO(
-            val itemName: String,
-            val quantity: Int,
-            val totalPrice: Int
-        )
-    }
+        val orderItems: List<OrderItem>,
+    )
 
     data class SalesSummery(
         val pickupId: Int,
         val status: PickupStatus,
         val createdAt: Timestamp,
         val address: String,
-        val orderItems: List<OrderItemDTO>,
-    ){
-        data class OrderItemDTO(
-            val itemName: String,
-            val quantity: Int,
-            val totalPrice: Int
-        )
-    }
+        val orderItems: List<OrderItem>,
+    )
 
     data class StateUpdateReq(
         val pickupId: Int,

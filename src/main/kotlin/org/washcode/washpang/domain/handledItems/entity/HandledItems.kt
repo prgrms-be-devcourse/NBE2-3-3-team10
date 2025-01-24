@@ -8,15 +8,15 @@ import org.washcode.washpang.global.comm.enums.LaundryCategory
 class HandledItems (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+    val id: Int,
 
     @ManyToOne
     @JoinColumn(name = "laundryshop_id")
-    val laundryshop: LaundryShop,
+    var laundryshop: LaundryShop?,
 
-    val itemName: String,
+    var itemName: String,
 
     @Enumerated(EnumType.STRING)
-    val category: LaundryCategory,
-    val price: Int = 0
+    var category: LaundryCategory?,
+    var price: Int
 )

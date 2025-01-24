@@ -6,9 +6,9 @@ import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
 
 @Service
-class HandledItemsService {
-    @Autowired
-    private val handledItemsRepository: HandledItemsRepository? = null
+class HandledItemsService(
+    private val handledItemsRepository: HandledItemsRepository
+) {
 
     fun getHandledItemById(id: Long): HandledItems {
         // itemId로 데이터베이스에서 아이템을 조회
@@ -20,9 +20,9 @@ class HandledItemsService {
             }!!
     }
 
-    fun getAllHandledItems(laundryShopId: Long): List<HandledItems?>? {
+    fun getAllHandledItems(laundryShopId: Long): List<HandledItems> {
         try {
-            return handledItemsRepository!!.findByLaundryshopId(laundryShopId)
+            return handledItemsRepository.findByLaundryshopId(laundryShopId)
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("HandledItems 조회 중 오류 발생", e)

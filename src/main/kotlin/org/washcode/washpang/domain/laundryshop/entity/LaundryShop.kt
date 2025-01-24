@@ -18,18 +18,18 @@ class LaundryShop (
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
-    val user: User,
+    var user: User?,
 
-    val shopName: String,
-    val businessNumber: String,
-    val userName: String,
-    val phone: String,
-    val address: String,
-    val nonOperatingDays: String,
+    var shopName: String?,
+    var businessNumber: String?,
+    var userName: String?,
+    var phone: String?,
+    var address: String?,
+    var nonOperatingDays: String?,
 
-    val latitude: Double,
-    val longtitude: Double,
+    var latitude: Double,
+    var longitude: Double,
 
     @CreationTimestamp
-    val createdAt: Timestamp
+    var createdAt: Timestamp?
 )

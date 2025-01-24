@@ -107,40 +107,40 @@ class OrderService(
         pickupItemRepository.save(pickupItem)
     }
 
-    private fun createAndSavePayment(pickup: Pickup, handledItem: HandledItems, orderReqDTO: OrderDto.OrderReq) {
-        val payment = Payment(
-            id = 0,
-            pickup = pickup,
-            paymentDatetime = Timestamp(System.currentTimeMillis()),
-            amount = handledItem.price * orderReqDTO.quantity,
-            method = orderReqDTO.paymentMethod,
-            aid = "",
-            tid = "",
-            paymentMethodType = "",
-            createdAt = Timestamp(System.currentTimeMillis()).toString(),
-            approvedAt = "",
-            payload = ""
-        )
-        paymentRepository.save(payment)
-    }
+//    private fun createAndSavePayment(pickup: Pickup, handledItem: HandledItems, orderReqDTO: OrderDto.OrderReq) {
+//        val payment = Payment(
+//            id = 0,
+//            pickup = pickup,
+//            paymentDatetime = Timestamp(System.currentTimeMillis()),
+//            amount = handledItem.price * orderReqDTO.quantity,
+//            method = orderReqDTO.paymentMethod,
+//            aid = "",
+//            tid = "",
+//            paymentMethodType = "",
+//            createdAt = Timestamp(System.currentTimeMillis()).toString(),
+//            approvedAt = "",
+//            payload = ""
+//        )
+//        paymentRepository.save(payment)
+//    }
 
 
 
     // 유저 ID 로 주문내역 조회
-    fun getOrders(id: Int): ResponseEntity<*> {
-        val result: List<Array<Pickup>> = pickupRepository.findOrderListByUserId(id)
-
-        val orderlistResDTOS = result.map { row ->
-            OrderDto.listRes(
-                row[1] as Int,
-                row[0] as String,
-                (row[2] as PickupStatus).desc,
-                SimpleDateFormat("yyyy년 MM월 dd일").format(row[3] as Timestamp)
-            )
-        }
-
-        return ResponseEntity.ok().body(orderlistResDTOS)
-    }
+//    fun getOrders(id: Int): ResponseEntity<*> {
+//        val result: List<Array<Pickup>> = pickupRepository.findOrderListByUserId(id)
+//
+//        val orderlistResDTOS = result.map { row ->
+//            OrderDto.listRes(
+//                row[1] as Int,
+//                row[0] as String,
+//                (row[2] as PickupStatus).desc,
+//                SimpleDateFormat("yyyy년 MM월 dd일").format(row[3] as Timestamp)
+//            )
+//        }
+//
+//        return ResponseEntity.ok().body(orderlistResDTOS)
+//    }
 
     // 유저 ID 및 주문 ID로 주문 상세 내역 조회
     @Transactional

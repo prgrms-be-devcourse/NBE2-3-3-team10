@@ -20,30 +20,30 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @Service
-class LaundryShopService {
-    @Autowired
-    private val laundryShopRepository: LaundryShopRepository? = null
+class LaundryShopService(
 
-//    @Autowired
-//    private val userRepository: UserRepository? = null
-
-    @Autowired
-    private val handledItemsRepository: HandledItemsRepository? = null
-
+    private val laundryShopRepository: LaundryShopRepository,
+//    private val userRepository: UserRepository,
+    private val handledItemsRepository: HandledItemsRepository,
+) {
     fun getLaundryById(id: Long): LaundryShop {
-        return laundryShopRepository!!.findById(id)
+        return laundryShopRepository.findById(id)
             .orElseThrow { RuntimeException("LaundryShop not found") }
     }
 
     fun getLaundryShops(userLat: Double, userLng: Double): List<LaundryShop> {
-        val shops = laundryShopRepository!!.findAll()
+        val shops = laundryShopRepository.findAll()
         return sortByDistance(shops, userLat, userLng)
     }
 
     // 검색된 세탁소 리스트 거리순 정렬
     fun getLaundryShops(shopName: String, userLat: Double, userLng: Double): List<LaundryShop> {
-        val shops = laundryShopRepository!!.findByShopNameContaining(shopName)
-        return sortByDistance(shops, userLat, userLng)
+        val shops = laundryShopRepository.findByShopNameContaining(shopName)
+//        return sortByDistance(shops, userLat, userLng)
+
+        return shops.sortedBy { shop ->
+            calculateDistance(userLat, userLng, shop.latitude, shop.longitude)
+        }
     }
 
     // 거리 계산 및 정렬
@@ -52,10 +52,10 @@ class LaundryShopService {
             .sorted { shop1: LaundryShop, shop2: LaundryShop ->
                 val distance1 = calculateDistance(
                     userLat, userLng,
-                    shop1.latitude!!,
-                    shop1.longitude!!
+                    shop1.latitude,
+                    shop1.longitude
                 )
-                val distance2 = calculateDistance(userLat, userLng, shop2.latitude!!, shop2.longitude!!)
+                val distance2 = calculateDistance(userLat, userLng, shop2.latitude, shop2.longitude)
                 java.lang.Double.compare(distance1, distance2)
             }
             .collect(Collectors.toList())
@@ -74,43 +74,42 @@ class LaundryShopService {
 
     //세탁소 상세정보 조회
     //세탁소 id로 세탁소 정보 찾기
-    fun getLaundryShopById(id: Int): LaundryDetailResDTO {
-        val laundryShop = laundryShopRepository!!.findById(id.toLong())
-            .orElseThrow { RuntimeException("LaundryShop not found") }
-
-        println("LaundryDetailResDTO: " + laundryShop.id)
-
-        val handledItems = handledItemsRepository!!.findByLaundryshopId(laundryShop.id.toLong())
-            .map {entity ->
-                LaundryDetailResDTO.HandledItems(
-                    id = entity.id,
-                    itemName = entity.itemName,
-                    laundryshop = entity.laundryshop,
-                    category = entity.category,
-                    price = entity.price
-                )
-            }
-
-        val to = LaundryDetailResDTO(
-            shopName = laundryShop.shopName,
-            phone = laundryShop.phone,
-            address = laundryShop.address,
-            nonOperatingDays = laundryShop.nonOperatingDays,
-            businessNumber = laundryShop.businessNumber,
-            userName = laundryShop.userName,
-
-            handledItems = handledItems
-        )
-
-        return to
-    }
+//    fun getLaundryShopById(id: Int): LaundryDetailResDTO {
+//        val laundryShop = laundryShopRepository.findById(id.toLong())
+//
+//        println("LaundryDetailResDTO: " + laundryShop.id)
+//
+//        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
+//            .map {entity ->
+//                LaundryDetailResDTO.HandledItems(
+//                    id = entity.id,
+//                    itemName = entity.itemName,
+//                    laundryshop = entity.laundryshop,
+//                    category = entity.category,
+//                    price = entity.price
+//                )
+//            }
+//
+//        val to = LaundryDetailResDTO(
+//            shopName = laundryShop.shopName,
+//            phone = laundryShop.phone,
+//            address = laundryShop.address,
+//            nonOperatingDays = laundryShop.nonOperatingDays,
+//            businessNumber = laundryShop.businessNumber,
+//            userName = laundryShop.userName,
+//
+//            handledItems = handledItems
+//        )
+//
+//        return to
+//    }
 
     //user_id로 세탁소 정보 찾기
     fun getLaundryShopByUserId(id: Int): LaundryDetailResDTO? {
-        val laundryShop = laundryShopRepository!!.findByUserId(id).orElse(null) ?: return null
+        val laundryShop = laundryShopRepository.findByUserId(id)?: return null
         println("LaundryDetailResDTO: " + laundryShop.id)
 
-        val handledItems = handledItemsRepository!!.findByLaundryshopId(laundryShop.id.toLong())
+        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
             .map {entity ->
                 LaundryDetailResDTO.HandledItems(
                     id = entity.id,
@@ -137,16 +136,16 @@ class LaundryShopService {
     //카테고리로 세탁소 정보 찾기
     fun findLaundryShopsByCategory(category: LaundryCategory): List<LaundryShop> {
         // HandledItems에서 카테고리에 맞는 세탁소 ID 리스트 가져오기
-        val shopIds = handledItemsRepository!!.findLaundryShopIdsByCategory(category)
+        val shopIds = handledItemsRepository.findLaundryShopIdsByCategory(category)
 
         // 세탁소 정보 가져오기
-        return laundryShopRepository!!.findByIdIn(shopIds)
+        return laundryShopRepository.findByIdIn(shopIds)
     }
 
 //    //세탁소 저장하기
 //    fun registerLaundryShop(to: ShopAddReqDTO, id: Int): Int {
 //        val user: User = userRepository.findById(id).orElse(null)
-//        val shop = laundryShopRepository!!.findByUserId(id)
+//        val shop = laundryShopRepository.findByUserId(id)
 //            .orElseGet { LaundryShop() }
 //
 //        shop.user = user
@@ -169,7 +168,7 @@ class LaundryShopService {
     //가격표 정보 등록 및 수정
     fun setHandledItems(items: List<HandledItemsResDTO>): List<HandledItems> {
         val laundryId = items[0].laundryId.toLong()
-        val laundryShop = laundryShopRepository!!.findById(laundryId)
+        val laundryShop = laundryShopRepository.findById(laundryId)
             .orElseThrow {
                 IllegalArgumentException(
                     "LaundryShop not found with ID: $laundryId"
@@ -178,7 +177,7 @@ class LaundryShopService {
 
 
         //laundry_id로 이미 저장되어있는 가격표가 있다면 불러옴
-        var handledItemsList = handledItemsRepository!!.findByLaundryshopId(laundryId).toMutableList()
+        var handledItemsList = handledItemsRepository.findByLaundryshopId(laundryId).toMutableList()
 
 
         //없으면 새로 생성
@@ -222,11 +221,13 @@ class LaundryShopService {
                 handledItem.price = price
             } else {
                 // 기존 항목이 없다면 새로 생성
-                handledItem = HandledItems()
-                handledItem.laundryshop = laundryShop
-                handledItem.itemName = itemName
-                handledItem.category = category
-                handledItem.price = price
+                handledItem = HandledItems(
+                laundryshop = laundryShop,
+                    itemName = itemName,
+                    category = category,
+                    price = price,
+                    id = laundryId.toInt()
+                )
 
                 handledItemsList.add(handledItem) // 새 항목 추가
             }

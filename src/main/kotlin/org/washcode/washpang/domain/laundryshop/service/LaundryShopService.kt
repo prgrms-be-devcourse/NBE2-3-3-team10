@@ -1,13 +1,10 @@
 package org.washcode.washpang.domain.laundryshop.service
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
-import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
-import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.domain.user.entity.User
@@ -74,64 +71,65 @@ class LaundryShopService(
 
     //세탁소 상세정보 조회
     //세탁소 id로 세탁소 정보 찾기
-//    fun getLaundryShopById(id: Int): LaundryDetailResDTO {
-//        val laundryShop = laundryShopRepository.findById(id.toLong())
-//
-//        println("LaundryDetailResDTO: " + laundryShop.id)
-//
-//        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
-//            .map {entity ->
-//                LaundryDetailResDTO.HandledItems(
-//                    id = entity.id,
-//                    itemName = entity.itemName,
-//                    laundryshop = entity.laundryshop,
-//                    category = entity.category,
-//                    price = entity.price
-//                )
-//            }
-//
-//        val to = LaundryDetailResDTO(
-//            shopName = laundryShop.shopName,
-//            phone = laundryShop.phone,
-//            address = laundryShop.address,
-//            nonOperatingDays = laundryShop.nonOperatingDays,
-//            businessNumber = laundryShop.businessNumber,
-//            userName = laundryShop.userName,
-//
-//            handledItems = handledItems
-//        )
-//
-//        return to
-//    }
+    fun getLaundryShopById(id: Int): LaundryDetailResDTO {
+        val laundryShop = laundryShopRepository.findById(id)
+
+        //println("LaundryDetailResDTO: " + laundryShop.id)
+
+        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
+            .map {entity ->
+                LaundryDetailResDTO.HandledItems(
+                    id = entity.id,
+                    itemName = entity.itemName,
+                    laundryshop = entity.laundryshop,
+                    category = entity.category,
+                    price = entity.price
+                )
+            }
+
+        val to = LaundryDetailResDTO(
+            shopName = laundryShop.shopName,
+            phone = laundryShop.phone,
+            address = laundryShop.address,
+            nonOperatingDays = laundryShop.nonOperatingDays,
+            businessNumber = laundryShop.businessNumber,
+            userName = laundryShop.userName,
+
+            handledItems = handledItems
+        )
+
+        return to
+    }
 
     //user_id로 세탁소 정보 찾기
-//    fun getLaundryShopByUserId(id: Int): LaundryDetailResDTO? {
-//        val laundryShop = laundryShopRepository.findByUserId(id)?: return null
-//        println("LaundryDetailResDTO: " + laundryShop.id)
-//
-//        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
-//            .map {entity ->
-//                LaundryDetailResDTO.HandledItems(
-//                    id = entity.id,
-//                    itemName = entity.itemName,
-//                    laundryshop = entity.laundryshop,
-//                    category = entity.category,
-//                    price = entity.price
-//                )
-//            }
-//        val to = LaundryDetailResDTO(
-//            shopName = laundryShop.shopName,
-//            phone = laundryShop.phone,
-//            address = laundryShop.address,
-//            nonOperatingDays = laundryShop.nonOperatingDays,
-//            businessNumber = laundryShop.businessNumber,
-//            userName = laundryShop.userName,
-//
-//            handledItems = handledItems
-//        )
-//
-//        return to
-//    }
+    fun getLaundryShopByUserId(id: Int): LaundryDetailResDTO? {
+        val laundryShop = laundryShopRepository.findByUserId(id)?: return null
+        println("LaundryDetailResDTO: " + laundryShop.id)
+
+        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id.toLong())
+            .map {entity ->
+                LaundryDetailResDTO.HandledItems(
+                    id = entity.id,
+                    itemName = entity.itemName,
+                    laundryshop = entity.laundryshop,
+                    category = entity.category,
+                    price = entity.price
+                )
+            }
+
+        val to = LaundryDetailResDTO(
+            shopName = laundryShop.shopName,
+            phone = laundryShop.phone,
+            address = laundryShop.address,
+            nonOperatingDays = laundryShop.nonOperatingDays,
+            businessNumber = laundryShop.businessNumber,
+            userName = laundryShop.userName,
+
+            handledItems = handledItems
+        )
+
+        return to
+    }
 
     //카테고리로 세탁소 정보 찾기
     fun findLaundryShopsByCategory(category: LaundryCategory): List<LaundryShop> {

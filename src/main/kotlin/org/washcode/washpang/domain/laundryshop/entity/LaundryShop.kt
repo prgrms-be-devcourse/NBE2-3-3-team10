@@ -18,18 +18,18 @@ class LaundryShop (
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
-    var user: User?,
+    var user: User,
 
-    var shopName: String?,
-    var businessNumber: String?,
-    var userName: String?,
-    var phone: String?,
-    var address: String?,
-    var nonOperatingDays: String?,
+    var shopName: String,
+    var businessNumber: String,
+    var userName: String,
+    var phone: String,
+    var address: String,
+    var nonOperatingDays: String,
 
     var latitude: Double,
     var longitude: Double,
 
     @CreationTimestamp
-    var createdAt: Timestamp?
+    var createdAt: Timestamp
 )

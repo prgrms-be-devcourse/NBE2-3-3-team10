@@ -13,13 +13,10 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/laundry")
-class LaundryShopController {
-    @Autowired
-    private val laundryShopService: LaundryShopService? = null
-
-    @Autowired
-    private val handledItemsService: HandledItemsService? = null
-
+class LaundryShopController(
+    private val laundryShopService: LaundryShopService,
+    private val handledItemsService: HandledItemsService
+) {
 
     @GetMapping("/map")
     fun map(
@@ -40,7 +37,7 @@ class LaundryShopController {
         val id = 1
         println("checkLaundryExists: $id")
 
-        return laundryShopService!!.getLaundryShopByUserId(id)
+        return laundryShopService?.getLaundryShopByUserId(id)
     }
 
     //세탁소 정보 저장

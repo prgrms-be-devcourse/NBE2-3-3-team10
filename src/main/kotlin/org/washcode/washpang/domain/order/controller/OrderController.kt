@@ -3,7 +3,6 @@ package org.washcode.washpang.domain.order.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.washcode.washpang.domain.order.dto.KakaoPayReqDTO
 import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.service.OrderService
 

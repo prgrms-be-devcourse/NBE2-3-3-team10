@@ -11,7 +11,7 @@ import org.washcode.washpang.domain.pickup.entity.Pickup
 interface PaymentRepository : JpaRepository<Payment, Long> {
     fun findByPickupId(pickupId: Long): Payment?
 
-    fun findById(id: Int): Payment
+    fun findById(id: Int): Payment?     // Optional을 사용하지 않고 바로 null을 반환
 
     @Query("SELECT p.pickup FROM Payment p WHERE p.id = :id")
     fun findPickUpById(@Param("id") id: Int): Pickup

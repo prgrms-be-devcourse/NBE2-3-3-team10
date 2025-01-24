@@ -76,6 +76,7 @@ class OrderService(
     }
 
     private fun fetchUserById(id: Int) = userRepository.findById(id)
+        .orElseThrow { IllegalArgumentException("User not found with id: $id") }
 
     private fun fetchLaundryShopById(id: Int) = laundryShopRepository.findById(id)
         ?: throw IllegalArgumentException("LaundryShop not found with id: $id")

@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
+import org.washcode.washpang.global.client.Dto.KakaoPayDto
 //import org.washcode.washpang.domain.order.dto.KakaoPayApproveRes
 //import org.washcode.washpang.domain.pickup.entity.Pickup
 import java.sql.Timestamp
@@ -34,7 +35,7 @@ class Payment (
 ){
 
     // 카카오페이 결제 데이터 업데이트 메서드
-    fun updateKakaoPayData(kakaoPayApproveRes: OrderDto.KakaoPayApproveRes) {
+    fun updateKakaoPayData(kakaoPayApproveRes: KakaoPayDto.KakaoPayApproveRes) {
         this.aid = kakaoPayApproveRes.aid
         this.tid = kakaoPayApproveRes.tid
         this.paymentMethodType = kakaoPayApproveRes.paymentMethodType

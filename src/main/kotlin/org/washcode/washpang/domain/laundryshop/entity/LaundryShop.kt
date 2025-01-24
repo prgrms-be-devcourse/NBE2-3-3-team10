@@ -14,22 +14,22 @@ import java.sql.Timestamp
 class LaundryShop (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    val id: Int,
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
-    var user: User?,
+    val user: User,
 
-    var shopName: String?,
-    var businessNumber: String?,
-    var userName: String?,
-    var phone: String?,
-    var address: String?,
-    var nonOperatingDays: String?,
+    val shopName: String,
+    val businessNumber: String,
+    val userName: String,
+    val phone: String,
+    val address: String,
+    val nonOperatingDays: String,
 
-    var latitude: Double?,
-    var longtitude: Double?,
+    val latitude: Double,
+    val longtitude: Double,
 
     @CreationTimestamp
-    var createdAt: Timestamp?
+    val createdAt: Timestamp
 )

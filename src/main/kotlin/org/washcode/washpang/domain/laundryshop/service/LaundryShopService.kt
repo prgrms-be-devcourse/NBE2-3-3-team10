@@ -88,7 +88,7 @@ class LaundryShopService(
                 )
             }
 
-        val to = LaundryDetailResDTO(
+        val dto = LaundryDetailResDTO(
             shopName = laundryShop.shopName,
             phone = laundryShop.phone,
             address = laundryShop.address,
@@ -99,7 +99,7 @@ class LaundryShopService(
             handledItems = handledItems
         )
 
-        return to
+        return dto
     }
 
     //user_id로 세탁소 정보 찾기

@@ -70,7 +70,7 @@ class LaundryShopController(
         return laundryShopService.upsertHandledItems(itemsList)
     }
 
-//    세탁소 정보 수정
+    //세탁소 정보 수정
     @PutMapping("/")
     @Operation(summary = "세탁소 정보 수정", description = "세탁소 수정 API 입니다.")
     fun modifyLaundry(
@@ -97,9 +97,9 @@ class LaundryShopController(
         return laundryShopService.upsertHandledItems(itemsList)
     }
 
-    //세탁소 목록 가져오기
+    //세탁소 상세 조회
     @GetMapping("/{laundryId}")
-    @Operation(summary = "세탁소 목록 조회", description = "세탁소 목록 조회 API 입니다.")
+    @Operation(summary = "세탁소 상세 조회", description = "세탁소 상세 조회 API 입니다.")
     fun getHandledItems(
         @PathVariable("laundryId") laundryId: Int /*@AuthenticationPrincipal int id*/
     ): MutableMap<String, Any> {
@@ -129,9 +129,7 @@ class LaundryShopController(
 
             // 해당 세탁소의 가장 저렴한 항목 조회
             val handledItems = handledItemsService.getAllHandledItems(shop.id)
-            val cheapestItem = handledItems.stream()
-                .min(Comparator.comparing(HandledItems::price))
-                .orElse(null)
+            val cheapestItem = handledItems.minBy { it.price }
 
             shopData["cheapestItem"] = cheapestItem
 

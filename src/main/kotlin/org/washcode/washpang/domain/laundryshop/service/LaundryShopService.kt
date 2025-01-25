@@ -19,19 +19,22 @@ import kotlin.math.sqrt
 
 @Service
 class LaundryShopService(
-
     private val laundryShopRepository: LaundryShopRepository,
 //    private val userRepository: UserRepository,
-    private val handledItemsRepository: HandledItemsRepository,
+    private val handledItemsRepository: HandledItemsRepository
 ) {
-//    fun getLaundryById(id: Long): LaundryShop {
-//        return laundryShopRepository.findById(id)
-//            .orElseThrow { RuntimeException("LaundryShop not found") }
-//    }
+    fun getLaundryById(id: Long): LaundryShop {
+        return laundryShopRepository.findById(id)
+            .orElseThrow { RuntimeException("LaundryShop not found") }
+    }
 
     fun getLaundryShops(userLat: Double, userLng: Double): List<LaundryShop> {
         val shops = laundryShopRepository.findAll()
-        return sortByDistance(shops, userLat, userLng)
+        //return sortByDistance(shops, userLat, userLng)
+
+        return shops.sortedBy { shop ->
+            calculateDistance(userLat, userLng, shop.latitude, shop.longitude)
+        }
     }
 
     // 검색된 세탁소 리스트 거리순 정렬
@@ -45,19 +48,19 @@ class LaundryShopService(
     }
 
     // 거리 계산 및 정렬
-    private fun sortByDistance(shops: List<LaundryShop>, userLat: Double, userLng: Double): List<LaundryShop> {
-        return shops.stream()
-            .sorted { shop1: LaundryShop, shop2: LaundryShop ->
-                val distance1 = calculateDistance(
-                    userLat, userLng,
-                    shop1.latitude,
-                    shop1.longitude
-                )
-                val distance2 = calculateDistance(userLat, userLng, shop2.latitude, shop2.longitude)
-                java.lang.Double.compare(distance1, distance2)
-            }
-            .collect(Collectors.toList())
-    }
+//    private fun sortByDistance(shops: List<LaundryShop>, userLat: Double, userLng: Double): List<LaundryShop> {
+//        return shops.stream()
+//            .sorted { shop1: LaundryShop, shop2: LaundryShop ->
+//                val distance1 = calculateDistance(
+//                    userLat, userLng,
+//                    shop1.latitude,
+//                    shop1.longitude
+//                )
+//                val distance2 = calculateDistance(userLat, userLng, shop2.latitude, shop2.longitude)
+//                java.lang.Double.compare(distance1, distance2)
+//            }
+//            .collect(Collectors.toList())
+//    }
 
     // Haversine 공식을 사용하여 거리 계산
     private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
@@ -74,8 +77,6 @@ class LaundryShopService(
     //세탁소 id로 세탁소 정보 찾기
     fun getLaundryShopById(id: Int): LaundryDetailResDTO {
         val laundryShop = laundryShopRepository.findById(id)
-
-        //println("LaundryDetailResDTO: " + laundryShop.id)
 
         val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
             .map {entity ->
@@ -143,7 +144,7 @@ class LaundryShopService(
 
     //세탁소 저장하기
     fun registerLaundryShop(dto: ShopAddReqDTO, id: Int): Int {
-//        val user: User = userRepository.findById(id).orElse(null)
+//        val user: User = userRepository.findById(id)
 //        val shop = laundryShopRepository.findByUserId(id)
 //
 //        shop.user = user
@@ -195,7 +196,6 @@ class LaundryShopService(
                 id = dto.id
             )
         }
-
         // 저장 및 반환
         return handledItemsRepository.saveAll(updatedItems)
     }

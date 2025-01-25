@@ -16,7 +16,7 @@ class HandledItemsService(
 //                IllegalArgumentException(
 //                    "아이템을 찾을 수 없습니다. ID: $id"
 //                )
-//            }!!
+//            }
 //    }
 
     fun getAllHandledItems(laundryShopId: Int): List<HandledItems> {

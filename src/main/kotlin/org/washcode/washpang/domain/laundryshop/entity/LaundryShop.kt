@@ -10,7 +10,7 @@ import java.sql.Timestamp
 class LaundryShop (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    val id: Int,
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")

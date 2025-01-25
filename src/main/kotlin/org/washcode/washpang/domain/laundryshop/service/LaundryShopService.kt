@@ -10,6 +10,7 @@ import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.stream.Collectors
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -141,10 +142,21 @@ class LaundryShopService(
     }
 
     //세탁소 저장하기
-//    fun registerLaundryShop(to: ShopAddReqDTO, id: Int): Int {
+    fun registerLaundryShop(to: ShopAddReqDTO, id: Int): Int {
 //        val user: User = userRepository.findById(id).orElse(null)
-//        val shop = laundryShopRepository.findByUserId(id)
-//            .orElseGet { LaundryShop() }
+//        val shop = laundryShopRepository.findByUserId(id)?: LaundryShop(
+//            id = id,
+//            user = user,
+//            shopName = to.shopName,
+//            address = to.address,
+//            nonOperatingDays = to.nonOperatingDays,
+//            businessNumber = to.businessNumber,
+//            latitude = to.latitude,
+//            longitude = to.longitude,
+//            phone = to.phone,
+//            createdAt = Timestamp(System.currentTimeMillis()),
+//            userName = to.userName
+//        )
 //
 //        shop.user = user
 //        shop.shopName = to.shopName
@@ -160,75 +172,45 @@ class LaundryShopService(
 //        val savedShop = laundryShopRepository.save(shop)
 //
 //        return savedShop.id
-//    }
+
+        return 1
+    }
 
 
     //가격표 정보 등록 및 수정
-    fun setHandledItems(items: List<HandledItemsResDTO>): List<HandledItems> {
-        val laundryId = items[0].laundryId
+    fun upsertHandledItems(items: List<HandledItemsResDTO>): List<HandledItems> {
+        val laundryId = items.first().laundryId
         val laundryShop = laundryShopRepository.findById(laundryId)
 
-        //laundry_id로 이미 저장되어있는 가격표가 있다면 불러옴
-        var handledItemsList = handledItemsRepository.findByLaundryshopId(laundryId).toMutableList()
+        println("laundry id : $laundryId")
 
+        // laundry_id로 저장된 가격표 가져오기
+        val existingItems = handledItemsRepository.findByLaundryshopId(laundryId).toMutableList()
 
-        //없으면 새로 생성
-        if (handledItemsList == null) {
-            handledItemsList = ArrayList()
+        // 삭제할 항목 식별 및 제거
+        val toBeDeletedItems = existingItems.filterNot { existingItem ->
+            items.any { it.itemName == existingItem.itemName && it.category == existingItem.category }
         }
+        handledItemsRepository.deleteAll(toBeDeletedItems)
 
-        val toBeDeletedItems = handledItemsList.stream()
-            .filter { existingItem: HandledItems ->
-                !items.stream()
-                    .anyMatch { item: HandledItemsResDTO ->
-                        item.itemName == existingItem.itemName &&
-                                item.category == existingItem.category
-                    }
+        // 기존 항목 업데이트 및 새 항목 추가
+        val updatedItems = items.map { dto ->
+            val existingItem = existingItems.find {
+                it.itemName == dto.itemName && it.category == dto.category
             }
-            .collect(Collectors.toList())
-
-        // 삭제할 항목들 삭제
-        for (itemToDelete in toBeDeletedItems) {
-            handledItemsRepository.delete(itemToDelete) // 해당 항목 삭제
-            handledItemsList.remove(itemToDelete) // 로컬 리스트에서 삭제된 항목 제거
-        }
-
-        for ((itemName, category, price) in items) {
-            // 기존 항목이 있는지 찾아보기
-            val existingItemOptional = handledItemsList.stream()
-                .filter { existingItem: HandledItems ->
-                    existingItem.itemName == itemName &&
-                            existingItem.category == category
-                }
-                .findFirst()
-
-            val handledItem: HandledItems
-
-            if (existingItemOptional.isPresent) {
-                // 기존 항목이 있다면 업데이트
-                handledItem = existingItemOptional.get()
-
-                handledItem.itemName = itemName
-                handledItem.category = category
-                handledItem.price = price
-            } else {
-                // 기존 항목이 없다면 새로 생성
-                handledItem = HandledItems(
+            existingItem?.apply {
+                this.price = dto.price
+            } ?: HandledItems(
                 laundryshop = laundryShop,
-                    itemName = itemName,
-                    category = category,
-                    price = price,
-                    id = laundryId.toInt()
-                )
-
-                handledItemsList.add(handledItem) // 새 항목 추가
-            }
-
-            // 저장
-            handledItemsRepository.save(handledItem)
+                itemName = dto.itemName,
+                category = dto.category,
+                price = dto.price,
+                id = dto.id
+            )
         }
 
-        // 전체 항목 저장
-        return handledItemsRepository.saveAll(handledItemsList)
+        // 저장 및 반환
+        return handledItemsRepository.saveAll(updatedItems)
     }
+
 }

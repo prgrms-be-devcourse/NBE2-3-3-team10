@@ -1,5 +1,7 @@
 package org.washcode.washpang.domain.laundryshop.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
@@ -19,6 +21,7 @@ class LaundryShopController(
 ) {
 
     @GetMapping("/map")
+    @Operation(summary = "지도로 목록 조회", description = "지도위에서 세탁소 위치 및 목록 확인")
     fun map(
         @RequestParam(value = "shopName", required = false) shopName: String?,
         @RequestParam(value = "userLat") userLat: Double,
@@ -41,49 +44,62 @@ class LaundryShopController(
     }
 
     //세탁소 정보 저장
-//    @PostMapping("/")
-//    fun ResponseEntity<*> registerLaundry(@RequestBody ShopAddReqDTO to, /*@AuthenticationPrincipal int id*/) {
-//        val id: Int = 1
-//
-//        int laundryId = laundryShopService.registerLaundryShop(to, id);
-//
-//        System.out.println(laundryId);
-//
-//        // 성공 응답 반환
-//        return ResponseEntity.ok().body(Map.of("laundryId", laundryId));
-//    }
+    @PostMapping("/")
+    @Operation(summary = "세탁소 정보 저장", description = "세탁소 저장 API 입니다.")
+    fun registerLaundry(
+        @RequestBody to: ShopAddReqDTO
+    /*, @AuthenticationPrincipal int id*/
+    ): ResponseEntity<Map<String, Int>>
+    {
+        val id: Int = 1
+
+        val laundryId = laundryShopService.registerLaundryShop(to, id);
+
+        System.out.println(laundryId);
+
+        // 성공 응답 반환
+        return ResponseEntity.ok(mapOf("laundryId" to laundryId))
+    }
 
     //가격표 저장
     @PostMapping("/handled-items")
+    @Operation(summary = "가격표 저장", description = "가격표 저장 API 입니다.")
     fun setHandledItems(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
         println("Received items list: $itemsList")
 
-        return laundryShopService.setHandledItems(itemsList)
+        return laundryShopService.upsertHandledItems(itemsList)
     }
 
 //    세탁소 정보 수정
-//    @PutMapping("/")
-//    public ResponseEntity<*> modifyLaundry(@RequestBody LaundryDTO.ShopAddReqDTO to, /*@AuthenticationPrincipal int id*/) {
-//        int id = 1;
-//        //System.out.println(to.getUserName());
-//
-//        int laundryId = laundryShopService.registerLaundryShop(to, id);
-//
-//        System.out.println(laundryId);
-//        // 성공 응답 반환
-//        return ResponseEntity.ok().body(Map.of("laundryId", laundryId));
-//    }
+    @PutMapping("/")
+    @Operation(summary = "세탁소 정보 수정", description = "세탁소 수정 API 입니다.")
+    fun modifyLaundry(
+    @RequestBody to: ShopAddReqDTO
+    /*, @AuthenticationPrincipal int id*/
+    ): ResponseEntity<Map<String, Int>>  {
+        val id: Int = 1;
+        //System.out.println(to.getUserName());
+
+        val laundryId = laundryShopService.registerLaundryShop(to, id)
+
+        System.out.println(laundryId)
+
+        // 성공 응답 반환
+        return ResponseEntity.ok().body(mapOf("laundryId" to laundryId))
+    }
 
     //가격표 수정
     @PutMapping("/handled-items")
+    @Operation(summary = "가격표 수정", description = "가격표 수정 API 입니다.")
     fun setHandledItemsModify(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
         println("Received items list: $itemsList")
 
-        return laundryShopService.setHandledItems(itemsList)
+        return laundryShopService.upsertHandledItems(itemsList)
     }
 
     //세탁소 목록 가져오기
     @GetMapping("/{laundryId}")
+    @Operation(summary = "세탁소 목록 조회", description = "세탁소 목록 조회 API 입니다.")
     fun getHandledItems(
         @PathVariable("laundryId") laundryId: Int /*@AuthenticationPrincipal int id*/
     ): MutableMap<String, Any> {
@@ -99,6 +115,7 @@ class LaundryShopController(
 
     //카테고리별로 세탁소 list 조회
     @GetMapping("/category/{category}")
+    @Operation(summary = "세탁소 카테고리별 조회", description = "세탁소 카테고리별 조회 API 입니다.")
     fun getLaundryShopsCategory(@PathVariable("category") category: String): List<Map<String, Any>> {
         val laundryCategory = LaundryCategory.valueOf(category.uppercase(Locale.getDefault()))
 

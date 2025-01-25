@@ -24,10 +24,10 @@ class LaundryShopService(
 //    private val userRepository: UserRepository,
     private val handledItemsRepository: HandledItemsRepository,
 ) {
-    fun getLaundryById(id: Long): LaundryShop {
-        return laundryShopRepository.findById(id)
-            .orElseThrow { RuntimeException("LaundryShop not found") }
-    }
+//    fun getLaundryById(id: Long): LaundryShop {
+//        return laundryShopRepository.findById(id)
+//            .orElseThrow { RuntimeException("LaundryShop not found") }
+//    }
 
     fun getLaundryShops(userLat: Double, userLng: Double): List<LaundryShop> {
         val shops = laundryShopRepository.findAll()
@@ -118,7 +118,7 @@ class LaundryShopService(
                 )
             }
 
-        val to = LaundryDetailResDTO(
+        val dto = LaundryDetailResDTO(
             shopName = laundryShop.shopName,
             phone = laundryShop.phone,
             address = laundryShop.address,
@@ -129,7 +129,7 @@ class LaundryShopService(
             handledItems = handledItems
         )
 
-        return to
+        return dto
     }
 
     //카테고리로 세탁소 정보 찾기
@@ -142,37 +142,24 @@ class LaundryShopService(
     }
 
     //세탁소 저장하기
-    fun registerLaundryShop(to: ShopAddReqDTO, id: Int): Int {
+    fun registerLaundryShop(dto: ShopAddReqDTO, id: Int): Int {
 //        val user: User = userRepository.findById(id).orElse(null)
-//        val shop = laundryShopRepository.findByUserId(id)?: LaundryShop(
-//            id = id,
-//            user = user,
-//            shopName = to.shopName,
-//            address = to.address,
-//            nonOperatingDays = to.nonOperatingDays,
-//            businessNumber = to.businessNumber,
-//            latitude = to.latitude,
-//            longitude = to.longitude,
-//            phone = to.phone,
-//            createdAt = Timestamp(System.currentTimeMillis()),
-//            userName = to.userName
-//        )
+//        val shop = laundryShopRepository.findByUserId(id)
 //
 //        shop.user = user
-//        shop.shopName = to.shopName
-//        shop.businessNumber = to.businessNumber
-//        shop.userName = to.userName
-//        shop.address = to.address
-//        shop.phone = to.phone
-//        shop.nonOperatingDays = to.nonOperatingDays
-//        shop.latitude = to.latitude
-//        shop.longitude = to.longitude
+//        shop.shopName = dto.shopName
+//        shop.businessNumber = dto.businessNumber
+//        shop.userName = dto.userName
+//        shop.address = dto.address
+//        shop.phone = dto.phone
+//        shop.nonOperatingDays = dto.nonOperatingDays
+//        shop.latitude = dto.latitude
+//        shop.longitude = dto.longitude
 //        shop.createdAt = Timestamp(System.currentTimeMillis())
 //
 //        val savedShop = laundryShopRepository.save(shop)
 //
 //        return savedShop.id
-
         return 1
     }
 

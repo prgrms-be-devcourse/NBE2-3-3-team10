@@ -1,42 +1,29 @@
-package org.washcode.washpang.global.client.Dto
+package org.washcode.washpang.global.comm.client.Dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.JsonNode
 import lombok.Getter
+import java.util.UUID
 
 class KakaoDto private constructor() {
-
-//    data class Data(
-//        val id: Long,
-//        val connected_at: String,
-//        val properties: Properties,
-//        val kakao_account: KakaoAccount
-//    ) {
-//        data class Properties(
-//            val nickname: String
-//        )
-//
-//        data class KakaoAccount(
-//            val profile_nickname_needs_agreement: Boolean,
-//            val profile: Profile,
-//            val has_email: Boolean,
-//            val email_needs_agreement: Boolean,
-//            val is_email_valid: Boolean,
-//            val is_email_verified: Boolean,
-//            val email: String
-//        )
-//
-//        data class Profile(
-//            val nickname: String,
-//            val is_default_nickname: Boolean
-//        )
-//    }
 
     data class Data(
         val id: Long,
         val email: String,
         val nickname: String,
         val password: String
-    )
+    ) {
+        companion object {
+            @JvmStatic
+            fun from(json: JsonNode): Data {
+                return Data(
+                    id = json["id"].asLong(),
+                    email = json["kakao_account"]["email"].asText(""),
+                    nickname = json["properties"]["nickname"].asText(""),
+                    password = UUID.randomUUID().toString().replace("-", "").substring(0, 12)
+                )
+            }
+        }
+    }
 
     @Getter
     data class AccessToken (

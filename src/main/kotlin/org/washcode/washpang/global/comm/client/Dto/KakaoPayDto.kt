@@ -1,4 +1,4 @@
-package org.washcode.washpang.global.client.Dto
+package org.washcode.washpang.global.comm.client.Dto
 
 class KakaoPayDto private constructor() {
     data class KakaoPayApproveRes (

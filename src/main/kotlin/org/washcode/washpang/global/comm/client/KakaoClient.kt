@@ -1,21 +1,21 @@
-package org.washcode.washpang.global.client
+package org.washcode.washpang.global.comm.client
 
-import org.springframework.ui.Model;
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import feign.FeignException
 import jakarta.servlet.http.HttpServletResponse
 import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.*;
-
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseCookie
+import org.springframework.stereotype.Service
+import org.springframework.ui.Model
 import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.domain.user.repository.UserRepository
-import org.washcode.washpang.global.client.Dto.KakaoDto
-import org.washcode.washpang.global.client.feign.client.KakaoApiServerClient
-import org.washcode.washpang.global.client.feign.client.KakaoAuthServerClient
+import org.washcode.washpang.global.comm.client.Dto.KakaoDto
+import org.washcode.washpang.global.module.feign.client.KakaoApiServerClient
+import org.washcode.washpang.global.module.feign.client.KakaoAuthServerClient
 
 @Service
 @Slf4j
@@ -49,7 +49,7 @@ class KakaoClient (
             .build()
     }
 
-    private fun getKakaoAccessToken(code: String): String {
+    private fun getKakaoAccessToken(code: String): String? {
 
         var res: KakaoDto.KakaoAccessToken? = null // 초기값 설정
 
@@ -63,7 +63,7 @@ class KakaoClient (
             log.error("카카오 Get AccessToken 실패")
             log.error(e.message)
 
-            return ""
+            return null
         }
     }
 
@@ -86,13 +86,9 @@ class KakaoClient (
 
         // 2. 1에서 받아온 Body를 Json으로 파싱
         try {
-            val j = mapper.readTree(resBody)
-            val res = KakaoDto.Data(
-                j.get("id").asLong(),
-                j.get("kakao_account").get("email").asText(),
-                j.get("properties").get("nickname").asText(),
-                ""
-            )
+            val jsonNode = mapper.readTree(resBody)
+            val res = KakaoDto.Data.from(jsonNode)
+
             return res
         } catch (e : JsonProcessingException) {
             log.error("=================================================================")
@@ -134,14 +130,11 @@ class KakaoClient (
         }
     }
 
-    fun login(code: String, model: Model ,response: HttpServletResponse): String {
+    fun login(code: String, model: Model, response: HttpServletResponse): String {
 
         // 1. "인가 코드"로 "액세스 토큰" 요청
         val accessToken = getKakaoAccessToken(code)
-
-        if (accessToken == "") {
-            return "glober/Login"
-        }
+        if (accessToken == null) { return "glober/Login" }
 
         // 2. "액세스 토큰"으로 "사용자 정보" 요청
         val result = getKakaoUserData(accessToken)

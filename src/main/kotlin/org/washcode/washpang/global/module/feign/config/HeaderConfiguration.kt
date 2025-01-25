@@ -1,4 +1,4 @@
-package org.washcode.washpang.global.client.feign.config
+package org.washcode.washpang.global.module.feign.config
 
 import feign.*
 import org.springframework.context.annotation.Bean

@@ -2,9 +2,8 @@ package org.washcode.washpang.domain.order.entity.db
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
-import org.washcode.washpang.global.client.Dto.KakaoPayDto
+import org.washcode.washpang.global.comm.client.Dto.KakaoPayDto
 //import org.washcode.washpang.domain.order.dto.KakaoPayApproveRes
 //import org.washcode.washpang.domain.pickup.entity.Pickup
 import java.sql.Timestamp

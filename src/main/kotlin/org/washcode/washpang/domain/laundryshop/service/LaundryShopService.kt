@@ -47,21 +47,6 @@ class LaundryShopService(
         }
     }
 
-    // 거리 계산 및 정렬
-//    private fun sortByDistance(shops: List<LaundryShop>, userLat: Double, userLng: Double): List<LaundryShop> {
-//        return shops.stream()
-//            .sorted { shop1: LaundryShop, shop2: LaundryShop ->
-//                val distance1 = calculateDistance(
-//                    userLat, userLng,
-//                    shop1.latitude,
-//                    shop1.longitude
-//                )
-//                val distance2 = calculateDistance(userLat, userLng, shop2.latitude, shop2.longitude)
-//                java.lang.Double.compare(distance1, distance2)
-//            }
-//            .collect(Collectors.toList())
-//    }
-
     // Haversine 공식을 사용하여 거리 계산
     private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val R = 6371 // 지구 반지름 (km)

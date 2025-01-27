@@ -35,6 +35,7 @@ class KakaoPayClient(
     @Value("\${kakaopay.key.secret-dev}")
     private val secretDev = ""
 
+    @Transactional
     fun payReady(userId: Int, dto: KakaoPayDto.ReqDto): ResponseResult {
         val reqDto = KakaoPayDto.ReadyReq(cid, clientSecret, dto.paymentId, userId.toString(), dto.name, dto.quantity, dto.totalPrice)
         var resBody: KakaoPayDto.ReadyRes? = null

@@ -7,5 +7,5 @@ import org.washcode.washpang.domain.review.entity.Review
 
 @Repository
 interface ReviewRepository: JpaRepository<Review, Long> {
-    
+    fun findByLaundryShopId(laundryShopId: Long): List<Review>
 }

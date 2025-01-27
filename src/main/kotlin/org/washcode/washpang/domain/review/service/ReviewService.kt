@@ -31,5 +31,15 @@ class ReviewService(
         return reviewRepository.save(review)
     }
 
+    //리뷰 목록 조회(전체)
+    fun getReviewAll():List<Review>{
+        return reviewRepository.findAll()
+    }
+
+    //세탁소 리뷰 목록 조회
+    fun getReviewsByLaundryShop(laundryShopId: Long): List<Review>{
+        return reviewRepository.findByLaundryShopId(laundryShopId)
+    }
+
 
 }

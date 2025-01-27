@@ -14,28 +14,16 @@ class User ( // 클래스 'User'에는 [public, protected] no-arg 생성자가 �
     @Column(unique = true)
     val kakao_id: Long,
 
-    @Column(nullable = false)
-    val name: String,
-
-    @Column(nullable = false)
-    val password: String,
-
-    @Column(unique = false)
-    val baseAddress: String,
-
-    @Column(unique = false)
-    val detailedAddress: String,
-
-    @Column(nullable = false)
-    val phone: String,
-
-    @Column(nullable = false)
-    val email: String,
+    var name: String,
+    var password: String,
+    var baseAddress: String,
+    var detailedAddress: String,
+    var phone: String,
+    var email: String,
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     @ColumnDefault("USER")
-    val role: UserRole,
+    var role: UserRole,
 
     @CreationTimestamp
     val created_at: Timestamp

@@ -3,12 +3,19 @@ package org.washcode.washpang.domain.order.service
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.washcode.washpang.domain.handledItems.entity.HandledItems
+import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
+import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
+import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.repository.db.PaymentRepository
 import org.washcode.washpang.domain.order.entity.db.Payment
 import org.washcode.washpang.domain.order.repository.redis.KakaoPayPgTokenRepository
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem
+import org.washcode.washpang.domain.pickup.repository.PickupItemRepository
+import org.washcode.washpang.domain.pickup.repository.PickupRepository
+import org.washcode.washpang.domain.user.entity.User
 
 import org.washcode.washpang.global.comm.enums.PickupStatus
 import java.sql.Timestamp
@@ -38,7 +45,8 @@ class OrderService(
     fun getInfo(id: Int, laundryId: Int): ResponseEntity<*> {
         val orderInfoResDTO = OrderDto.InfoRes(
             name = userRepository.findNameById(id).get(),
-            address = userRepository.findAddressById(id).get(),
+            baseAddress = userRepository.findAddressById(id).get(),
+            detailedAddress = userRepository.findAddressById(id).get(),
             shopName = laundryShopRepository.findNameById(laundryId).get(),
             category = handledItemsRepository.findHandledItemsByLaundryId(laundryId)
         )
@@ -46,40 +54,14 @@ class OrderService(
         return ResponseEntity.ok().body(orderInfoResDTO)
     }
 
-
     fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseEntity<*> {
         return try {
-            // 사용자 및 세탁소 찾기
-            val user = userRepository.findById(id).orElseThrow()
-            val laundryshop = laundryShopRepository.findById(orderReqDTO.laundryshopId).orElseThrow()
-            val handledItem = handledItemsRepository.findById(orderReqDTO.itemId).orElseThrow()
-
-            // Pickup 객체 생성 (createdAt은 자동으로 설정됨)
-            val pickup = Pickup(
-                user = user,
-                laundryshop = laundryshop,
-                status = PickupStatus.REQUESTED,
-                content = orderReqDTO.content
-            )
-            pickupRepository.save(pickup)  // 이때 createdAt이 자동으로 설정됨
-
-            // PickupItem 객체 생성
-            val pickupItem = PickupItem(
-                pickup = pickup,
-                handledItems = handledItem,
-                quantity = orderReqDTO.quantity,
-                totalPrice = handledItem.price * orderReqDTO.quantity
-            )
-            pickupItemRepository.save(pickupItem)
-
-            // Payment 객체 생성
-            val payment = Payment(
-                pickup = pickup,
-                amount = handledItem.price * orderReqDTO.quantity,
-                method = orderReqDTO.paymentMethod ?: throw IllegalArgumentException("Payment method cannot be null"),
-                paymentDatetime = Timestamp(System.currentTimeMillis())  // 결제 시간
-            )
-            paymentRepository.save(payment)
+            val user = fetchUserById(id)
+            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
+            val pickup = createAndSavePickup(user, laundryshop, orderReqDTO.content)
+            val handledItem = fetchHandledItemById(orderReqDTO.itemId)
+            createAndSavePickupItem(pickup, handledItem, orderReqDTO.quantity)
+            createAndSavePayment(pickup, handledItem, orderReqDTO)
 
             ResponseEntity.ok().body(pickupRepository.findIdByMax())
         } catch (e: Exception) {
@@ -87,6 +69,57 @@ class OrderService(
             ResponseEntity.status(500).body("DB 에러")
         }
     }
+
+    private fun fetchUserById(id: Int) = userRepository.findById(id)
+        .orElseThrow { IllegalArgumentException("User not found with id: $id") }
+
+    private fun fetchLaundryShopById(id: Int) = laundryShopRepository.findById(id)
+        ?: throw IllegalArgumentException("LaundryShop not found with id: $id")
+
+    private fun fetchHandledItemById(id: Int) = handledItemsRepository.findById(id)
+        ?: throw IllegalArgumentException("HandledItem not found with id: $id")
+
+    private fun createAndSavePickup(user: User, laundryshop: LaundryShop, content: String): Pickup {
+        val pickup = Pickup(
+            id = 0,
+            user = user,
+            laundryshop = laundryshop,
+            status = PickupStatus.REQUESTED,
+            content = content
+        ).apply {
+            createdAt = Timestamp(System.currentTimeMillis())
+        }
+        return pickupRepository.save(pickup)
+    }
+
+    private fun createAndSavePickupItem(pickup: Pickup, handledItem: HandledItems, quantity: Int) {
+        val pickupItem = PickupItem(
+            id = 0,
+            pickup = pickup,
+            handledItems = handledItem,
+            quantity = quantity,
+            totalPrice = handledItem.price * quantity
+        )
+        pickupItemRepository.save(pickupItem)
+    }
+
+    private fun createAndSavePayment(pickup: Pickup, handledItem: HandledItems, orderReqDTO: OrderDto.OrderReq) {
+        val payment = Payment(
+            id = 0,
+            pickup = pickup,
+            paymentDatetime = Timestamp(System.currentTimeMillis()),
+            amount = handledItem.price * orderReqDTO.quantity,
+            method = orderReqDTO.paymentMethod,
+            aid = "",
+            tid = "",
+            paymentMethodType = "",
+            createdAt = Timestamp(System.currentTimeMillis()).toString(),
+            approvedAt = "",
+            payload = ""
+        )
+        paymentRepository.save(payment)
+    }
+
 
 
     // 유저 ID 로 주문내역 조회
@@ -108,7 +141,20 @@ class OrderService(
     // 유저 ID 및 주문 ID로 주문 상세 내역 조회
     fun getOrdersDetail(id: Int, pickupId: Int): ResponseEntity<*> {
         val result = pickupRepository.findOrderDetails(id, pickupId)
-        val orderResDTO = OrderDto.OrderRes().apply {
+        val orderResDTO = OrderDto.OrderRes(
+            name = "",
+            address = "",
+            phone = "",
+            shopName = "",
+            content = "",
+            createdAt = "",
+            updateAt = "",
+            paymentId = 0,
+            method = "",
+            amount = 0,
+            price = 0,
+            status = ""
+        ).apply {
             orderItems = mutableListOf()
         }
 
@@ -121,7 +167,7 @@ class OrderService(
                 name = obj[15] as String
                 val status = (obj[4] as PickupStatus).desc
                 createdAt = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm").format(obj[6] as Timestamp)
-                updateAt = obj[7]?.let { SimpleDateFormat("yyyy년 MM월 dd일 HH:mm").format(it as Timestamp) }
+                updateAt = obj[7]?.let { SimpleDateFormat("yyyy년 MM월 dd일 HH:mm").format(it as Timestamp) }?:""
                 method = obj[14] as String
                 amount = obj[13] as Int
                 paymentId = obj[17] as Int
@@ -147,8 +193,9 @@ class OrderService(
 
         val paymentId = kakaoPayPgToken.partnerOrderId
         val pickup = paymentRepository.findPickUpById(paymentId)
-            .orElseThrow { IllegalArgumentException("No matching payment found for paymentId: $paymentId") }
+            ?: throw IllegalArgumentException("No matching payment found for paymentId: $paymentId")
 
+//            .orElseThrow { IllegalArgumentException("No matching payment found for paymentId: $paymentId") }
         pickup.status = PickupStatus.PAYMENT_COMPLETED
     }
 }

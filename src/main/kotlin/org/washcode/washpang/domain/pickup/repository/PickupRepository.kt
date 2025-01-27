@@ -58,7 +58,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
     )
     fun findOrderListByUserId(
         @Param("userId") userId: Int
-    ): List<Array<Any>>
+    ): List<Array<Pickup>>
 
 
     // 필터링된 데이터 가져오기(개월 수)
@@ -71,7 +71,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
     fun findByUserIdAndDate(
         @Param("userId") userId: Int,
         @Param("fromDate") fromDate: Timestamp
-    ): List<Array<Any>>
+    ): List<Array<Pickup>>
 
 
     //이용내역 조회(상세보기)
@@ -93,7 +93,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
                 "pay.amount AS amount, " +
                 "pay.method AS method, " +
                 "u.name AS name, " +
-                "pay.payment_datetime AS paymentDateTime, " +
+                "pay.paymentDatetime AS paymentDateTime, " +
                 "pay.id AS paymentId " +
                 "FROM User u " +
                 "JOIN Pickup p ON u.id = p.user.id " +
@@ -106,7 +106,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
     fun findOrderDetails(
         @Param("userId") userId: Int,
         @Param("pickupId") pickupId: Int
-    ): List<Array<Any>>
+    ): List<Array<Pickup>>
 
     @Transactional
     @Modifying

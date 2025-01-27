@@ -8,19 +8,16 @@ import org.washcode.washpang.domain.order.service.OrderService
 
 @RestController
 @RequestMapping("/api/orders")
-class OrderController {
-
-    @Autowired
-    private lateinit var orderService: OrderService
-
-    @Autowired
-    private lateinit var kakaoPayClient: KakaoPayClient
+class OrderController (
+    private val orderService: OrderService,
+    private val kakaoPayClient: KakaoPayClient
+) {
 
     @GetMapping("/info/{laundryId}")
     fun getInfo(
 //        @AuthenticationPrincipal id: Int,
         @PathVariable("laundryId") laundryId: Int): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return orderService.getInfo(id, laundryId)
     }
 
@@ -29,7 +26,7 @@ class OrderController {
 //        @AuthenticationPrincipal id: Int,
         @RequestBody orderReqDTO: OrderDto.OrderReq
     ): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return orderService.createOrder(id, orderReqDTO)
     }
 
@@ -37,7 +34,7 @@ class OrderController {
     fun getOrders(
 //        @AuthenticationPrincipal id: Int
     ): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return orderService.getOrders(id)
     }
 
@@ -46,7 +43,7 @@ class OrderController {
 //        @AuthenticationPrincipal id: Int,
         @PathVariable("pickupId") pickupId: Int
     ): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return orderService.getOrdersDetail(id, pickupId)
     }
 
@@ -55,7 +52,7 @@ class OrderController {
 //        @AuthenticationPrincipal id: Int,
         @RequestBody pickupId: Map<String, Int>
     ): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return orderService.cancelOrder(id, pickupId["pickupId"] ?: 0)
     }
 
@@ -64,7 +61,7 @@ class OrderController {
 //        @AuthenticationPrincipal id: Int,
         @RequestBody kakaoPayReqDTO: OrderDto.KakaoPayReq
     ): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return kakaoPayClient.payReady(id, kakaoPayReqDTO)
     }
 
@@ -73,7 +70,7 @@ class OrderController {
 //        @AuthenticationPrincipal id: Int,
         @RequestBody request: Map<String, String>
     ): ResponseEntity<*> {
-        var id:Int =1
+        val id:Int =1
         return kakaoPayClient.payCompleted(id, request["token"])
     }
 }

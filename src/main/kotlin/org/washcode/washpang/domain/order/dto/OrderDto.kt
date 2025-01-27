@@ -53,12 +53,11 @@ class OrderDto private constructor(){
         val price: Int,
         var orderItems: List<OrderItem>
 
-    ) {
-        // OrderItem 클래스 정의
-        data class OrderItem(
-            val itemName: String,
-            val quantity: Int,
-            val totalPrice: Int
-        )
-    }
+    )
+
+    data class OrderItem(
+        val itemName: String,
+        val quantity: Int,
+        val totalPrice: Int
+    )
 }

@@ -11,6 +11,9 @@ import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.exception.FailToFindfLaundryShopException
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
+import org.washcode.washpang.domain.user.entity.User
+import org.washcode.washpang.domain.user.exception.NoUserDataException
+import org.washcode.washpang.domain.user.repository.UserRepository
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 import org.washcode.washpang.global.exception.ErrorCode
 import org.washcode.washpang.global.exception.ResponseResult
@@ -25,7 +28,7 @@ import kotlin.math.sqrt
 @Service
 class LaundryShopService(
     private val laundryShopRepository: LaundryShopRepository,
-//    private val userRepository: UserRepository,
+    private val userRepository: UserRepository,
     private val handledItemsRepository: HandledItemsRepository
 ) {
 //    fun getLaundryById(id: Long): ResponseResult {
@@ -37,7 +40,6 @@ class LaundryShopService(
 
     fun getLaundryShops(userLat: Double, userLng: Double): ResponseResult {
         val shops = laundryShopRepository.findAll()
-        //return sortByDistance(shops, userLat, userLng)
 
         return ResponseResult(shops.sortedBy { shop ->
             calculateDistance(userLat, userLng, shop.latitude, shop.longitude)
@@ -47,7 +49,6 @@ class LaundryShopService(
     // 검색된 세탁소 리스트 거리순 정렬
     fun getLaundryShops(shopName: String, userLat: Double, userLng: Double): ResponseResult {
         val shops = laundryShopRepository.findByShopNameContaining(shopName)
-//        return sortByDistance(shops, userLat, userLng)
 
         return ResponseResult(shops.sortedBy { shop ->
             calculateDistance(userLat, userLng, shop.latitude, shop.longitude)
@@ -142,24 +143,28 @@ class LaundryShopService(
 
     //세탁소 저장하기
     fun registerLaundryShop(dto: ShopAddReqDTO, id: Int): ResponseResult {
-//        val user: User = userRepository.findById(id)
-//        val shop = laundryShopRepository.findByUserId(id)
-//
-//        shop.user = user
-//        shop.shopName = dto.shopName
-//        shop.businessNumber = dto.businessNumber
-//        shop.userName = dto.userName
-//        shop.address = dto.address
-//        shop.phone = dto.phone
-//        shop.nonOperatingDays = dto.nonOperatingDays
-//        shop.latitude = dto.latitude
-//        shop.longitude = dto.longitude
-//        shop.createdAt = Timestamp(System.currentTimeMillis())
-//
-//        val savedShop = laundryShopRepository.save(shop)
-//
-//        return ResponseResult(savedShop.id)
-        return ResponseResult()
+        try {
+            val user = userRepository.findById(id)
+                ?: throw NoUserDataException()
+            val shop = laundryShopRepository.findByUserId(id)
+
+            shop.user = user
+            shop.shopName = dto.shopName
+            shop.businessNumber = dto.businessNumber
+            shop.userName = dto.userName
+            shop.address = dto.address
+            shop.phone = dto.phone
+            shop.nonOperatingDays = dto.nonOperatingDays
+            shop.latitude = dto.latitude
+            shop.longitude = dto.longitude
+            shop.createdAt = dto.createdAt
+
+            val savedShop = laundryShopRepository.save(shop)
+
+            return ResponseResult(data = savedShop.id)
+        } catch (e: NoUserDataException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
+            }
     }
 
 

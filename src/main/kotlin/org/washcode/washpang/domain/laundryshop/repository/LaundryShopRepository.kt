@@ -17,7 +17,7 @@ interface LaundryShopRepository : JpaRepository<LaundryShop, Long> {
 
     fun findByIdIn(ids: List<Int>): List<LaundryShop>
 
-    fun findByUserId(userId: Int): LaundryShop?
+    fun findByUserId(userId: Int): LaundryShop
 
     fun findById(id: Int): LaundryShop
 }

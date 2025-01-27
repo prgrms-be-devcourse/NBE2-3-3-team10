@@ -56,7 +56,7 @@ class LaundryShopController(
 
         val laundryId = laundryShopService.registerLaundryShop(to, id);
 
-        System.out.println(laundryId);
+
 
         // 성공 응답 반환
         return ResponseResult(ResponseEntity.ok(mapOf("laundryId" to laundryId)))

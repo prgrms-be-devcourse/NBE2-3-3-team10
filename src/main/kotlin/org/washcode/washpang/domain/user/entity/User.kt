@@ -13,7 +13,7 @@ class User ( // 클래스 'User'에는 [public, protected] no-arg 생성자가 �
     val id: Int,
 
     @Column(unique = true)
-    var kakao_id: Long,
+    val kakao_id: Long,
 
     var name: String,
     var password: String,
@@ -27,5 +27,5 @@ class User ( // 클래스 'User'에는 [public, protected] no-arg 생성자가 �
     var role: UserRole,
 
     @CreationTimestamp
-    var created_at: Timestamp
+    val created_at: Timestamp
 )

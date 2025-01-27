@@ -13,10 +13,6 @@ class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int = 0
 
-//    @ManyToOne
-//    @JoinColumn(name = "userId")
-//    lateinit var user: User  // User 엔티티와 연관 관계를 설정
-
     @ManyToOne
     @JoinColumn(name = "pickupId")
     lateinit var pickup: Pickup

@@ -23,25 +23,25 @@ class PickupController (
         return ResponseResult(pickupDetail)
     }
 
-//    @GetMapping("/pickupList/userId")
-//    fun getPickupList(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
-//        val id = 1
-//        val pickupList: List<PickupDto.DetailRes> = pickupService.getPickupList(id.toLong())
-//
-//        return ResponseResult(pickupList)
-//    }
-//
-//    @PostMapping("/updateStatus")
-//    fun updateStatus(
-//        @RequestParam("pickupId") pickupId: Long,
-//        @RequestParam("status") statusStr: String
-//    ): ResponseResult {
-//        val id = 1
-//        val newStatus: PickupStatus = PickupStatus.valueOf(statusStr)
-//        pickupService.updatePickupStatus(pickupId, newStatus)
-//
-//        return ResponseResult(newStatus)
-//    }
+    @GetMapping("/pickupList/userId")
+    fun getPickupList(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
+        val id = 1
+        val pickupList: List<PickupDto.DetailRes> = pickupService.getPickupList(id.toLong())
+
+        return ResponseResult(pickupList)
+    }
+
+    @PostMapping("/updateStatus")
+    fun updateStatus(
+        @RequestParam("pickupId") pickupId: Long,
+        @RequestParam("status") statusStr: String
+    ): ResponseResult {
+        val id = 1
+        val newStatus: PickupStatus = PickupStatus.valueOf(statusStr)
+        pickupService.updatePickupStatus(pickupId, newStatus)
+
+        return ResponseResult(newStatus)
+    }
 
     @GetMapping("/pickedUpList/userId")
     fun getPickedUpListByUserId(/*@AuthenticationPrincipal id: Int*/): ResponseResult {

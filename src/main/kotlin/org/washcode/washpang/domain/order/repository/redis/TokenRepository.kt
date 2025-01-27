@@ -7,6 +7,6 @@ import java.util.*
 
 @Repository
 interface TokenRepository : CrudRepository<Token, Long> {
-    fun findById(id: Int): Optional<Token>
+    fun findById(id: Int): Token?
 }
 

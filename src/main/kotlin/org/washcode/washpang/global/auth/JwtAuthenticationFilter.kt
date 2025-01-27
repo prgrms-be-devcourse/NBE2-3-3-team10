@@ -17,7 +17,7 @@ class JwtAuthenticationFilter(private val jwtProvider: JwtProvider) : OncePerReq
         response: HttpServletResponse,
         filterChain: jakarta.servlet.FilterChain
     ) {
-        val accessToken = jwtProvider!!.resolveAccessToken(request)
+        val accessToken = jwtProvider.resolveAccessToken(request)
         // 1-1. 유효한 토큰인지 확인
         if (accessToken != null && jwtProvider.validateToken(accessToken)) {
             // 2. 유저정보 저장
@@ -32,8 +32,8 @@ class JwtAuthenticationFilter(private val jwtProvider: JwtProvider) : OncePerReq
         val role: UserRole = jwtProvider.getRole(token)
         val userDetails: UserDetails = CustomUserDetails(id, role)
         val authentication: UsernamePasswordAuthenticationToken =
-            UsernamePasswordAuthenticationToken(id, null, userDetails.getAuthorities())
-        SecurityContextHolder.getContext().setAuthentication(authentication)
+            UsernamePasswordAuthenticationToken(id, null, userDetails.authorities)
+        SecurityContextHolder.getContext().authentication = authentication
     }
 
 

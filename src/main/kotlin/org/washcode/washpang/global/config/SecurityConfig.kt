@@ -26,6 +26,8 @@ class SecurityConfig(private val jwtProvider: JwtProvider) {
     @Throws(java.lang.Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .csrf().disable()
+            .cors().and() // CORS 설정 추가
             .authorizeHttpRequests { auth -> auth
                 // .requestMatchers("/api/**").permitAll()
                 // .requestMatchers("/swagger-ui/**").permitAll()

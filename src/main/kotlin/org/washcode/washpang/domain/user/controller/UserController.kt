@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 import org.washcode.washpang.domain.user.service.UserService
-import org.washcode.washpang.global.comm.client.KakaoClient
+import org.washcode.washpang.global.domain.kakao.client.KakaoClient
 import org.washcode.washpang.global.exception.ResponseResult
 
 @RestController

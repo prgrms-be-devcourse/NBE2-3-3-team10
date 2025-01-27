@@ -4,13 +4,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.service.OrderService
+import org.washcode.washpang.global.domain.kakao.dto.KakaoDto
+import org.washcode.washpang.global.domain.kakaopay.client.KakaoPayClient
+import org.washcode.washpang.global.domain.kakaopay.dto.KakaoPayDto
 import org.washcode.washpang.global.exception.ResponseResult
 
 @RestController
 @RequestMapping("/api/orders")
 class OrderController (
     private val orderService: OrderService,
-//    private val kakaoPayClient: KakaoPayClient
+    private val kakaoPayClient: KakaoPayClient
 ) {
     @GetMapping("/info/{laundryId}")
     fun getInfo(/*@AuthenticationPrincipal id: Int,*/@PathVariable("laundryId") laundryId: Int): ResponseResult {
@@ -42,12 +45,12 @@ class OrderController (
         return orderService.cancelOrder(id, pickupId["pickupId"] ?: 0)
     }
 
-//    @PostMapping("/kakaopay/ready")
-//    fun kakaoPayReady( /*@AuthenticationPrincipal id: Int,*/ @RequestBody kakaoPayReqDTO: OrderDto.KakaoPayReq): ResponseEntity<*> {
-//        var id:Int = 1
-//        return kakaoPayClient.payReady(id, kakaoPayReqDTO)
-//    }
-//
+    @PostMapping("/kakaopay/ready")
+    fun kakaoPayReady( /*@AuthenticationPrincipal id: Int,*/ @RequestBody kakaoPayReqDTO: KakaoPayDto.ReqDto): ResponseResult {
+        var id:Int = 1
+        return kakaoPayClient.payReady(id, kakaoPayReqDTO)
+    }
+
 //    @PostMapping("/kakaopay/approve")
 //    fun kakaoPayApprove( /*@AuthenticationPrincipal id: Int,*/ @RequestBody request: Map<String, String> ): ResponseEntity<*> {
 //        var id:Int = 1

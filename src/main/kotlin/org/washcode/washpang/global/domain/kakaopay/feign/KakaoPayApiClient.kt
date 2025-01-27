@@ -14,6 +14,6 @@ interface KakaoPayApiClient {
     @PostMapping(value = ["/ready"], produces = ["application/json"])
     fun ready(@RequestHeader(name = "Authorization") authorization: String, @RequestBody dto: KakaoPayDto.ReadyReq): KakaoPayDto.ReadyRes?
 
-//    @PostMapping("/approve")
-//    fun approve(@RequestBody dto: String): KakaoPayDto.ReadyRes
+    @PostMapping("/approve")
+    fun approve(@RequestHeader(name = "Authorization") authorization: String, @RequestBody dto: KakaoPayDto.ApproveReq ): KakaoPayDto.ApproveRes?
 }

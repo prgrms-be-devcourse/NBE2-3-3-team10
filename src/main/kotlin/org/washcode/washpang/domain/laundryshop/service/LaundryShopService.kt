@@ -1,9 +1,11 @@
 package org.washcode.washpang.domain.laundryshop.service
 
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
+import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
@@ -26,10 +28,12 @@ class LaundryShopService(
 //    private val userRepository: UserRepository,
     private val handledItemsRepository: HandledItemsRepository
 ) {
-    fun getLaundryById(id: Long): LaundryShop {
-        return laundryShopRepository.findById(id)
-            .orElseThrow { RuntimeException("LaundryShop not found") }
-    }
+//    fun getLaundryById(id: Long): ResponseResult {
+//        val result: LaundryShop = laundryShopRepository.findById(id)
+//            .orElseThrow { RuntimeException("LaundryShop not found") }
+//
+//        return ResponseResult(result)
+//    }
 
     fun getLaundryShops(userLat: Double, userLng: Double): ResponseResult {
         val shops = laundryShopRepository.findAll()

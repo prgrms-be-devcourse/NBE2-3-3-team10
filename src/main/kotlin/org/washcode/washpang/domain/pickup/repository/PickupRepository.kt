@@ -106,7 +106,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
     fun findOrderDetails(
         @Param("userId") userId: Int,
         @Param("pickupId") pickupId: Int
-    ): List<Array<Pickup>>
+    ): List<Array<Any>>
 
     @Transactional
     @Modifying
@@ -133,7 +133,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
         @Param("statuses") statuses: List<PickupStatus>,
         @Param("year") year: Int,
         @Param("month") month: Int
-    ): List<Pickup>
+    ): List<Any>
 
     @Query("SELECT MAX(p.id) AS pickup_id FROM Pickup p")
     fun findIdByMax(): Int

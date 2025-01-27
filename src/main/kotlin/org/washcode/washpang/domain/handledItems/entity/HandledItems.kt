@@ -11,7 +11,7 @@ class HandledItems (
     val id: Int,
 
     @ManyToOne
-    @JoinColumn(name = "laundryshop_id")
+    @JoinColumn(name = "laundryshopId")
     var laundryshop: LaundryShop,
 
     var itemName: String,

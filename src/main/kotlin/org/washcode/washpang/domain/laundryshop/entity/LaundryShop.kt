@@ -13,7 +13,7 @@ class LaundryShop (
     val id: Int,
 
     @OneToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id")
+    @JoinColumn(name="userId", referencedColumnName = "id")
     val user: User,
     val shopName: String,
     val businessNumber: String,

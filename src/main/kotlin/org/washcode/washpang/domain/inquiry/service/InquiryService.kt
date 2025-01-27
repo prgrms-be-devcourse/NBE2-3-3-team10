@@ -43,4 +43,25 @@ class InquiryService(
             return ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
         }
     }
+
+    fun findInquiryByUserId(userId: Int): ResponseResult {
+        try {
+            val user = userRepository.findById(userId)
+                ?: throw NoUserDataException()
+
+            val inquiryList: List<Inquiry> = inquiryRepository.findListByUserId(userId)
+
+            return ResponseResult(inquiryList)
+        } catch (e: NoUserDataException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
+        }
+    }
+
+    fun findInquiryByLaundryId(laundryId: Int): ResponseResult {
+        val laundryShop = laundryShopRepository.findById(laundryId)
+
+        val inquiryList: List<Inquiry> = inquiryRepository.findListByLaundryId(laundryId)
+
+        return ResponseResult(inquiryList)
+    }
 }

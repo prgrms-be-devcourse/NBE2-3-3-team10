@@ -3,15 +3,6 @@ package org.washcode.washpang.global.domain.kakaopay.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 
 class KakaoPayDto private constructor() {
-    data class ApproveRes (
-        val aid: String,                 // 요청 고유 번호
-        val tid: String,                 // 결제 고유 번호
-        val paymentMethodType: String,   // 결제 수단, CARD 또는 MONEY 중 하나
-        val createdAt: String,           // 결제 준비 요청 시각
-        val approvedAt: String,          // 결제 승인 시각
-        val payload: String
-    )
-
     data class ReqDto (
         val name: String,
         val totalPrice: Int,
@@ -58,5 +49,31 @@ class KakaoPayDto private constructor() {
         val next_redirect_app_url: String,
         val android_app_scheme: String,
         val ios_app_scheme: String
+    )
+
+    // 카카오 페이 승인
+    data class ApproveReq (
+        val cid: String,
+        val tid: String,
+        val partner_order_id: Int,
+        val partner_user_id: Int,
+        val pg_token: String
+    ) {
+       override fun toString(): String {
+           return "cid=$cid&" +
+                   "tid=$tid&" +
+                   "partner_order_id=$partner_order_id&" +
+                   "partner_user_id=$partner_user_id&" +
+                   "pg_token=$pg_token"
+       }
+    }
+
+    data class ApproveRes (
+        val aid: String,                 // 요청 고유 번호
+        val tid: String,                 // 결제 고유 번호
+        val paymentMethodType: String,   // 결제 수단, CARD 또는 MONEY 중 하나
+        val createdAt: String,           // 결제 준비 요청 시각
+        val approvedAt: String,          // 결제 승인 시각
+        val payload: String
     )
 }

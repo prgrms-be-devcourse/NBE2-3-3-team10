@@ -47,13 +47,13 @@ class OrderController (
 
     @PostMapping("/kakaopay/ready")
     fun kakaoPayReady( /*@AuthenticationPrincipal id: Int,*/ @RequestBody kakaoPayReqDTO: KakaoPayDto.ReqDto): ResponseResult {
-        var id:Int = 1
+        var id = 1
         return kakaoPayClient.payReady(id, kakaoPayReqDTO)
     }
 
-//    @PostMapping("/kakaopay/approve")
-//    fun kakaoPayApprove( /*@AuthenticationPrincipal id: Int,*/ @RequestBody request: Map<String, String> ): ResponseEntity<*> {
-//        var id:Int = 1
-//        return kakaoPayClient.payCompleted(id, request["token"])
-//    }
+    @PostMapping("/kakaopay/approve")
+    fun kakaoPayApprove( /*@AuthenticationPrincipal id: Int,*/ @RequestBody request: Map<String, String> ): ResponseResult {
+        var id = 1
+        return kakaoPayClient.payCompleted(id, request.getValue("pg_token"))
+    }
 }

@@ -8,11 +8,13 @@ import org.washcode.washpang.global.domain.kakaopay.redis.db.KakaoPayPgTokenRepo
 import org.washcode.washpang.global.domain.kakaopay.redis.db.KakaoPaymentInfoRepository
 import org.washcode.washpang.domain.order.service.OrderService
 import org.washcode.washpang.global.domain.kakaopay.dto.KakaoPayDto
-import org.washcode.washpang.global.domain.kakaopay.exception.KakaoPayReadyErrorException
+import org.washcode.washpang.global.domain.kakaopay.exception.KakaoPayApproveFeignException
 import org.washcode.washpang.global.domain.kakaopay.feign.KakaoPayApiClient
+import org.washcode.washpang.global.domain.kakaopay.feign.KakaoPayApproveRedisErrorException
 import org.washcode.washpang.global.domain.kakaopay.redis.entity.KakaoPaymentInfo
 import org.washcode.washpang.global.exception.ErrorCode
 import org.washcode.washpang.global.exception.ResponseResult
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class KakaoPayClient(
@@ -33,6 +35,7 @@ class KakaoPayClient(
     @Value("\${kakaopay.key.secret-dev}")
     private val secretDev = ""
 
+    @Transactional
     fun payReady(userId: Int, dto: KakaoPayDto.ReqDto): ResponseResult {
         val reqDto = KakaoPayDto.ReadyReq(cid, clientSecret, dto.paymentId, userId.toString(), dto.name, dto.quantity, dto.totalPrice)
         var resBody: KakaoPayDto.ReadyRes? = null
@@ -59,6 +62,52 @@ class KakaoPayClient(
         } catch (e: Exception) {
             log.error("=================================================================")
             log.error("카카오페이 Tid Redis에 저장 실패")
+            log.error(e.message)
+
+            return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)
+        }
+    }
+
+    @Transactional
+    fun payCompleted(userId: Int, token: String): ResponseResult {
+        val payInfo: KakaoPaymentInfo?
+        val pgToken: String?
+
+        try {
+            val payInfo = kakaoPaymentInfoRepository.findById("$cid:$userId")
+                .orElseThrow { throw KakaoPayApproveRedisErrorException() }
+            kakaoPaymentInfoRepository.delete(payInfo)
+
+            val reqDto = KakaoPayDto.ApproveReq(cid, payInfo.tid, payInfo.partnerOrderId, userId, token)
+
+            val resBody = kakaoPayApiClient.approve("SECRET_KEY $secretDev", reqDto)
+                ?: throw KakaoPayApproveFeignException()
+
+            val payment = paymentRepository.findById(payInfo.partnerOrderId)
+                ?: throw Exception("결제 정보를 찾을 수 없습니다.")
+            payment.updateKakaoPayData(resBody)
+            orderService.updatePaymentStatusComplete(token)
+
+            val result = mapOf(
+                "aid" to resBody.aid,
+                "approvedAt" to resBody.approvedAt
+            )
+
+            return ResponseResult(result)
+        } catch (e: KakaoPayApproveRedisErrorException) {
+            log.error("=================================================================")
+            log.error("카카오페이 Redis Tid 조회 실패")
+            log.error(e.message)
+
+            return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)
+        } catch (e: KakaoPayApproveFeignException) {
+            log.error("=================================================================")
+            log.error(e.message)
+
+            return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)
+        } catch (e: Exception) {
+            log.error("=================================================================")
+            log.error("카카오페이 결제 승인 실패")
             log.error(e.message)
 
             return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)

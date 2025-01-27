@@ -18,7 +18,7 @@ class ReviewController(private val reviewService: ReviewService) {
 
     //리뷰 목록 조회
     @GetMapping("/lists")
-    fun reviewList(): List<Review> {
+    fun reviewList(): List<ReviewDto.ReviewRes>  {
         return reviewService.getReviewAll()
     }
 

@@ -32,8 +32,16 @@ class ReviewService(
     }
 
     //리뷰 목록 조회(전체)
-    fun getReviewAll():List<Review>{
-        return reviewRepository.findAll()
+    fun getReviewAll():List<ReviewDto.ReviewRes>{
+        val reviews = reviewRepository.findAll()
+        return reviews.map{ review->
+            ReviewDto.ReviewRes(
+                pickupId = review.pickup.id,
+                userName = review.pickup.user.name,
+                shopName = review.laundryShop.shopName,
+                content = review.content  // Review 객체에서 content를 가져옴
+            )
+        }
     }
 
     //세탁소 리뷰 목록 조회

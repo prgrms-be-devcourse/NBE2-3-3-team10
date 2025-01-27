@@ -128,7 +128,7 @@
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
-                const string = res.data.split(' ');
+                const string = res.data.data.baseAddress.split(' ');
                 document.getElementById('myAddress').innerHTML = string[0] + ' ' + string[1] + ' ' + string[2] + " " + "...";
                     //+ '<img src="./main/arrowDown.svg" class="h-[9px] w-[5px]"/>';
 

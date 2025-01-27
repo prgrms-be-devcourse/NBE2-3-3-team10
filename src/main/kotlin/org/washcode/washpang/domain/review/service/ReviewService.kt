@@ -1,11 +1,11 @@
 package org.washcode.washpang.domain.review.service
 
 import org.springframework.stereotype.Service
-import org.washcode.washpang.domain.laundryshop.exception.FailToFindfLaundryShopException
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.domain.pickup.repository.PickupRepository
 import org.washcode.washpang.domain.review.dto.ReviewDto
 import org.washcode.washpang.domain.review.entity.Review
+import org.washcode.washpang.domain.review.exception.FailToFindReviewException
 import org.washcode.washpang.domain.review.repository.ReviewRepository
 
 @Service
@@ -41,5 +41,23 @@ class ReviewService(
         return reviewRepository.findByLaundryShopId(laundryShopId)
     }
 
+    /// 리뷰 삭제
+    fun deleteReview(reviewId: Int) {
+        val review = reviewRepository.findById(reviewId.toLong())
+            .orElseThrow { IllegalArgumentException("Review not found with id") }
+
+        // 리뷰 작성자가 삭제 요청자와 일치하는지 확인(임시)
+        val userId = getCurrentUserId() // 현재 로그인한 사용자 ID 가져오는 메소드
+        if (review.pickup.user.id.toLong() != userId) {
+            throw IllegalArgumentException("This review does not belong to the current user.")
+        }
+
+        reviewRepository.delete(review)
+    }
+
+    // 현재 로그인한 사용자 ID 가져오는 메소드 (임시)
+    private fun getCurrentUserId(): Long {
+        return 1L // 예시로 사용자 ID가 1인 경우
+    }
 
 }

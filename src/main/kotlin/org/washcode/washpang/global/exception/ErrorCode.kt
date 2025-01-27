@@ -28,5 +28,8 @@ enum class ErrorCode (
     FAIL_TO_FIND_LAUNDRYSHOP(HttpStatus.NOT_FOUND, "존재하지 않는 세탁소입니다"),
 
     // OrderItems
-    FAIL_TO_FIND_ORDERITEMS(HttpStatus.NOT_FOUND, "존재하지 않는 주문 아이템입니다")
+    FAIL_TO_FIND_ORDERITEMS(HttpStatus.NOT_FOUND, "존재하지 않는 주문 아이템입니다"),
+
+    // Review
+    FAIL_TO_FIND_REVIEW(HttpStatus.NOT_FOUND,"존재하지 않는 리뷰입니다.")
 }

@@ -3,6 +3,7 @@ package org.washcode.washpang.domain.pickup.service
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import org.washcode.washpang.domain.order.entity.db.Payment
+import org.washcode.washpang.domain.order.repository.db.PaymentRepository
 import org.washcode.washpang.domain.pickup.dto.PickupDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem
@@ -52,7 +53,7 @@ class PickupService(
             pickupRepository.findAllByUserIdWithFetchJoinAndStatus(userId, PickupStatus.REQUESTED)
 
         return pickups.map { pickup ->
-            val payment: Payment = paymentRepository.findByPickupId(pickup.id.toLong())
+            val payment: Payment? = paymentRepository.findByPickupId(pickup.id.toLong())
             val pickupItems: List<PickupItem> = pickupItemRepository.findByPickupId(pickup.id.toLong())
 
             val orderItems: List<PickupDto.OrderItem> = pickupItems.map { item ->
@@ -71,8 +72,8 @@ class PickupService(
                 phone = pickup.user.phone,
                 content = pickup.content,
                 orderItems = orderItems,
-                paymentAmount = payment.amount,
-                paymentMethod = payment.method
+                paymentAmount = payment?.amount?: 0,
+                paymentMethod = payment?.method?: "NONE"
             )
         }
     }

@@ -23,8 +23,12 @@ class LaundryShop (
     var nonOperatingDays: String,
 
     var latitude: Double,
-    var longitude: Double,
-
-    @CreationTimestamp
-    var createdAt: Timestamp
+    var longitude: Double
 )
+{
+    @CreationTimestamp
+    lateinit var createdAt: Timestamp
+
+    @UpdateTimestamp
+    lateinit var updateAt: Timestamp
+}

@@ -78,7 +78,6 @@ class LaundryShopController(
     /*, @AuthenticationPrincipal int id*/
     ): ResponseEntity<Map<String, Int>>  {
         val id: Int = 1;
-        //System.out.println(to.getUserName());
 
         val laundryId = laundryShopService.registerLaundryShop(to, id)
 

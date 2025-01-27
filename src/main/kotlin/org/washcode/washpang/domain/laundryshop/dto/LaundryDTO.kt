@@ -2,6 +2,7 @@ package org.washcode.washpang.domain.laundryshop.dto
 
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.global.comm.enums.LaundryCategory
+import java.sql.Timestamp
 
 class LaundryDTO private constructor() {
     data class LaundryDetailResDTO(
@@ -11,6 +12,7 @@ class LaundryDTO private constructor() {
         val nonOperatingDays: String,
         val businessNumber: String,
         val userName: String,
+        val createdAt: Timestamp,
 
         //var handledItems: List<HandledItems>
         val handledItems: List<HandledItems>
@@ -35,6 +37,8 @@ class LaundryDTO private constructor() {
         val latitude: Double,
         val longitude: Double,
 
-        val userId: Int
+        val userId: Int,
+
+        val createdAt: Timestamp
     )
 }

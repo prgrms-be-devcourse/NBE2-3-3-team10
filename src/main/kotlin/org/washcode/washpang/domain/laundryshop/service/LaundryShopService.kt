@@ -81,6 +81,7 @@ class LaundryShopService(
             nonOperatingDays = laundryShop.nonOperatingDays,
             businessNumber = laundryShop.businessNumber,
             userName = laundryShop.userName,
+            createdAt = laundryShop.createdAt,
 
             handledItems = handledItems
         )
@@ -111,7 +112,7 @@ class LaundryShopService(
             nonOperatingDays = laundryShop.nonOperatingDays,
             businessNumber = laundryShop.businessNumber,
             userName = laundryShop.userName,
-
+            createdAt = laundryShop.createdAt,
             handledItems = handledItems
         )
 

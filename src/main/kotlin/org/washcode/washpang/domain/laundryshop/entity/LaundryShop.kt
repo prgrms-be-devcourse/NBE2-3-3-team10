@@ -14,21 +14,21 @@ class LaundryShop (
 
     @OneToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
-    var user: User,
-    var shopName: String,
-    var businessNumber: String,
-    var userName: String,
-    var phone: String,
-    var address: String,
-    var nonOperatingDays: String,
+    val user: User,
+    val shopName: String,
+    val businessNumber: String,
+    val userName: String,
+    val phone: String,
+    val address: String,
+    val nonOperatingDays: String,
 
-    var latitude: Double,
-    var longitude: Double
+    val latitude: Double,
+    val longitude: Double,
+//
+//    @CreationTimestamp
+//    var createdAt: Timestamp
 )
 {
     @CreationTimestamp
     lateinit var createdAt: Timestamp
-
-    @UpdateTimestamp
-    lateinit var updateAt: Timestamp
 }

@@ -9,10 +9,10 @@ import org.washcode.washpang.domain.inquiry.entity.Inquiry
 
 @Repository
 interface InquiryRepository: JpaRepository<Inquiry, Long> {
-    fun findByUserId(userId: Int): Inquiry?
+    fun findByUserId(userId: Int): Inquiry
 
     fun findListByUserId(userId: Int): List<Inquiry>
 
-    @Query("select i from Inquiry i where i.laundryShop.id =: laundryId")
+    @Query("select i from Inquiry i where laundryId =: laundryId")
     fun findListByLaundryId(laundryId: Int): List<Inquiry>
 }

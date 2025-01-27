@@ -17,24 +17,40 @@ class InquiryService(
     private val inquiryRepository: InquiryRepository
 ) {
     //문의사항 저장하기
-    fun upsertInquiry(dto: InquiryDto, id: Int): ResponseResult {
+    fun insertInquiry(dto: InquiryDto, id: Int): ResponseResult {
         try {
             val user = userRepository.findById(id)
                 ?: throw NoUserDataException()
             val laundryShop = laundryShopRepository.findById(dto.laundryId)
 
-            val inquiry = inquiryRepository.findByUserId(user.id)
-                ?.apply {
-                    inquiryContent = dto.inquiryContent
-                    replyContent = dto.replyContent
-                    title = dto.title
-                } ?: Inquiry(
+            val inquiry = Inquiry(
                     user = user,
                     laundryShop = laundryShop,
                     inquiryContent = dto.inquiryContent,
                     replyContent = dto.replyContent,
                     title = dto.title
                 )
+
+            val saveInquiry = inquiryRepository.save(inquiry)
+
+            return ResponseResult(saveInquiry)
+        } catch (e: NoUserDataException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
+        }
+    }
+
+    //문의 사항 수정하기
+    fun updateInquiry(dto: InquiryDto, id: Int): ResponseResult {
+        try {
+            val user = userRepository.findById(id)
+                ?: throw NoUserDataException()
+            val laundryShop = laundryShopRepository.findById(dto.laundryId)
+
+            val inquiry = inquiryRepository.findByUserId(user.id).apply {
+                    inquiryContent = dto.inquiryContent
+                    replyContent = dto.replyContent
+                    title = dto.title
+                }
 
             val saveInquiry = inquiryRepository.save(inquiry)
 

@@ -13,15 +13,26 @@ class InquiryController(
     private val inquiryService: InquiryService
 ) {
 
-    @PostMapping("/")
-    @Operation(summary = "문의사항 저장 및 수정", description = "문의사항 저장 및 수정 API 입니다.")
-    fun upsertInquiry(
+    @PostMapping("/insert")
+    @Operation(summary = "문의사항 저장", description = "문의사항 저장 API 입니다.")
+    fun insertInquiry(
         @RequestBody dto: InquiryDto
         /*, @AuthenticationPrincipal int id*/
     ): ResponseResult {
         val id: Int = 1
 
-        return ResponseResult(inquiryService.upsertInquiry(dto, id))
+        return ResponseResult(inquiryService.insertInquiry(dto, id))
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "문의사항 수정", description = "문의사항 수정 API 입니다.")
+    fun updateInquiry(
+        @RequestBody dto: InquiryDto
+        /*, @AuthenticationPrincipal int id*/
+    ): ResponseResult {
+        val id: Int = 1
+
+        return ResponseResult(inquiryService.updateInquiry(dto, id))
     }
 
     @GetMapping("/lists")

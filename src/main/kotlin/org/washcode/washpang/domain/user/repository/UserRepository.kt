@@ -9,7 +9,7 @@ import org.washcode.washpang.domain.user.entity.User
 
 @Repository
 interface UserRepository: JpaRepository<User, Long> {
-    fun findById(id: Int): User?;
+    fun findById(id: Int): User?
 
     @Query("SELECT EXISTS (SELECT true FROM User u where u.email = :email)")
     fun findByEmailExists(@Param("email") email: String): Boolean

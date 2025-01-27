@@ -23,43 +23,48 @@ class PickupController (
         return ResponseResult(pickupDetail)
     }
 
-    @GetMapping("/pickupList/userId")
-    fun getPickupList(@AuthenticationPrincipal id: Int): ResponseResult {
-        val pickupList: List<PickupDto.DetailRes> = pickupService.getPickupList(id.toLong())
-
-        return ResponseResult(pickupList)
-    }
-
-    @PostMapping("/updateStatus")
-    fun updateStatus(
-        @RequestParam("pickupId") pickupId: Long,
-        @RequestParam("status") statusStr: String
-    ): ResponseResult {
-        val newStatus: PickupStatus = PickupStatus.valueOf(statusStr)
-        pickupService.updatePickupStatus(pickupId, newStatus)
-
-        return ResponseResult(newStatus)
-    }
+//    @GetMapping("/pickupList/userId")
+//    fun getPickupList(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
+//        val id = 1
+//        val pickupList: List<PickupDto.DetailRes> = pickupService.getPickupList(id.toLong())
+//
+//        return ResponseResult(pickupList)
+//    }
+//
+//    @PostMapping("/updateStatus")
+//    fun updateStatus(
+//        @RequestParam("pickupId") pickupId: Long,
+//        @RequestParam("status") statusStr: String
+//    ): ResponseResult {
+//        val id = 1
+//        val newStatus: PickupStatus = PickupStatus.valueOf(statusStr)
+//        pickupService.updatePickupStatus(pickupId, newStatus)
+//
+//        return ResponseResult(newStatus)
+//    }
 
     @GetMapping("/pickedUpList/userId")
-    fun getPickedUpListByUserId(@AuthenticationPrincipal id: Int): ResponseResult {
+    fun getPickedUpListByUserId(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
+        val id = 1
         val pickedUpList: List<PickupDto.Res> = pickupService.getPickedupListAndUpdateStatus(id.toLong())
 
         return ResponseResult(pickedUpList)
     }
 
     @GetMapping("/pickupDelivery/userId")
-    fun getDeliveryPickupListByUserId(@AuthenticationPrincipal id: Int): ResponseResult {
+    fun getDeliveryPickupListByUserId(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
+        val id = 1
         val pickupList: List<PickupDto.DeliveryRes> = pickupService.getPickupDeliveryList(id.toLong())
 
         return ResponseResult(pickupList)
     }
 
     @GetMapping("/sales-summary/page")
-    fun getSalesSummeryPage(@AuthenticationPrincipal id: Int): ResponseResult {
+    fun getSalesSummeryPage(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
         val calendar = Calendar.getInstance()
         val currentYear = calendar[Calendar.YEAR]
         val currentMonth = calendar[Calendar.MONTH] + 1
+        val id = 1
 
         val pickupList: List<PickupDto.SalesSummery> =
             pickupService.getPickupSalesSummery(id.toLong(), currentYear, currentMonth)
@@ -69,10 +74,11 @@ class PickupController (
 
     @GetMapping("/sales-summary")
     fun getSalesSummary(
-        @AuthenticationPrincipal id: Int,
+        /*@AuthenticationPrincipal id: Int,*/
         @RequestParam("year") year: Int,
         @RequestParam("month") month: Int
     ): ResponseResult {
+        val id = 1
         System.out.println(pickupService.getPickupSalesSummery(id.toLong(), year, month))
         val pickupList: List<PickupDto.SalesSummery> = pickupService.getPickupSalesSummery(id.toLong(), year, month)
 

@@ -6,19 +6,24 @@ import org.springframework.transaction.annotation.Transactional
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
+import org.washcode.washpang.domain.laundryshop.exception.FailToFindfLaundryShopException
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.repository.db.PaymentRepository
 import org.washcode.washpang.domain.order.entity.db.Payment
+import org.washcode.washpang.domain.order.exception.FailToFindOrderItemsException
 import org.washcode.washpang.domain.order.repository.redis.KakaoPayPgTokenRepository
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem
 import org.washcode.washpang.domain.pickup.repository.PickupItemRepository
 import org.washcode.washpang.domain.pickup.repository.PickupRepository
 import org.washcode.washpang.domain.user.entity.User
+import org.washcode.washpang.domain.user.exception.NoUserDataException
 import org.washcode.washpang.domain.user.repository.UserRepository
 
 import org.washcode.washpang.global.comm.enums.PickupStatus
+import org.washcode.washpang.global.exception.ErrorCode
+import org.washcode.washpang.global.exception.ResponseResult
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -43,40 +48,58 @@ class OrderService(
         }
     }
 
-    fun getInfo(id: Int, laundryId: Int): ResponseEntity<*> {
-        val orderInfoResDTO = OrderDto.InfoRes(
-            name = userRepository.findNameById(id).toString(),
-            baseAddress = userRepository.findAddressById(id).toString(),
-            detailedAddress = userRepository.findAddressById(id).toString(),
-            shopName = laundryShopRepository.findNameById(laundryId).toString(),
-            category = handledItemsRepository.findHandledItemsByLaundryId(laundryId)
-        )
+    fun getInfo(id: Int, laundryId: Int): ResponseResult {
+        try {
+            val user = userRepository.findById(id)
+                ?: throw NoUserDataException()
+            val laundryShopName = laundryShopRepository.findNameById(laundryId)
+                ?: throw FailToFindfLaundryShopException()
+            val category = handledItemsRepository.findHandledItemsByLaundryId(laundryId)
+                ?: throw FailToFindOrderItemsException()
 
-        return ResponseEntity.ok().body(orderInfoResDTO)
-    }
+            val orderInfoResDTO = OrderDto.InfoRes(
+                name = user.name,
+                baseAddress = user.baseAddress,
+                detailedAddress = user.detailedAddress,
+                shopName = laundryShopName,
+                category = category
+            )
 
-    fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseEntity<*> {
-        return try {
-            val user = fetchUserById(id)
-            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
-            val pickup = user?.let { createAndSavePickup(it, laundryshop, orderReqDTO.content) }
-            val handledItem = fetchHandledItemById(orderReqDTO.itemId)
-            if (pickup != null) {
-                createAndSavePickupItem(pickup, handledItem, orderReqDTO.quantity)
-            }
-            if (pickup != null) {
-                createAndSavePayment(pickup, handledItem, orderReqDTO)
-            }
-
-            ResponseEntity.ok().body(pickupRepository.findIdByMax())
-        } catch (e: Exception) {
-            println("[Error] ${e.message}")
-            ResponseEntity.status(500).body("DB 에러")
+            return ResponseResult(orderInfoResDTO) // 정상 200 OK!
+        } catch (e: NoUserDataException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_USER) // 1. ErrorCode Enum을 사용한 케이스
+            // return ResponseResult(400, "존재하지 않는 회원입니다") 2. 직접적으로 Status Code와 Message를 지정한 케이스
+        } catch (e: FailToFindfLaundryShopException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_LAUNDRYSHOP)
+        } catch (e: FailToFindOrderItemsException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_ORDERITEMS)
         }
     }
 
-    private fun fetchUserById(id: Int) = userRepository.findById(id)
-        .orElseThrow { IllegalArgumentException("User not found with id: $id") }
+
+
+//    fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseEntity<*> {
+//        return try {
+//            val user = fetchUserById(id)
+//            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
+//            val pickup = user?.let { createAndSavePickup(it, laundryshop, orderReqDTO.content) }
+//            val handledItem = fetchHandledItemById(orderReqDTO.itemId)
+//            if (pickup != null) {
+//                createAndSavePickupItem(pickup, handledItem, orderReqDTO.quantity)
+//            }
+//            if (pickup != null) {
+//                createAndSavePayment(pickup, handledItem, orderReqDTO)
+//            }
+//
+//            ResponseEntity.ok().body(pickupRepository.findIdByMax())
+//        } catch (e: Exception) {
+//            println("[Error] ${e.message}")
+//            ResponseEntity.status(500).body("DB 에러")
+//        }
+//    }
+
+//    private fun fetchUserById(id: Int) = userRepository.findById(id)
+//        .orElseThrow { IllegalArgumentException("User not found with id: $id") }
 
     private fun fetchLaundryShopById(id: Int) = laundryShopRepository.findById(id)
         ?: throw IllegalArgumentException("LaundryShop not found with id: $id")

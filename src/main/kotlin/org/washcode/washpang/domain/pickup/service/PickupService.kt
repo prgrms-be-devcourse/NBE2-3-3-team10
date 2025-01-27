@@ -16,7 +16,7 @@ import kotlin.math.log
 @Service
 class PickupService(
     private val pickupRepository: PickupRepository,
-    private val paymentRepository: PaymentRepository,
+//    private val paymentRepository: PaymentRepository,
     private val pickupItemRepository: PickupItemRepository,
 ) {
     @Transactional
@@ -46,36 +46,36 @@ class PickupService(
         )
     }
 
-    @Transactional
-    fun getPickupList(userId: Long): List<PickupDto.DetailRes> {
-        val pickups: List<Pickup> =
-            pickupRepository.findAllByUserIdWithFetchJoinAndStatus(userId, PickupStatus.REQUESTED)
-
-        return pickups.map { pickup ->
-            val payment: Payment = paymentRepository.findByPickupId(pickup.id.toLong())
-            val pickupItems: List<PickupItem> = pickupItemRepository.findByPickupId(pickup.id.toLong())
-
-            val orderItems: List<PickupDto.OrderItem> = pickupItems.map { item ->
-                PickupDto.OrderItem(
-                    itemName = item.handledItems.itemName,
-                    quantity = item.quantity,
-                    totalPrice = item.totalPrice
-                )
-            }
-
-            PickupDto.DetailRes(
-                pickupId = pickup.id,
-                shopName = pickup.laundryshop.shopName,
-                createdAt = pickup.createdAt,
-                address = pickup.user.baseAddress,
-                phone = pickup.user.phone,
-                content = pickup.content,
-                orderItems = orderItems,
-                paymentAmount = payment.amount,
-                paymentMethod = payment.method
-            )
-        }
-    }
+//    @Transactional
+//    fun getPickupList(userId: Long): List<PickupDto.DetailRes> {
+//        val pickups: List<Pickup> =
+//            pickupRepository.findAllByUserIdWithFetchJoinAndStatus(userId, PickupStatus.REQUESTED)
+//
+//        return pickups.map { pickup ->
+//            val payment: Payment = paymentRepository.findByPickupId(pickup.id.toLong())
+//            val pickupItems: List<PickupItem> = pickupItemRepository.findByPickupId(pickup.id.toLong())
+//
+//            val orderItems: List<PickupDto.OrderItem> = pickupItems.map { item ->
+//                PickupDto.OrderItem(
+//                    itemName = item.handledItems.itemName,
+//                    quantity = item.quantity,
+//                    totalPrice = item.totalPrice
+//                )
+//            }
+//
+//            PickupDto.DetailRes(
+//                pickupId = pickup.id,
+//                shopName = pickup.laundryshop.shopName,
+//                createdAt = pickup.createdAt,
+//                address = pickup.user.baseAddress,
+//                phone = pickup.user.phone,
+//                content = pickup.content,
+//                orderItems = orderItems,
+//                paymentAmount = payment.amount,
+//                paymentMethod = payment.method
+//            )
+//        }
+//    }
 
     @Transactional
     fun updatePickupStatus(pickupId: Long, newStatus: PickupStatus) {

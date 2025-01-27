@@ -10,7 +10,6 @@ import java.sql.Timestamp
 
 @Entity
 class Payment (
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int, // 결제 id
@@ -23,15 +22,14 @@ class Payment (
     var paymentDatetime: Timestamp,
     var amount: Int,
     var method: String,
-
-    // 카카오페이 등 결제 데이터
-    var aid: String,
-    var tid: String,
-    var paymentMethodType: String,
-    var createdAt: String,
-    var approvedAt: String,
-    var payload: String
 ){
+    // 카카오페이 등 결제 데이터
+    private var aid: String? = null
+    private var tid: String? = null
+    private var paymentMethodType: String? = null
+    private var createdAt: String? = null
+    private var approvedAt: String? = null
+    private var payload: String? = null
 
     // 카카오페이 결제 데이터 업데이트 메서드
     fun updateKakaoPayData(kakaoPayApproveRes: KakaoPayDto.KakaoPayApproveRes) {

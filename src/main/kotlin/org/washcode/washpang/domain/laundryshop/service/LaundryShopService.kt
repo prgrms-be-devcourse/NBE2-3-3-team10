@@ -7,8 +7,11 @@ import org.washcode.washpang.domain.handledItems.repository.HandledItemsReposito
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
 import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
+import org.washcode.washpang.domain.laundryshop.exception.FailToFindfLaundryShopException
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.global.comm.enums.LaundryCategory
+import org.washcode.washpang.global.exception.ErrorCode
+import org.washcode.washpang.global.exception.ResponseResult
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.stream.Collectors
@@ -28,23 +31,23 @@ class LaundryShopService(
             .orElseThrow { RuntimeException("LaundryShop not found") }
     }
 
-    fun getLaundryShops(userLat: Double, userLng: Double): List<LaundryShop> {
+    fun getLaundryShops(userLat: Double, userLng: Double): ResponseResult {
         val shops = laundryShopRepository.findAll()
         //return sortByDistance(shops, userLat, userLng)
 
-        return shops.sortedBy { shop ->
+        return ResponseResult(shops.sortedBy { shop ->
             calculateDistance(userLat, userLng, shop.latitude, shop.longitude)
-        }
+        })
     }
 
     // 검색된 세탁소 리스트 거리순 정렬
-    fun getLaundryShops(shopName: String, userLat: Double, userLng: Double): List<LaundryShop> {
+    fun getLaundryShops(shopName: String, userLat: Double, userLng: Double): ResponseResult {
         val shops = laundryShopRepository.findByShopNameContaining(shopName)
 //        return sortByDistance(shops, userLat, userLng)
 
-        return shops.sortedBy { shop ->
+        return ResponseResult(shops.sortedBy { shop ->
             calculateDistance(userLat, userLng, shop.latitude, shop.longitude)
-        }
+        })
     }
 
     // Haversine 공식을 사용하여 거리 계산
@@ -60,7 +63,7 @@ class LaundryShopService(
 
     //세탁소 상세정보 조회
     //세탁소 id로 세탁소 정보 찾기
-    fun getLaundryShopById(id: Int): LaundryDetailResDTO {
+    fun getLaundryShopById(id: Int): ResponseResult {
         val laundryShop = laundryShopRepository.findById(id)
 
         val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
@@ -86,50 +89,55 @@ class LaundryShopService(
             handledItems = handledItems
         )
 
-        return dto
+        return ResponseResult(dto)
     }
 
     //user_id로 세탁소 정보 찾기
-    fun getLaundryShopByUserId(id: Int): LaundryDetailResDTO? {
-        val laundryShop = laundryShopRepository.findByUserId(id)?: return null
-        println("LaundryDetailResDTO: " + laundryShop.id)
+    fun getLaundryShopByUserId(id: Int): ResponseResult {
+        try {
+            val laundryShop = laundryShopRepository.findByUserId(id)
+                ?: throw FailToFindfLaundryShopException()
+            println("LaundryDetailResDTO: " + laundryShop.id)
 
-        val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
-            .map {entity ->
-                LaundryDetailResDTO.HandledItems(
-                    id = entity.id,
-                    itemName = entity.itemName,
-                    laundryshop = entity.laundryshop,
-                    category = entity.category,
-                    price = entity.price
-                )
-            }
+            val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
+                .map { entity ->
+                    LaundryDetailResDTO.HandledItems(
+                        id = entity.id,
+                        itemName = entity.itemName,
+                        laundryshop = entity.laundryshop,
+                        category = entity.category,
+                        price = entity.price
+                    )
+                }
 
-        val dto = LaundryDetailResDTO(
-            shopName = laundryShop.shopName,
-            phone = laundryShop.phone,
-            address = laundryShop.address,
-            nonOperatingDays = laundryShop.nonOperatingDays,
-            businessNumber = laundryShop.businessNumber,
-            userName = laundryShop.userName,
-            createdAt = laundryShop.createdAt,
-            handledItems = handledItems
-        )
+            val dto = LaundryDetailResDTO(
+                shopName = laundryShop.shopName,
+                phone = laundryShop.phone,
+                address = laundryShop.address,
+                nonOperatingDays = laundryShop.nonOperatingDays,
+                businessNumber = laundryShop.businessNumber,
+                userName = laundryShop.userName,
+                createdAt = laundryShop.createdAt,
+                handledItems = handledItems
+            )
 
-        return dto
+            return ResponseResult(dto)
+        } catch (e: FailToFindfLaundryShopException) {
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_LAUNDRYSHOP)
+        }
     }
 
     //카테고리로 세탁소 정보 찾기
-    fun findLaundryShopsByCategory(category: LaundryCategory): List<LaundryShop> {
+    fun findLaundryShopsByCategory(category: LaundryCategory): ResponseResult {
         // HandledItems에서 카테고리에 맞는 세탁소 ID 리스트 가져오기
         val shopIds: List<Int> = handledItemsRepository.findLaundryShopIdsByCategory(category)
 
         // 세탁소 정보 가져오기
-        return laundryShopRepository.findByIdIn(shopIds)
+        return ResponseResult(laundryShopRepository.findByIdIn(shopIds))
     }
 
     //세탁소 저장하기
-    fun registerLaundryShop(dto: ShopAddReqDTO, id: Int): Int {
+    fun registerLaundryShop(dto: ShopAddReqDTO, id: Int): ResponseResult {
 //        val user: User = userRepository.findById(id)
 //        val shop = laundryShopRepository.findByUserId(id)
 //
@@ -146,13 +154,13 @@ class LaundryShopService(
 //
 //        val savedShop = laundryShopRepository.save(shop)
 //
-//        return savedShop.id
-        return 1
+//        return ResponseResult(savedShop.id)
+        return ResponseResult()
     }
 
 
     //가격표 정보 등록 및 수정
-    fun upsertHandledItems(items: List<HandledItemsResDTO>): List<HandledItems> {
+    fun upsertHandledItems(items: List<HandledItemsResDTO>): ResponseResult {
         val laundryId = items.first().laundryId
         val laundryShop = laundryShopRepository.findById(laundryId)
 
@@ -183,6 +191,6 @@ class LaundryShopService(
             )
         }
         // 저장 및 반환
-        return handledItemsRepository.saveAll(updatedItems)
+        return ResponseResult(handledItemsRepository.saveAll(updatedItems))
     }
 }

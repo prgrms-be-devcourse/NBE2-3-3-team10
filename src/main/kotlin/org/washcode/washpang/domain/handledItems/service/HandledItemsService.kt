@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
+import org.washcode.washpang.global.exception.ResponseResult
 
 @Service
 class HandledItemsService(
@@ -20,9 +21,9 @@ class HandledItemsService(
 //            }
 //    }
 
-    fun getAllHandledItems(laundryShopId: Int): List<HandledItems> {
+    fun getAllHandledItems(laundryShopId: Int): ResponseResult {
         try {
-            return handledItemsRepository.findByLaundryshopId(laundryShopId)
+            return ResponseResult(handledItemsRepository.findByLaundryshopId(laundryShopId))
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("HandledItems 조회 중 오류 발생", e)

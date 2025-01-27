@@ -2,9 +2,7 @@ package org.washcode.washpang.domain.order.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.service.OrderService
-import org.washcode.washpang.global.domain.kakao.dto.KakaoDto
 import org.washcode.washpang.global.domain.kakaopay.client.KakaoPayClient
 import org.washcode.washpang.global.domain.kakaopay.dto.KakaoPayDto
 import org.washcode.washpang.global.exception.ResponseResult

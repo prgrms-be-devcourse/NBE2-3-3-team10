@@ -41,4 +41,3 @@ enum class ErrorCode (
     KAKAOPAY_APPROVE_REDIS_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "TID가 REDIS 안에 없습니다."),
     KAKAOPAY_APPROVE_FEIGN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "카카오페이 승인 API 통신 실패"),
     KAKAOPAY_APPROVE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "카카오페이 결제 승인 에러");
-}

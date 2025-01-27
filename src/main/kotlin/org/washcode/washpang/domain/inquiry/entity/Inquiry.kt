@@ -20,9 +20,9 @@ class Inquiry(
     @JoinColumn(name = "laundryId")
     val laundryShop: LaundryShop,
 
-    val title: String,
-    val inquiryContent: String,
-    val replyContent: String? = null,
+    var title: String,
+    var inquiryContent: String,
+    var replyContent: String? = null,
 )
 {
     @CreationTimestamp

@@ -1,6 +1,8 @@
 package org.washcode.washpang.domain.inquiry.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.user.entity.User
 import java.sql.Timestamp
 
@@ -11,10 +13,18 @@ class Inquiry(
     val id: Int = 0,  // 기본값 설정
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     val user: User,
 
-    val inquiry_content: String? = null,
-    val reply_content: String? = null,
-    val created_at: Timestamp? = null
+    @ManyToOne
+    @JoinColumn(name = "laundryId")
+    val laundryShop: LaundryShop,
+
+    val title: String,
+    val inquiryContent: String,
+    val replyContent: String? = null,
 )
+{
+    @CreationTimestamp
+    lateinit var createdAt: Timestamp
+}

@@ -24,8 +24,8 @@ interface UserRepository: JpaRepository<User, Long> {
     @Query("SELECT U.role, U.name FROM User U WHERE U.id = :id")
     fun findRoleAndNameById(id: Int): UserDto.MyPageRes?
 
-    @Query("SELECT U.baseAddress, U.detailedAddress FROM User U WHERE U.id = :id")
-    fun findAddressById(id: Int): UserDto.AddressRes?
+    @Query("SELECT U.baseAddress FROM User U WHERE U.id = :id")
+    fun findAddressById(id: Int): String
 
     fun findByEmail(email: String): User?
 

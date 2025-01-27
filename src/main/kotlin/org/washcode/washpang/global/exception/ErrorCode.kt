@@ -24,7 +24,7 @@ enum class ErrorCode (
     FAIL_TO_FIND_USER(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다"),
     NOT_EQUALS_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일입니다"),
-
+    NOT_DUPLICATE_EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다"),
 
     // Auth
     TOKEN_NOT_EXPIRED(HttpStatus.OK, "accessToken 정상"),

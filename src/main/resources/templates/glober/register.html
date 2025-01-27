@@ -148,7 +148,7 @@
                     isPhoneCertified = true;
                 })
                 .catch(error => {
-                    alert(error.response.data);
+                    alert(error.response.data.message);
                 });
         }
 
@@ -183,28 +183,29 @@
         }
 
         function reqRegister() {
-            const kakao_id = /*[[${kakaoUserData?.id}]]*/ '';
-            const kakao_password = /*[[${kakaoUserData?.password}]]*/ '';
+            const kakaoId = /*[[${kakaoUserData?.id}]]*/ '';
+            const kakaoPassword = /*[[${kakaoUserData?.password}]]*/ '';
 
             const formData = {
                 email: document.getElementById('email').value,
-                password: kakao_password ? kakao_password : document.getElementById('password').value,
+                password: kakaoPassword ? kakaoPassword : document.getElementById('password').value,
                 name: document.getElementById('name').value,
                 role: document.getElementById('userRole').value,
-                address: document.getElementById('address').value + " " + document.getElementById('detailAddress').value,
+                baseAddress: document.getElementById('address').value,
+                detailedAddress: document.getElementById('detailAddress').value,
                 phone: document.getElementById('phone').value,
-                kakao_id: kakao_id ? kakao_id : null
+                kakaoId: kakaoId ? kakaoId : null
             };
 
             console.log(formData);
 
-            if (!formData.email || !formData.password || !formData.name || !formData.role || !formData.address || !formData.phone) {
+            if (!formData.email || !formData.password || !formData.name || !formData.role || !formData.baseAddress || !formData.phone) {
                 alert('모든 항목을 입력해주세요.');
                 return;
             }
 
             if (formData.password !== document.getElementById('password2').value) {
-                if (!kakao_id) {
+                if (!kakaoId) {
                     alert('비밀번호가 일치하지 않습니다.');
                     return;
                 }
@@ -216,7 +217,7 @@
                     window.location.href = '/';
                 })
                 .catch(error => {
-                    alert(error.response.data);
+                    alert(error.response.data.message);
                 });
         }
 
@@ -233,9 +234,10 @@
                     email: email
                 }
             }).then(res => {
-                alert(res.data); // 서버 응답 본문 출력
+                console.log(res.data.message);
+                alert(res.data.message); // 서버 응답 본문 출력
             }).catch(error => {
-                alert(error.response?.data || '에러가 발생했습니다.'); // 오류 메시지 출력
+                alert(error.response.data.message); // 오류 메시지 출력
             });
         }
     </script>

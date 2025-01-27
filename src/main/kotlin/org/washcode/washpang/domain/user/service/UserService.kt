@@ -44,12 +44,11 @@ class UserService(
                 refreshToken = cookie.value
             }
         }
-
         // AccessToken 유효성 확인
         if (accessToken != null && jwtProvider.validateToken(accessToken)) {
             return ResponseResult(ErrorCode.TOKEN_NOT_EXPIRED)
             // RefreshToken 유효성 확인 후 AccessToken 재발급
-        } else if (refreshToken != null && !jwtProvider.validateToken(accessToken!!) && jwtProvider.validateToken(refreshToken)) {
+        } else if (refreshToken != null && jwtProvider.validateToken(refreshToken)) {
             // RefreshToken 유효성 확인 후, UserId 가져오기
             val userId = jwtProvider.getId(refreshToken)
 
@@ -181,7 +180,7 @@ class UserService(
     @Transactional
     fun updateUser(id: Int, userUpdateReqDTO: UserDto.UpdateReq): ResponseResult {
         try {
-            val user: User = userRepository.findById(id) ?: throw RuntimeException()
+            val user: User = userRepository.findById(id) ?: throw NoUserDataException()
             user.baseAddress = userUpdateReqDTO.baseAddress
             user.detailedAddress = userUpdateReqDTO.detailedAddress
             user.phone = userUpdateReqDTO.phone
@@ -191,9 +190,9 @@ class UserService(
             }
 
             return ResponseResult(ErrorCode.SUCCESS)
-        } catch (e: java.lang.RuntimeException) {
+        } catch (e: NoUserDataException) {
             println("[Error] " + e.message)
-            return ResponseResult(ErrorCode.DB_ERROR)
+            return ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
         }
     }
 
@@ -201,7 +200,7 @@ class UserService(
         try {
             userRepository.deleteById(id.toLong())
             return ResponseResult(ErrorCode.SUCCESS)
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             println("[Error] " + e.message)
             return ResponseResult(ErrorCode.DB_ERROR)
         }
@@ -223,15 +222,15 @@ class UserService(
             val userRole = UserDto.MyPageRes(user.role,user.name)
             ResponseResult(userRole)
         } catch (e: NoUserDataException) {
-            ResponseResult(ErrorCode.DB_ERROR)
+            ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
         }
     }
 
     fun getUserAddress(id: Int): ResponseResult {
         return try {
-            val userAddress = userRepository.findAddressById(id) ?: throw RuntimeException()
+            val userAddress = userRepository.findAddressById(id)
             ResponseResult(userAddress)
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             ResponseResult(ErrorCode.DB_ERROR)
         }
     }
@@ -243,11 +242,11 @@ class UserService(
     fun checkEmailDuplication(email: String): ResponseResult {
         try {
             return if (userRepository.findByEmailExists(email)) {
-                ResponseResult(ErrorCode.DB_ERROR)
+                ResponseResult(ErrorCode.DUPLICATE_EMAIL)
             } else {
-                ResponseResult(ErrorCode.SUCCESS)
+                ResponseResult(ErrorCode.NOT_DUPLICATE_EMAIL)
             }
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             println("[Error] " + e.message)
             return ResponseResult(ErrorCode.DB_ERROR)
         }

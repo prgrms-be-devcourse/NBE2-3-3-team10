@@ -1,4 +1,4 @@
-package org.washcode.washpang.domain.order.entity.redis
+package org.washcode.washpang.global.domain.kakaopay.redis.entity
 
 import jakarta.persistence.Id
 import org.springframework.data.redis.core.RedisHash

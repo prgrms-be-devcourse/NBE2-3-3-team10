@@ -6,13 +6,6 @@ import jakarta.validation.constraints.NotBlank
 import org.washcode.washpang.global.comm.enums.UserRole
 
 class UserDto private constructor(){
-    data class KakaoData (
-        val id: Long,
-        val email: String,
-        val nickname: String,
-        val profile_image: String
-    )
-
     // 사용자 로그인 (공통)
     data class LoginReq (
         @Schema(description = "사용자 ID", example = "custom@test.com")

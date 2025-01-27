@@ -1,19 +1,32 @@
 package org.washcode.washpang.domain.review.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.pickup.entity.Pickup
+import org.washcode.washpang.domain.user.entity.User
 import java.sql.Timestamp
 
 @Entity
 class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id:Int =0
+    val id: Int = 0
+
+//    @ManyToOne
+//    @JoinColumn(name = "userId")
+//    lateinit var user: User  // User 엔티티와 연관 관계를 설정
 
     @ManyToOne
-    @JoinColumn(name="pickupId")
-    lateinit var pickup: Pickup //(**확인필요**)
+    @JoinColumn(name = "pickupId")
+    lateinit var pickup: Pickup
 
-    var content:String = ""
-    var createAt: Timestamp= Timestamp(System.currentTimeMillis())
+    @ManyToOne
+    @JoinColumn(name = "laundryShopId")
+    lateinit var laundryShop: LaundryShop
+
+    lateinit var content: String
+
+    @CreationTimestamp
+    lateinit var createAt: Timestamp
 }

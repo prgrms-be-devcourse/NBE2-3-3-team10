@@ -17,6 +17,7 @@ class ReviewDto {
     data class ReviewRes(
         val pickupId: Int,
         val userName: String,
+        val shopName: String,
         val content: String
     )
 }

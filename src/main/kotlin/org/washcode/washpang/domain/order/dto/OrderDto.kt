@@ -38,20 +38,20 @@ class OrderDto private constructor(){
     )
 
     data class OrderRes(
-        var name: String,
-        var address: String,
-        var phone: String,
-        var shopName: String,
-        var content: String,
-        var status: String,
-        var createdAt: String,
-        var updateAt: String,
-        var paymentId: Int,
-        var method: String,
-        var amount: Int,
-        var paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"),
-        var price: Int,
-        var orderItems: MutableList<OrderItem> = mutableListOf()
+        val name: String,
+        val address: String,
+        val phone: String,
+        val shopName: String,
+        val content: String,
+        val status: String,
+        val createdAt: String,
+        val updateAt: String,
+        val paymentId: Int,
+        val method: String,
+        val amount: Int,
+        val paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"),
+        val price: Int,
+        var orderItems: List<OrderItem>
 
     ) {
         // OrderItem 클래스 정의

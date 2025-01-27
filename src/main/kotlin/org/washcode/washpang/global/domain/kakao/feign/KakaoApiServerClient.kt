@@ -1,4 +1,4 @@
-package org.washcode.washpang.global.module.feign.client
+package org.washcode.washpang.global.domain.kakao.feign
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.cloud.openfeign.FeignClientProperties.FeignClientConfiguration

@@ -28,5 +28,8 @@ enum class ErrorCode (
     FAIL_TO_FIND_LAUNDRYSHOP(HttpStatus.NOT_FOUND, "존재하지 않는 세탁소입니다"),
 
     // OrderItems
-    FAIL_TO_FIND_ORDERITEMS(HttpStatus.NOT_FOUND, "존재하지 않는 주문 아이템입니다")
+    FAIL_TO_FIND_ORDERITEMS(HttpStatus.NOT_FOUND, "존재하지 않는 주문 아이템입니다"),
+
+    // 카카오페이 결제 에러
+    KAKAOPAY_READY_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "카카오페이 결제 준비 에러");
 }

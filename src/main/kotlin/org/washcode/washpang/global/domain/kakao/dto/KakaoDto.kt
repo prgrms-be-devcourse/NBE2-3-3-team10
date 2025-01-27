@@ -1,4 +1,4 @@
-package org.washcode.washpang.global.comm.client.Dto
+package org.washcode.washpang.global.domain.kakao.dto
 
 import com.fasterxml.jackson.databind.JsonNode
 import lombok.Getter
@@ -26,7 +26,7 @@ class KakaoDto private constructor() {
     }
 
     @Getter
-    data class AccessToken (
+    data class AccessReq (
         val grant_type: String = "authorization_code",
         val client_id: String,
         val redirect_uri: String,
@@ -40,7 +40,7 @@ class KakaoDto private constructor() {
         }
     }
 
-    data class KakaoAccessToken (
+    data class AccessRes (
         val token_type: String,
         val access_token: String,
         val id_token: String,

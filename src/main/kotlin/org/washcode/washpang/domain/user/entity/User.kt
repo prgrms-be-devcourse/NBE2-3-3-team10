@@ -3,7 +3,6 @@ package org.washcode.washpang.domain.user.entity
 import org.hibernate.annotations.*
 import jakarta.persistence.*
 import org.washcode.washpang.global.comm.enums.UserRole
-
 import java.sql.Timestamp
 
 @Entity

@@ -10,7 +10,7 @@ import java.util.*
 @Repository
 interface LaundryShopRepository : JpaRepository<LaundryShop, Long> {
     @Query("SELECT L.shopName FROM LaundryShop L WHERE L.id = :id")
-    fun findNameById(id: Int): Optional<String>
+    fun findNameById(id: Int): String?
 
     @Query("SELECT L FROM LaundryShop L WHERE L.shopName like %:shopName% OR L.address like %:shopName%")
     fun findByShopNameContaining(@Param("shop_name") shopName: String): List<LaundryShop>

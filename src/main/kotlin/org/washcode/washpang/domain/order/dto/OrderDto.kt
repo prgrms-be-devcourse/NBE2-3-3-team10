@@ -1,6 +1,6 @@
 package org.washcode.washpang.domain.order.dto
 
-import org.washcode.washpang.domain.handledItems.dto.ItemInfoResDto
+import org.washcode.washpang.domain.handledItems.dto.ItemInfoResDTO
 import java.sql.Timestamp
 
 
@@ -8,9 +8,10 @@ class OrderDto private constructor(){
 
     data class InfoRes (
         val name: String,
-        val address: String,
+        val baseAddress: String,        //주소
+        val detailedAddress: String,    //상세주소
         val shopName: String,
-        //val category: List<ItemInfoResDTO>? = emptyList()  // 빈 리스트로 초기화
+        val category: List<ItemInfoResDTO>? = emptyList()  // 빈 리스트로 초기화
     )
 
     data class ItemReq(
@@ -37,20 +38,20 @@ class OrderDto private constructor(){
     )
 
     data class OrderRes(
-        val name: String,
-        val address: String,
-        val phone: String,
-        val shopName: String,
-        val content: String,
-        val status: String,
-        val createdAt: String,
-        val updateAt: String,
-        val paymentId: Int,
-        val method: String,
-        val amount: Int,
-        val paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"), //
-        val price: Int,
-        val orderItems: List<OrderItem>? = emptyList()  // 빈 리스트로 초기화
+        var name: String,
+        var address: String,
+        var phone: String,
+        var shopName: String,
+        var content: String,
+        var status: String,
+        var createdAt: String,
+        var updateAt: String,
+        var paymentId: Int,
+        var method: String,
+        var amount: Int,
+        var paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"),
+        var price: Int,
+        var orderItems: MutableList<OrderItem> = mutableListOf()
 
     ) {
         // OrderItem 클래스 정의

@@ -147,24 +147,33 @@ class LaundryShopService(
             val user = userRepository.findById(id)
                 ?: throw NoUserDataException()
             val shop = laundryShopRepository.findByUserId(id)
-
-            shop.user = user
-            shop.shopName = dto.shopName
-            shop.businessNumber = dto.businessNumber
-            shop.userName = dto.userName
-            shop.address = dto.address
-            shop.phone = dto.phone
-            shop.nonOperatingDays = dto.nonOperatingDays
-            shop.latitude = dto.latitude
-            shop.longitude = dto.longitude
-            shop.createdAt = dto.createdAt
+                ?.apply {
+                    shopName = dto.shopName
+                    businessNumber = dto.businessNumber
+                    userName = dto.userName
+                    address = dto.address
+                    phone = dto.phone
+                    nonOperatingDays = dto.nonOperatingDays
+                    latitude = dto.latitude
+                    longitude = dto.longitude
+                } ?: LaundryShop(
+                        user = user,
+                        shopName = dto.shopName,
+                        businessNumber = dto.businessNumber,
+                        userName = dto.userName,
+                        address = dto.address,
+                        phone = dto.phone,
+                        nonOperatingDays = dto.nonOperatingDays,
+                        latitude = dto.latitude,
+                        longitude = dto.longitude
+                )
 
             val savedShop = laundryShopRepository.save(shop)
 
             return ResponseResult(data = savedShop.id)
         } catch (e: NoUserDataException) {
             return ResponseResult(ErrorCode.FAIL_TO_FIND_USER)
-            }
+        }
     }
 
 

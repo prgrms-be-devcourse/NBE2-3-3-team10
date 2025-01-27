@@ -8,4 +8,3 @@ data class HandledItemsResDTO (
     val price: Int,
     val laundryId: Int
 )
-{}

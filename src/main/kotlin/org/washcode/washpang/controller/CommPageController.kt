@@ -1,16 +1,20 @@
 package org.washcode.washpang.controller
 
+import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.washcode.washpang.global.comm.client.KakaoClient
 
 
 @Controller
 @RequiredArgsConstructor
-class CommPageController {
+class CommPageController(
+    private val kakaoClient: KakaoClient
+) {
 //   private final KakaoClient kakaoClient;
 
     @Value("\${kakao.redirect-uri}")
@@ -27,10 +31,10 @@ class CommPageController {
         return "glober/login";
     }
 
-//    @RequestMapping("/kakaoLogin")
-//    fun kakaoLogin(@RequestParam("code") code: String, model: Model, response: HttpServletResponse): String {
-//        return kakaoClient.kakaoLogin(code, model, response);
-//    }
+    @RequestMapping("/kakaoLogin")
+    fun kakaoLogin(@RequestParam("code") code: String, model: Model, response: HttpServletResponse): String {
+        return kakaoClient.login(code, model, response);
+    }
 
     @RequestMapping("/register")
     fun register(model: Model): String {

@@ -26,6 +26,13 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.0")
+    }
+}
+
+
 dependencies {
 
     // Default
@@ -73,6 +80,9 @@ dependencies {
 
     // logger
     implementation ("org.springframework.boot:spring-boot-starter-logging")
+
+    // Feign
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 }
 
 kotlin {

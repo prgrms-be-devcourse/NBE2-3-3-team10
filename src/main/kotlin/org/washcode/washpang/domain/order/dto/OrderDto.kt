@@ -12,7 +12,6 @@ class OrderDto private constructor(){
         val detailedAddress: String,    //상세주소
         val shopName: String,
         val category: List<ItemInfoResDTO>? = emptyList()  // 빈 리스트로 초기화
-
     )
 
     data class ItemReq(
@@ -31,7 +30,6 @@ class OrderDto private constructor(){
     }
 
     data class OrderReq(
-
         val laundryshopId: Int,
         val content: String,
         val itemId: Int,
@@ -63,21 +61,4 @@ class OrderDto private constructor(){
             val totalPrice: Int
         )
     }
-
-    data class KakaoPayApproveRes (
-        val aid: String,                // 요청 고유 번호
-        val tid: String,                // 결제 고유 번호
-        val paymentMethodType: String,   // 결제 수단, CARD 또는 MONEY 중 하나
-        val createdAt: String,           // 결제 준비 요청 시각
-        val approvedAt: String,          // 결제 승인 시각
-        val payload: String
-    )
-
-    data class KakaoPayReq(
-        val name: String,
-        val totalPrice: Int,
-        val quantity: Int,
-        val paymentId: Int
-    )
-
 }

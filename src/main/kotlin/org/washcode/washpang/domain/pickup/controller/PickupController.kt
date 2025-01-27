@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.washcode.washpang.domain.pickup.dto.PickupDto
 import org.washcode.washpang.domain.pickup.service.PickupService
+import org.washcode.washpang.global.annotation.ShopTopic
 import org.washcode.washpang.global.comm.enums.PickupStatus
 import org.washcode.washpang.global.exception.ResponseResult
 import java.util.Calendar
@@ -24,6 +25,7 @@ class PickupController (
     }
 
     @GetMapping("/pickupList/userId")
+    @ShopTopic // 현식님 체크
     fun getPickupList(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
         val id = 1
         val pickupList: List<PickupDto.DetailRes> = pickupService.getPickupList(id.toLong())

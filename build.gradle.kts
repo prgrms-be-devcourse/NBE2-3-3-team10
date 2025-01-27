@@ -83,6 +83,12 @@ dependencies {
 
     // Feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    // Kafka
+    implementation ("org.springframework.kafka:spring-kafka")
+    implementation ("org.apache.kafka:kafka-streams")
+    implementation ("org.apache.kafka:kafka-clients")
+
 }
 
 kotlin {

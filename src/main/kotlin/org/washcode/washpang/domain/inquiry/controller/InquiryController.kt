@@ -36,6 +36,7 @@ class InquiryController(
     }
 
     @GetMapping("/lists")
+    @Operation(summary = "userId로 문의사항 조회", description = "사용자 문의사항 조회 API 입니다.")
     fun getInquiryByUserId(
         /*@AuthenticationPrincipal int id*/
     ): ResponseResult {
@@ -45,11 +46,11 @@ class InquiryController(
     }
 
     @GetMapping("/lists/{laundryId}")
+    @Operation(summary = "세탁소ID로 문의사항 조회", description = "세탁소 문의사항 조회 API 입니다.")
     fun getInquiryByLaundryId(
-        @RequestParam("laundryId") laundryId: Int
+        @PathVariable("laundryId") laundryId: Int
     ): ResponseResult {
         return ResponseResult(inquiryService.findInquiryByLaundryId(laundryId))
     }
-
 
 }

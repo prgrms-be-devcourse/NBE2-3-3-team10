@@ -13,6 +13,6 @@ interface InquiryRepository: JpaRepository<Inquiry, Long> {
 
     fun findListByUserId(userId: Int): List<Inquiry>
 
-    @Query("select i from Inquiry i where laundryId =: laundryId")
+    @Query("select i from Inquiry i where i.laundryShop.id = :laundryId")
     fun findListByLaundryId(laundryId: Int): List<Inquiry>
 }

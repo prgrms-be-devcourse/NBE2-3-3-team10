@@ -15,4 +15,6 @@ interface InquiryRepository: JpaRepository<Inquiry, Long> {
 
     @Query("select i from Inquiry i where i.laundryShop.id = :laundryId")
     fun findListByLaundryId(laundryId: Int): List<Inquiry>
+
+    fun findById(id: Int): Inquiry
 }

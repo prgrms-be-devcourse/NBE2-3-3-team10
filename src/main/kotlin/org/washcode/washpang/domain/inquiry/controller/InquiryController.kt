@@ -53,4 +53,12 @@ class InquiryController(
         return ResponseResult(inquiryService.findInquiryByLaundryId(laundryId))
     }
 
+    @DeleteMapping("/delete/{inquiryId}")
+    @Operation(summary = "문의사항 삭제", description = "문의사항 삭제 API 입니다.")
+    fun deleteInquiry(
+        @PathVariable("inquiryId") inquiryId: Int,
+        /*, AuthenticationPrincipal int id */
+    ):ResponseResult {
+        return ResponseResult(inquiryService.deleteInquiry(inquiryId))
+    }
 }

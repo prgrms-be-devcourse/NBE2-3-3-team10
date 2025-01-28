@@ -60,6 +60,7 @@ class InquiryService(
         }
     }
 
+    //userId로 문의사항 조회
     fun findInquiryByUserId(userId: Int): ResponseResult {
         try {
             val user = userRepository.findById(userId)
@@ -73,11 +74,18 @@ class InquiryService(
         }
     }
 
+    //laundryId로 문의사항 조회
     fun findInquiryByLaundryId(laundryId: Int): ResponseResult {
         val laundryShop = laundryShopRepository.findById(laundryId)
 
         val inquiryList: List<Inquiry> = inquiryRepository.findListByLaundryId(laundryId)
 
         return ResponseResult(inquiryList)
+    }
+
+    //문의사항 삭제
+    fun deleteInquiry(inquiryId: Int): ResponseResult {
+        val inquiry = inquiryRepository.findById(inquiryId)
+        return ResponseResult(inquiryRepository.delete(inquiry))
     }
 }

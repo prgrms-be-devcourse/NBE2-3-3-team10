@@ -2,7 +2,6 @@ package org.washcode.washpang.domain.pickup.service
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import org.washcode.washpang.domain.order.entity.db.Payment
 import org.washcode.washpang.domain.pickup.dto.PickupDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem
@@ -10,8 +9,6 @@ import org.washcode.washpang.domain.pickup.repository.PickupItemRepository
 import org.washcode.washpang.domain.pickup.repository.PickupRepository
 import org.washcode.washpang.global.comm.enums.PickupStatus
 import java.util.*
-import java.util.stream.Collectors
-import kotlin.math.log
 
 @Service
 class PickupService(

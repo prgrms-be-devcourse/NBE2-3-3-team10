@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.washcode.washpang.domain.user.dto.UserDto
 import org.washcode.washpang.domain.user.service.UserService
-import org.washcode.washpang.global.comm.client.KakaoClient
+import org.washcode.washpang.global.domain.kakao.client.KakaoClient
 import org.washcode.washpang.global.exception.ResponseResult
 
 @RestController

@@ -9,10 +9,9 @@ import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.exception.FailToFindfLaundryShopException
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.domain.order.dto.OrderDto
-import org.washcode.washpang.domain.order.repository.db.PaymentRepository
-import org.washcode.washpang.domain.order.entity.db.Payment
+import org.washcode.washpang.domain.order.repository.PaymentRepository
 import org.washcode.washpang.domain.order.exception.FailToFindOrderItemsException
-import org.washcode.washpang.domain.order.repository.redis.KakaoPayPgTokenRepository
+import org.washcode.washpang.global.domain.kakaopay.redis.db.KakaoPayPgTokenRepository
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem
 import org.washcode.washpang.domain.pickup.repository.PickupItemRepository

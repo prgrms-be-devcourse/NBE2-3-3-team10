@@ -1,10 +1,10 @@
-package org.washcode.washpang.domain.order.repository.db
+package org.washcode.washpang.domain.order.repository
 
 import io.lettuce.core.dynamic.annotation.Param
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-import org.washcode.washpang.domain.order.entity.db.Payment
+import org.washcode.washpang.domain.order.entity.Payment
 import org.washcode.washpang.domain.pickup.entity.Pickup
 
 @Repository

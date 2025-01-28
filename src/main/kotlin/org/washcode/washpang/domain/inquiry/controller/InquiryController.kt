@@ -61,4 +61,17 @@ class InquiryController(
     ):ResponseResult {
         return ResponseResult(inquiryService.deleteInquiry(inquiryId))
     }
+
+    @PostMapping("/reply/{inquiryId}")
+    @Operation(summary = "문의사항 답글", description = "문의사항 답글 API 입니다.")
+    fun replyInquiry(
+        @RequestBody dto: InquiryDto,
+        @PathVariable("inquiryId") inquiryId: Int
+    /*, @AuthenticationPrincipal int id*/
+    ): ResponseResult {
+        //val id: Int = 1
+
+        return ResponseResult(inquiryService.replyInquiry(dto, inquiryId))
+    }
+
 }

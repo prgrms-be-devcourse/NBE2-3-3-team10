@@ -88,4 +88,14 @@ class InquiryService(
         val inquiry = inquiryRepository.findById(inquiryId)
         return ResponseResult(inquiryRepository.delete(inquiry))
     }
+
+    //문의사항 답글 달기
+    fun replyInquiry(dto: InquiryDto, inquiryId: Int): ResponseResult {
+        val inquiry = inquiryRepository.findById(inquiryId).apply {
+            replyContent = dto.replyContent
+        }
+
+        val saveReply = inquiryRepository.save(inquiry)
+        return ResponseResult(saveReply)
+    }
 }

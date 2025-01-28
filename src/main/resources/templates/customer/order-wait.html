@@ -46,7 +46,7 @@
                 Authorization: 'Bearer ' + token
             }
         }).then(res => {
-            sessionStorage.setItem("accessToken", res.data.accessToken);
+            sessionStorage.setItem("accessToken", res.data.data.accessToken);
             approvePayment();
         }).catch(error => {
             alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
@@ -64,13 +64,13 @@
                 }
             }
         ).then(res => {
-            const aid = res.data.aid;
-            const approvedAt = res.data.approvedAt;
+            const aid = res.data.data.aid;
+            const approvedAt = res.data.data.approvedAt;
 
             location.href = "/customer/order/success?aid=" + aid + "&approvedAt=" + approvedAt;
         }).catch(error => {
             alert("결제가 실패했습니다. 다시 시도해주세요.");
-            location.href = '/customer/main';
+            // location.href = '/customer/main';
         });
     }
 

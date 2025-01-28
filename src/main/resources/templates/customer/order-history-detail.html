@@ -112,14 +112,12 @@
             headers: {
                 Authorization: 'Bearer ' + token
             }
-        }).then((response) => {
+        }).then((res) => {
             // 성공 시, 카카오페이 결제 URL로 이동
-            const parsedData = JSON.parse(response.headers['readykakaopayres']);
-
             if(!isMobile()) {
-                window.location.href = parsedData.next_redirect_pc_url;
+                window.location.href = res.data.data.next_redirect_pc_url;
             } else {
-                window.location.href = parsedData.next_redirect_mobile_url;
+                window.location.href = res.data.data.next_redirect_mobile_url;
             }
         }).catch((error) => {
             // 에러 처리
@@ -133,6 +131,7 @@
                 Authorization: 'Bearer ' + token
             }
         }).then(res => {
+            console.log(res.data)
             let orderDetailHtml = '';
             let cancelHtml = '';
             let topHtml = '';
@@ -151,7 +150,7 @@
                 orderItems.push({name: row.itemName});
             });
             $("#order-detail").append(orderDetailHtml);
-            
+
             showPaymentButton(res.data.status, res.data.method)
 
             totalPrice = res.data.amount;
@@ -208,7 +207,7 @@
                 Authorization: 'Bearer ' + token
             }
         }).then(res => {
-            sessionStorage.setItem("accessToken", res.data.accessToken);
+            sessionStorage.setItem("accessToken", res.data.data.accessToken);
             getOrderDetail();
         }).catch(error => {
             alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
@@ -216,30 +215,7 @@
         });
     }
 
-    function changeSvg() {
-        const svgUrl = "https://havebin.s3.ap-northeast-2.amazonaws.com/washpang/footer"
-        const path = window.location.pathname;
-        // alert(currentPath);
-
-        const homeArray = ["/customer/main", "/customer/laundryshop-by-map", "/customer/laundryshop-by-category", "/customer/shop-main", "/customer/pickup-check", "/customer/pickup-delivery" ];
-        const orderArray = ["/customer/orderHistory"];
-        const starArray = ["/customer/mypage", "/customer/myInfo", "/customer/myInfoModify", "/customer/shop-mypage"];
-
-        if (homeArray.includes(path)) {
-            document.getElementById('home').src = svgUrl + "/Home_2.svg";
-        } else {
-            document.getElementById('home').src = svgUrl + "/Home.svg";
-        }
-
-        if (starArray.includes(path)) {
-            document.getElementById('star').src = svgUrl + "/Star_2.svg";
-        } else {
-            document.getElementById('star').src = svgUrl + "/Star.svg";
-        }
-    }
-
     window.onload = () => {
-        changeSvg();
         checkAccessToken();
     };
 </script>

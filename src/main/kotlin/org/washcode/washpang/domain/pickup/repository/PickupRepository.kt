@@ -75,38 +75,41 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
 
 
     //이용내역 조회(상세보기)
-    @Query(
-        "SELECT " +
-                "u.baseAddress AS baseAddress, " +
-                "u.phone AS phone, " +
-                "ls.shopName AS shopName, " +
-                "p.id AS pickupId, " +
-                "p.status AS status, " +
-                "p.content AS content, " +
-                "p.createdAt AS pickupCreatedAt, " +
-                "p.updateAt AS pickupUpdateAt, " +
-                "pi.id AS pickupItemId, " +
-                "pi.quantity AS quantity, " +
-                "pi.totalPrice AS totalPrice, " +
-                "hi.itemName AS itemName, " +
-                "hi.category AS category, " +
-                "pay.amount AS amount, " +
-                "pay.method AS method, " +
-                "u.name AS name, " +
-                "pay.paymentDatetime AS paymentDateTime, " +
-                "pay.id AS paymentId " +
-                "FROM User u " +
-                "JOIN Pickup p ON u.id = p.user.id " +
-                "JOIN LaundryShop ls ON ls.id = p.laundryshop.id " +
-                "LEFT JOIN PickupItem pi ON p.id = pi.pickup.id " +
-                "LEFT JOIN HandledItems hi ON pi.handledItems.id = hi.id " +
-                "LEFT JOIN Payment pay ON p.id = pay.pickup.id " +
-                "WHERE u.id = :userId AND pi.pickup.id = :pickupId"
-    )
-    fun findOrderDetails(
-        @Param("userId") userId: Int,
-        @Param("pickupId") pickupId: Int
-    ): List<Array<Pickup>>
+//    @Query(
+//        "SELECT " +
+//                "u.baseAddress AS baseAddress, " +
+//                "u.phone AS phone, " +
+//                "ls.shopName AS shopName, " +
+//                "p.id AS pickupId, " +
+//                "p.status AS status, " +
+//                "p.content AS content, " +
+//                "p.createdAt AS pickupCreatedAt, " +
+//                "p.updateAt AS pickupUpdateAt, " +
+//                "pi.id AS pickupItemId, " +
+//                "pi.quantity AS quantity, " +
+//                "pi.totalPrice AS totalPrice, " +
+//                "hi.itemName AS itemName, " +
+//                "hi.category AS category, " +
+//                "pay.amount AS amount, " +
+//                "pay.method AS method, " +
+//                "u.name AS name, " +
+//                "pay.paymentDatetime AS paymentDateTime, " +
+//                "pay.id AS paymentId " +
+//                "FROM User u " +
+//                "JOIN Pickup p ON u.id = p.user.id " +
+//                "JOIN LaundryShop ls ON ls.id = p.laundryshop.id " +
+//                "LEFT JOIN PickupItem pi ON p.id = pi.pickup.id " +
+//                "LEFT JOIN HandledItems hi ON pi.handledItems.id = hi.id " +
+//                "LEFT JOIN Payment pay ON p.id = pay.pickup.id " +
+//                "WHERE u.id = :userId AND pi.pickup.id = :pickupId"
+//    )
+//    fun findOrderDetails(
+//        @Param("userId") userId: Int,
+//        @Param("pickupId") pickupId: Int
+//    ): List<Array<Pickup>>
+
+    @Query("SELECT P FROM Pickup P WHERE P.user.id = :userId AND P.id = :pickupId")
+    fun findOrderDetail(@Param("userId") userId: Int, @Param("pickupId") pickupId: Int): Pickup?
 
     @Transactional
     @Modifying

@@ -1,6 +1,9 @@
 package org.washcode.washpang.global.domain.kakaopay.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.JsonNode
+import org.washcode.washpang.global.domain.kakao.dto.KakaoDto.Data
+import java.util.UUID
 
 class KakaoPayDto private constructor() {
     data class ReqDto (
@@ -49,7 +52,18 @@ class KakaoPayDto private constructor() {
         val next_redirect_app_url: String,
         val android_app_scheme: String,
         val ios_app_scheme: String
-    )
+    ) {
+        override fun toString(): String {
+            return "tid=$tid&" +
+                    "tms_result=$tms_result&" +
+                    "created_at=$created_at&" +
+                    "next_redirect_pc_url=$next_redirect_pc_url&" +
+                    "next_redirect_mobile_url=$next_redirect_mobile_url&" +
+                    "next_redirect_app_url=$next_redirect_app_url&" +
+                    "android_app_scheme=$android_app_scheme&" +
+                    "ios_app_scheme=$ios_app_scheme"
+        }
+    }
 
     // 카카오 페이 승인
     data class ApproveReq (
@@ -73,7 +87,19 @@ class KakaoPayDto private constructor() {
         val tid: String,                 // 결제 고유 번호
         val paymentMethodType: String,   // 결제 수단, CARD 또는 MONEY 중 하나
         val createdAt: String,           // 결제 준비 요청 시각
-        val approvedAt: String,          // 결제 승인 시각
-        val payload: String
-    )
+        val approvedAt: String           // 결제 승인 시각
+    ) {
+        companion object {
+            @JvmStatic
+            fun from(json: JsonNode): ApproveRes {
+                return ApproveRes(
+                    aid = json["aid"].asText(),
+                    tid = json["tid"].asText(),
+                    paymentMethodType = json["payment_method_type"].asText(),
+                    createdAt = json["created_at"].asText(),
+                    approvedAt = json["approved_at"].asText()
+                )
+            }
+        }
+    }
 }

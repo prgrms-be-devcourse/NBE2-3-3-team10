@@ -74,4 +74,13 @@ class InquiryController(
         return ResponseResult(inquiryService.replyInquiry(dto, inquiryId))
     }
 
+    @GetMapping("/{inquiryId}")
+    @Operation(summary = "문의사항 상세 조회", description = "문의사항 상세 조회 API 입니다.")
+    fun getInquiry(
+        @PathVariable("inquiryId") inquiryId: Int
+    ): ResponseResult {
+
+        return ResponseResult(inquiryService.findInquiryById(inquiryId))
+    }
+
 }

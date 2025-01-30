@@ -98,4 +98,11 @@ class InquiryService(
         val saveReply = inquiryRepository.save(inquiry)
         return ResponseResult(saveReply)
     }
+
+    fun findInquiryById(inquiryId: Int): ResponseResult {
+
+        val inquiry = inquiryRepository.findById(inquiryId)
+
+        return ResponseResult(inquiry)
+    }
 }

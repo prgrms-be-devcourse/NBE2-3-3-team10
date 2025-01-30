@@ -123,8 +123,10 @@
         const token = sessionStorage.getItem("accessToken");
         const detailAddressInput = document.getElementById("detailAddress");
 
+        var email = "";
         var phone = "";
-        var address = "";
+        var baseAddress = "";
+        var detailedAddress = "";
 
         window.onload = () => {
             changeSvg();
@@ -138,7 +140,13 @@
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
-                sessionStorage.setItem("accessToken", res.data.accessToken);
+                if(res.data.message === '토큰 정상'){
+                } else if(res.data.message === '성공'){
+                    sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                } else {
+                    alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+                    location.href = '/';
+                }
             }).catch(error => {
                 alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                 location.href = '/';
@@ -151,14 +159,18 @@
                     Authorization: 'Bearer ' + token
                 }
             }).then(function(response) {
-                email = response.data.email;
-                name = response.data.name;
-                phone = response.data.phone;
-                address = response.data.address;
+                console.log(response.data.data);
+                email = response.data.data.email;
+                name = response.data.data.name;
+                phone = response.data.data.phone;
+                baseAddress = response.data.data.baseAddress;
+                detailedAddress = response.data.data.detailedAddress;
 
                 document.getElementById('email').value = email;
                 document.getElementById('name').value = name;
-                document.getElementById('address').textContent = address
+                document.getElementById('phone').value = phone;
+                document.getElementById('address').textContent = baseAddress;
+                document.getElementById('detailAddress').value = detailedAddress;
             }).catch(function(error) {
                 console.error(error);
             });

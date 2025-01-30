@@ -62,7 +62,6 @@
                     }
                 }).then(res => {
                     if(res.data.data.role==="USER"){
-                        console.log(res.data.role)
                         location.href = "/customer/main";
                     }else if(res.data.data.role==="SHOP"){
                         location.href = "/shop/shop-main";

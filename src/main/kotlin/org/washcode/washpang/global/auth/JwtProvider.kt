@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.washcode.washpang.domain.order.entity.redis.Token
-import org.washcode.washpang.domain.order.repository.redis.TokenRepository
 import org.washcode.washpang.global.comm.enums.UserRole
+import org.washcode.washpang.global.domain.kakaopay.redis.db.TokenRepository
+import org.washcode.washpang.global.domain.kakaopay.redis.entity.Token
 import java.util.*
 import javax.crypto.SecretKey
 

@@ -27,8 +27,8 @@ enum class ErrorCode (
     NOT_DUPLICATE_EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다"),
 
     // Auth
-    TOKEN_NOT_EXPIRED(HttpStatus.OK, "accessToken 정상"),
-    TOKEN_EXPIRED(HttpStatus.OK, "accessToken 만료됨"),
+    TOKEN_NOT_EXPIRED(HttpStatus.OK, "토큰 정상"),
+    TOKEN_EXPIRED(HttpStatus.OK, "토큰 만료됨"),
 
     // LaundryShop
     FAIL_TO_FIND_LAUNDRYSHOP(HttpStatus.NOT_FOUND, "존재하지 않는 세탁소입니다"),

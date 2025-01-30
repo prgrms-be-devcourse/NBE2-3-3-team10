@@ -91,8 +91,8 @@
           Authorization: 'Bearer ' + token
         }
       }).then(function(response) {
-        document.getElementById('role').innerHTML = response.data.role == 'USER' ? '일반회원' : '세탁소'
-        document.getElementById('name').innerHTML = response.data.name + " 님";
+        document.getElementById('role').innerHTML = response.data.data.role === 'USER' ? '일반회원' : '세탁소'
+        document.getElementById('name').innerHTML = response.data.data.name + " 님";
       }).catch(function(error) {
         console.error(error);
       });

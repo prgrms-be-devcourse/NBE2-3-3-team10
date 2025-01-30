@@ -1,4 +1,4 @@
-package org.washcode.washpang.global.comm.client
+package org.washcode.washpang.global.domain.kakao.client
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service
 import org.springframework.ui.Model
 import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.domain.user.repository.UserRepository
-import org.washcode.washpang.global.comm.client.Dto.KakaoDto
-import org.washcode.washpang.global.module.feign.client.KakaoApiServerClient
-import org.washcode.washpang.global.module.feign.client.KakaoAuthServerClient
+import org.washcode.washpang.global.domain.kakao.dto.KakaoDto
+import org.washcode.washpang.global.domain.kakao.feign.KakaoApiServerClient
+import org.washcode.washpang.global.domain.kakao.feign.KakaoAuthServerClient
 
 @Service
 @Slf4j
@@ -51,10 +51,10 @@ class KakaoClient (
 
     private fun getKakaoAccessToken(code: String): String? {
 
-        var res: KakaoDto.KakaoAccessToken? = null // 초기값 설정
+        var res: KakaoDto.AccessRes? = null // 초기값 설정
 
         try {
-            val dto = KakaoDto.AccessToken("authorization_code", kakaoApiKey, redirectUri, code)
+            val dto = KakaoDto.AccessReq("authorization_code", kakaoApiKey, redirectUri, code)
             res = kakaoAuthServerClient.getAccessToken(dto.toString())
 
             return res.access_token
@@ -71,7 +71,6 @@ class KakaoClient (
         val resBody: String
         val mapper = ObjectMapper()
         val res : KakaoDto.Data? = null
-        log.info(accessToken)
 
         // 1. HTTP 요청 (https://kapi.kakao.com/v2/user/me 으로)
         try {

@@ -8,7 +8,7 @@ import org.washcode.washpang.global.comm.enums.UserRole
 class UserDto private constructor(){
     // 사용자 로그인 (공통)
     data class LoginReq (
-        @Schema(description = "사용자 ID", example = "custom@test.com")
+        @Schema(description = "사용자 ID", example = "customer@test.com")
         val email: String,
 
         @Schema(description = "비밀번호", example = "123")
@@ -16,12 +16,12 @@ class UserDto private constructor(){
     )
 
     data class RegisterReq (
-        @Schema(description = "사용자 ID", example = "ab123@gmail.com")
+        @Schema(description = "사용자 ID", example = "customer@test.com")
         @Email(message = "유효한 이메일 형식이 아닙니다.")
         val email: String,
 
         @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-        @Schema(description = "비밀번호", example = "ab123")
+        @Schema(description = "비밀번호", example = "123")
         val password: String,
 
         @NotBlank(message = "이름은 필수 입력 항목입니다.")
@@ -44,7 +44,7 @@ class UserDto private constructor(){
         val role: UserRole,
 
         @Schema(description = "카카오 ID")
-        val kakao_id: Long
+        val kakaoId: Long
     )
 
     data class MyPageRes (
@@ -52,24 +52,32 @@ class UserDto private constructor(){
         val name: String
     )
 
+    data class AddressRes (
+        val baseAddress: String,
+        val detailedAddress: String,
+    )
+
     data class ProfileRes (
         val name: String,
         val email: String,
-        val address: String,
+        val baseAddress: String,
+        val detailedAddress: String,
         val phone: String
     )
 
     // 회원 정보 요청시 ->상세보기 페이지
     data class UserRes (
         val name: String,
-        val address: String,
+        val baseAddress: String,
+        val detailedAddress: String,
         val phone: String
     )
 
     // 사용자 정보 수정 (공통)
     data class UpdateReq (
-        val address: String,
-        val phoneval: String,
-        val password: String
+        val baseAddress: String,
+        val detailedAddress: String,
+        val phone: String,
+        val password: String?
     )
 }

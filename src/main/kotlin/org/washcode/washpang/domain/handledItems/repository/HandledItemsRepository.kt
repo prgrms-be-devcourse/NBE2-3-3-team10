@@ -23,7 +23,7 @@ interface HandledItemsRepository : JpaRepository<HandledItems, Long> {
     @Query("SELECT h.laundryshop.id FROM HandledItems h WHERE h.category = :category")
     fun findLaundryShopIdsByCategory(category: LaundryCategory): List<Int>
 
-    @Query("SELECT h.id, h.itemName, h.category,h.price FROM HandledItems h WHERE h.laundryshop.id = :laundryId")
+    @Query("SELECT new org.washcode.washpang.domain.handledItems.dto.ItemInfoResDTO(h.id, h.itemName, h.category, h.price) FROM HandledItems h WHERE h.laundryshop.id = :laundryId")
     fun findHandledItemsByLaundryId(@Param("laundryId") laundryId: Int): List<ItemInfoResDTO>?
 
     fun findById(@Param("itemId") itemId: Int): HandledItems?

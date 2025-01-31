@@ -52,7 +52,13 @@
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
-                sessionStorage.setItem("accessToken", res.data.accessToken);
+                if(res.data.message === '토큰 정상'){
+                } else if(res.data.message === '성공'){
+                    sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                } else {
+                    alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+                    location.href = '/';
+                }
             }).catch(error => {
                 alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                 location.href = '/';
@@ -67,10 +73,11 @@
             fetch(`/api/laundry/category/` + category)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);  // 디버깅용: 데이터 확인
+                    const shops = data.data;
+                    console.log(shops);  // 디버깅용: 데이터 확인
 
                     let result = '';
-                    data.forEach(item => {
+                    shops.forEach(item => {
                        // var message = `<div style="padding:5px;">\${shop.shop_name}</div>`;
 
                         const shop = item.shop; // 세탁소 정보

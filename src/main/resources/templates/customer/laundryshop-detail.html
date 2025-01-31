@@ -17,27 +17,34 @@
         const url = "http://localhost:8080";
 
         window.onload = () => {
+            //checkAccessToken();
             getLaundryShopDetail();
         };
 
-        // function checkAccessToken() {
-        //     axios.post(url + '/api/user/check-login', {
-        //         headers: {
-        //             Authorization: 'Bearer ' + token
-        //         }
-        //     }).then(res => {
-        //         sessionStorage.setItem("accessToken", res.data.accessToken);
-        //         getLaundryShopDetail();
-        //     }).catch(error => {
-        //         alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
-        //         location.href = '/';
-        //     });
-        // }
+        function checkAccessToken() {
+            axios.post(url + '/api/user/check-login', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }).then(res => {
+                if(res.data.message === '토큰 정상'){
+                    getLaundryShopDetail();
+                } else if(res.data.message === '성공'){
+                    getLaundryShopDetail();
+                    sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                } else {
+                    alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+                    location.href = '/';
+                }
+            }).catch(error => {
+                alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+                location.href = '/';
+            });
+        }
 
         function getLaundryShopDetail() {
             const token = sessionStorage.getItem("accessToken")
 
-            // 페이지 로드가 완료된 후 fetch를 사용하여 데이터 받아오기
             // 페이지 로드가 완료된 후 fetch를 사용하여 데이터 받아오기
             fetch('/api/laundry/' + [[${laundryId}]], {
                 method: "GET",
@@ -46,10 +53,11 @@
                 }
             })
                 .then(response => response.json())
-                .then(data => {
-                    console.log(data); // 받아온 데이터를 출력
+                .then(res => {
+                    const details = res.data; // 받아온 데이터에서 laundry 추출
+                    console.log(details); // 받아온 데이터를 출력
 
-                    const handledItems = data.handledItems; // handledItems 추출
+                    const handledItems = details.handledItems.data; // handledItems 추출
 
                     // 중복된 항목 제거
                     const uniqueItems = Array.from(

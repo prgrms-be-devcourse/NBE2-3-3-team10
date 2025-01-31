@@ -68,7 +68,7 @@ class LaundryShopService(
 
     //세탁소 상세정보 조회
     //세탁소 id로 세탁소 정보 찾기
-    fun getLaundryShopById(id: Int): ResponseResult {
+    fun getLaundryShopById(id: Int): LaundryDetailResDTO {
         val laundryShop = laundryShopRepository.findById(id)
 
         val handledItems = handledItemsRepository.findByLaundryshopId(laundryShop.id)
@@ -94,7 +94,7 @@ class LaundryShopService(
             handledItems = handledItems
         )
 
-        return ResponseResult(dto)
+        return dto
     }
 
     //user_id로 세탁소 정보 찾기

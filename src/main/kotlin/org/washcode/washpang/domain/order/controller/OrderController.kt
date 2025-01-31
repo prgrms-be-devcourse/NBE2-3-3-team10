@@ -22,14 +22,12 @@ class OrderController (
     }
 
     @PostMapping
-    fun createOrder(/*@AuthenticationPrincipal id: Int,*/ @RequestBody orderReqDTO: OrderDto.OrderReq): ResponseResult  {
-        var id = 1
+    fun createOrder(@AuthenticationPrincipal id: Int, @RequestBody orderReqDTO: OrderDto.OrderReq): ResponseResult  {
         return orderService.createOrder(id, orderReqDTO)
     }
 
     @GetMapping
-    fun getOrders(/*@AuthenticationPrincipal id: Int,*/): ResponseResult  {
-        var id = 1
+    fun getOrders(@AuthenticationPrincipal id: Int): ResponseResult  {
         return orderService.getOrders(id)
     }
 

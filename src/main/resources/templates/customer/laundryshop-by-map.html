@@ -15,37 +15,8 @@
 
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ffeefd8246bf28331ea26a9ff648525c&libraries=services"></script>
     <script>
-        function changeSvg() {
-            const svgUrl = "https://havebin.s3.ap-northeast-2.amazonaws.com/washpang/footer"
-            const path = window.location.pathname + "/customer";
-            // alert(currentPath);
-
-            const homeArray = ["/customer/main", "/customer/laundryshop-by-map", "/customer/laundryshop-by-category", "/customer/shop-main", "/customer/pickup-check", "/customer/pickup-delivery" ];
-            const orderArray = ["/customer/orderHistory"];
-            const starArray = ["/customer/mypage", "/customer/myInfo", "/customer/myInfoModify", "/customer/shop-mypage"];
-
-            if (homeArray.includes(path)) {
-                document.getElementById('home').src = svgUrl + "/Home_2.svg";
-            } else {
-                document.getElementById('home').src = svgUrl + "/Home.svg";
-            }
-
-            if (orderArray.includes(path)) {
-                document.getElementById('bag').src = svgUrl + "/Bag_2.svg";
-            } else {
-                document.getElementById('bag').src = svgUrl + "/Bag.svg";
-            }
-
-            if (starArray.includes(path)) {
-                document.getElementById('star').src = svgUrl + "/Star_2.svg";
-            } else {
-                document.getElementById('star').src = svgUrl + "/Star.svg";
-            }
-        }
 
         window.onload = () => {
-            changeSvg();
-
             var infowindow = new kakao.maps.InfoWindow({zIndex: 1});
             var lat;
             var lon;
@@ -101,7 +72,8 @@
                 fetch(`/api/laundry/map?shopName=${searchTerm}&userLat=${lat}&userLng=${lon}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);  // 디버깅용: 데이터 확인
+                        const shops = data.data.data;
+                        console.log(shops)
 
                         clearMarkers();
 
@@ -109,7 +81,7 @@
                         let index = 0;
 
                         let result = '';
-                        data.forEach(shop => {
+                        shops.forEach(shop => {
                             var position = new kakao.maps.LatLng(shop.latitude, shop.longitude);
                             var message = `<div style="padding:5px;">${shop.shopName}</div>`;
                             displayMarker(position, message);
@@ -128,7 +100,7 @@
                         });
 
                         if (searchTerm !== '') {
-                            if (data.length === 0) {
+                            if (shops.length === 0) {
                                 // 검색 결과가 없을 경우 사용자 위치로 지도 설정
                                 map.setCenter(locPosition);
                                 map.setLevel(5); // 사용자 위치를 확대

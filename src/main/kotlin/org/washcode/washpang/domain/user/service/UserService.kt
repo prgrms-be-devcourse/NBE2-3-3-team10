@@ -7,17 +7,16 @@ import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseCookie
-import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.washcode.washpang.domain.order.entity.redis.Token
-import org.washcode.washpang.domain.order.repository.redis.TokenRepository
 import org.washcode.washpang.domain.user.dto.UserDto
 import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.domain.user.exception.NoUserDataException
 import org.washcode.washpang.domain.user.repository.UserRepository
 import org.washcode.washpang.global.auth.JwtProvider
 import org.washcode.washpang.global.comm.enums.UserRole
+import org.washcode.washpang.global.domain.kakaopay.redis.db.TokenRepository
+import org.washcode.washpang.global.domain.kakaopay.redis.entity.Token
 import org.washcode.washpang.global.exception.ErrorCode
 import org.washcode.washpang.global.exception.ResponseResult
 

@@ -66,4 +66,9 @@ class CustomerPageController {
 //        model.addAttribute("laundryId", laundryId)
         return "customer/laundryshop-detail"
     }
+
+    @RequestMapping("/writeReview")
+    fun writeReview():String{
+        return "customer/write-review-page"
+    }
 }

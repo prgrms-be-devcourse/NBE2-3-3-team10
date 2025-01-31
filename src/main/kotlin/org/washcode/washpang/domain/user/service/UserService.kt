@@ -99,7 +99,7 @@ class UserService(
 
             val user: User = User(
                 id = 0,
-                kakaoId = null,
+                kakaoId = registerReqDTO.kakaoId,
                 name = registerReqDTO.name,
                 password = encodePassword,
                 baseAddress = registerReqDTO.baseAddress,

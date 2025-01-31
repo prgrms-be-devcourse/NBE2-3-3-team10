@@ -103,7 +103,7 @@
                 document.getElementById('email').innerHTML = response.data.data.email;
                 document.getElementById('name').innerHTML = response.data.data.name
                 document.getElementById('phone').innerHTML = response.data.data.phone
-                document.getElementById('address').innerHTML = response.data.data.baseAddress
+                document.getElementById('address').innerHTML = response.data.data.baseAddress + " " + response.data.data.detailedAddress;
             }).catch(function(error) {
                 console.error(error);
             });

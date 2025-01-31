@@ -209,7 +209,7 @@
                 "  매출 데이터가 없습니다." +
                 "</div>";
         } else {
-            data.forEach(function(dto) {
+            data.data.forEach(function(dto) {
                 const createdDate = new Date(dto.createdAt);
                 const yearNum = createdDate.getFullYear();
                 const monthNum = String(createdDate.getMonth() + 1).padStart(2, "0");

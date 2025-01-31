@@ -15,7 +15,7 @@ class PickupDto private constructor() {
         val pickupId: Int,
         val shopName: String,
         val createdAt: Timestamp,
-        val address: String,
+        val baseAddress: String,
         val phone: String,
         val content: String,
         val orderItems: List<OrderItem>
@@ -25,7 +25,7 @@ class PickupDto private constructor() {
         val pickupId: Int,
         val shopName: String,
         val createdAt: Timestamp,
-        val address: String,
+        val baseAddress: String,
         val phone: String,
         val content: String,
         val orderItems: List<OrderItem>,
@@ -37,7 +37,7 @@ class PickupDto private constructor() {
         val pickupId: Int,
         val status: PickupStatus,
         val createdAt: Timestamp,
-        val address: String,
+        val baseAddress: String,
         val content: String,
         val orderItems: List<OrderItem>,
     )
@@ -46,7 +46,7 @@ class PickupDto private constructor() {
         val pickupId: Int,
         val status: PickupStatus,
         val createdAt: Timestamp,
-        val address: String,
+        val baseAddress: String,
         val orderItems: List<OrderItem>,
     )
 

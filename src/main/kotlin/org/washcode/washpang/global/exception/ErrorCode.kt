@@ -28,7 +28,7 @@ enum class ErrorCode (
 
     // Auth
     TOKEN_NOT_EXPIRED(HttpStatus.OK, "토큰 정상"),
-    TOKEN_EXPIRED(HttpStatus.OK, "토큰 만료됨"),
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰 만료됨"),
 
     // LaundryShop
     FAIL_TO_FIND_LAUNDRYSHOP(HttpStatus.NOT_FOUND, "존재하지 않는 세탁소입니다"),

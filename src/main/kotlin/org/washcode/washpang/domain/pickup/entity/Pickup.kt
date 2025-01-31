@@ -43,7 +43,7 @@ class Pickup(
     var status: PickupStatus,
 
     @Nullable
-    val content: String,
+    var content: String?,
 ){
     @CreationTimestamp
     lateinit var createdAt: Timestamp

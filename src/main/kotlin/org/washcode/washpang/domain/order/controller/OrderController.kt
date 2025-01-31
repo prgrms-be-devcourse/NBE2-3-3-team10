@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.service.OrderService
 import org.washcode.washpang.global.domain.kakaopay.client.KakaoPayClient
 import org.washcode.washpang.global.domain.kakaopay.dto.KakaoPayDto
@@ -20,26 +21,25 @@ class OrderController (
         return orderService.getInfo(id, laundryId)
     }
 
-//    @PostMapping
-//    fun createOrder(/*@AuthenticationPrincipal id: Int,*/ @RequestBody orderReqDTO: OrderDto.OrderReq): ResponseEntity<*> {
-//        var id = 1
-//        return orderService.createOrder(id, orderReqDTO)
-//    }
+    @PostMapping
+    fun createOrder(/*@AuthenticationPrincipal id: Int,*/ @RequestBody orderReqDTO: OrderDto.OrderReq): ResponseResult  {
+        var id = 1
+        return orderService.createOrder(id, orderReqDTO)
+    }
 
-//    @GetMapping
-//    fun getOrders(/*@AuthenticationPrincipal id: Int,*/): ResponseEntity<*> {
-//        var id = 1
-//        return orderService.getOrders(id)
-//    }
+    @GetMapping
+    fun getOrders(/*@AuthenticationPrincipal id: Int,*/): ResponseResult  {
+        var id = 1
+        return orderService.getOrders(id)
+    }
 
     @GetMapping("/{pickupId}")
-    fun getOrderDetail( @AuthenticationPrincipal id: Int, @PathVariable("pickupId") pickupId: Int): ResponseEntity<*> {
+    fun getOrderDetail( @AuthenticationPrincipal id: Int, @PathVariable("pickupId") pickupId: Int): ResponseResult  {
         return orderService.getOrdersDetail(id, pickupId)
     }
 
     @PostMapping("/cancel")
-    fun cancelOrder(/*@AuthenticationPrincipal id: Int,*/ @RequestBody pickupId: Map<String, Int>): ResponseEntity<*> {
-        var id = 1
+    fun cancelOrder(@AuthenticationPrincipal id: Int, @RequestBody pickupId: Map<String, Int>): ResponseResult {
         return orderService.cancelOrder(id, pickupId["pickupId"] ?: 0)
     }
 

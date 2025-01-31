@@ -2,15 +2,20 @@ package org.washcode.washpang.domain.order.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.washcode.washpang.domain.handledItems.entity.HandledItems
 import org.washcode.washpang.domain.handledItems.repository.HandledItemsRepository
+import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.exception.FailToFindfLaundryShopException
 import org.washcode.washpang.domain.laundryshop.repository.LaundryShopRepository
 import org.washcode.washpang.domain.order.dto.OrderDto
+import org.washcode.washpang.domain.order.entity.Payment
 import org.washcode.washpang.domain.order.exception.FailToFindOrderItemsException
 import org.washcode.washpang.domain.order.repository.PaymentRepository
 import org.washcode.washpang.domain.pickup.entity.Pickup
+import org.washcode.washpang.domain.pickup.entity.PickupItem
 import org.washcode.washpang.domain.pickup.repository.PickupItemRepository
 import org.washcode.washpang.domain.pickup.repository.PickupRepository
+import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.domain.user.exception.NoUserDataException
 import org.washcode.washpang.domain.user.repository.UserRepository
 import org.washcode.washpang.global.comm.enums.PickupStatus
@@ -72,27 +77,28 @@ class OrderService(
 
 
 
-//    fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseResult {
-//        return try {
-//            val user = fetchUserById(id)
-//            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
-//            val pickup = user?.let { createAndSavePickup(it, laundryshop, orderReqDTO.content) }
-//            val handledItem = fetchHandledItemById(orderReqDTO.itemId)
-//            if (pickup != null) {
-//                createAndSavePickupItem(pickup, handledItem, orderReqDTO.quantity)
-//            }
-//            if (pickup != null) {
-//                createAndSavePayment(pickup, handledItem, orderReqDTO)
-//            }
+    fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseResult {
+        return try {
+            val user = fetchUserById(id)
+            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
+            val pickup = user?.let { createAndSavePickup(it, laundryshop, orderReqDTO.content) }
+            val handledItem = fetchHandledItemById(orderReqDTO.itemId)
+            if (pickup != null) {
+                createAndSavePickupItem(pickup, handledItem, orderReqDTO.quantity)
+            }
+            if (pickup != null) {
+                createAndSavePayment(pickup, handledItem, orderReqDTO)
+            }
 //            ResponseResult(pickupRepository.findIdByMax())
-//        } catch (e: Exception) {
-//            println("[Error] ${e.message}")
-//            ResponseResult("DB 에러")
-//        }
-//    }
+            ResponseResult(200, "Order created")
+        } catch (e: Exception) {
+            println("[Error] ${e.message}")
+            ResponseResult("DB 에러")
+        }
+    }
 
-//    private fun fetchUserById(id: Int) = userRepository.findById(id)
-//        .orElseThrow { IllegalArgumentException("User not found with id: $id") }
+    private fun fetchUserById(id: Int) = userRepository.findById(id)
+        ?: throw IllegalArgumentException("User not found with id: $id")
 
     private fun fetchLaundryShopById(id: Int) = laundryShopRepository.findById(id)
         ?: throw IllegalArgumentException("LaundryShop not found with id: $id")
@@ -100,46 +106,50 @@ class OrderService(
     private fun fetchHandledItemById(id: Int) = handledItemsRepository.findById(id)
         ?: throw IllegalArgumentException("HandledItem not found with id: $id")
 
-//    private fun createAndSavePickup(user: User, laundryshop: LaundryShop, content: String): Pickup {
-//        val pickup = Pickup(
-//            id = 0,
-//            user = user,
-//            laundryshop = laundryshop,
-//            status = PickupStatus.REQUESTED,
-//            content = content
-//        ).apply {
-//            createdAt = Timestamp(System.currentTimeMillis())
-//        }
-//        return pickupRepository.save(pickup)
-//    }
-//
-//    private fun createAndSavePickupItem(pickup: Pickup, handledItem: HandledItems, quantity: Int) {
-//        val pickupItem = PickupItem(
-//            id = 0,
-//            pickup = pickup,
-//            handledItems = handledItem,
-//            quantity = quantity,
-//            totalPrice = handledItem.price * quantity
-//        )
-//        pickupItemRepository.save(pickupItem)
-//    }
+    private fun createAndSavePickup(user: User, laundryshop: LaundryShop, content: String): Pickup {
+        val pickup = Pickup(
+            id = 0,
+            user = user,
+            laundryshop = laundryshop,
+            status = PickupStatus.REQUESTED,
+            content = content,
+            pickupItems = emptyList(),
+            payment = createPayment() //초기화
+        ).apply {
+            createdAt = Timestamp(System.currentTimeMillis())
+        }
+        return pickupRepository.save(pickup)
+    }
+    private fun createPayment(): Payment {
+        return Payment(
+            id = 0,
+            pickup = TODO(),  // 🔥 Pickup 생성 후 설정 필요
+            paymentDatetime = Timestamp(System.currentTimeMillis()),
+            amount = 0,
+            method = "UNKNOWN"
+        )
+    }
+    private fun createAndSavePickupItem(pickup: Pickup, handledItem: HandledItems, quantity: Int) {
+        val pickupItem = PickupItem(
+            id = 0,
+            pickup = pickup,
+            handledItems = handledItem,
+            quantity = quantity,
+            totalPrice = handledItem.price * quantity
+        )
+        pickupItemRepository.save(pickupItem)
+    }
 
-//    private fun createAndSavePayment(pickup: Pickup, handledItem: HandledItems, orderReqDTO: OrderDto.OrderReq) {
-//        val payment = Payment(
-//            id = 0,
-//            pickup = pickup,
-//            paymentDatetime = Timestamp(System.currentTimeMillis()),
-//            amount = handledItem.price * orderReqDTO.quantity,
-//            method = orderReqDTO.paymentMethod,
-//            aid = "",
-//            tid = "",
-//            paymentMethodType = "",
-//            createdAt = Timestamp(System.currentTimeMillis()).toString(),
-//            approvedAt = "",
-//            payload = ""
-//        )
-//        paymentRepository.save(payment)
-//    }
+    private fun createAndSavePayment(pickup: Pickup, handledItem: HandledItems, orderReqDTO: OrderDto.OrderReq) {
+        val payment = Payment(
+            id = 0,
+            pickup = pickup,
+            paymentDatetime = Timestamp(System.currentTimeMillis()),
+            amount = handledItem.price * orderReqDTO.quantity,
+            method = orderReqDTO.paymentMethod,
+        )
+        paymentRepository.save(payment)
+    }
 
     // 유저 ID 로 주문내역 조회
     fun getOrders(id: Int): ResponseResult {

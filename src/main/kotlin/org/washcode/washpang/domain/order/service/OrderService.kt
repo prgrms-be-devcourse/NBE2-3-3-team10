@@ -75,21 +75,16 @@ class OrderService(
         }
     }
 
-
-
     fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseResult {
         return try {
             val user = fetchUserById(id)
-            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
-            val pickup = user?.let { createAndSavePickup(it, laundryshop, orderReqDTO.content) }
+            val laundryShop = fetchLaundryShopById(orderReqDTO.laundryshopId)
+            val pickup = createAndSavePickup(user, laundryShop, orderReqDTO.content)
             val handledItem = fetchHandledItemById(orderReqDTO.itemId)
-            if (pickup != null) {
-                createAndSavePickupItem(pickup, handledItem, orderReqDTO.quantity)
-            }
-            if (pickup != null) {
-                createAndSavePayment(pickup, handledItem, orderReqDTO)
-            }
-//            ResponseResult(pickupRepository.findIdByMax())
+
+            if (pickup != null) { createAndSavePayment(pickup, handledItem, orderReqDTO) }
+
+            // ResponseResult(pickupRepository.findIdByMax())
             ResponseResult(200, "Order created")
         } catch (e: Exception) {
             println("[Error] ${e.message}")

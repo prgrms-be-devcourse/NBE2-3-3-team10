@@ -121,7 +121,6 @@
 
     <script>
         const url = "http://localhost:8080"
-        const token = sessionStorage.getItem("accessToken");
         const detailAddressInput = document.getElementById("detailAddress");
 
         var email = "";
@@ -131,18 +130,21 @@
 
         window.onload = () => {
             checkAccessToken();
-            getUserInfo();
+
         }
 
         function checkAccessToken() {
+            const token = sessionStorage.getItem("accessToken");
             axios.post(url + '/api/user/check-login', {
                 headers: {
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
                 if(res.data.message === '토큰 정상'){
+                    getUserInfo(token);
                 } else if(res.data.message === '성공'){
                     sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                    getUserInfo(res.data.data.accessToken);
                 } else {
                     alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                     location.href = '/';
@@ -153,10 +155,10 @@
             });
         }
 
-        function getUserInfo() {
+        function getUserInfo(checkToken) {
             axios.get(url + '/api/user', {
                 headers: {
-                    Authorization: 'Bearer ' + token
+                    Authorization: 'Bearer ' + checkToken
                 }
             }).then(function(response) {
                 console.log(response.data.data);
@@ -215,6 +217,7 @@
 
         // 유저 정보를 변경하는 Axios 요청을 보내는 함수
         function updateUserInfo() {
+            const token = sessionStorage.getItem("accessToken");
             const regex = /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,30}$/;
 
             if (document.getElementById('password').value !== document.getElementById('password2').value) {

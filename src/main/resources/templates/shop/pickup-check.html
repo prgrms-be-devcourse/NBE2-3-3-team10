@@ -41,15 +41,18 @@
     function checkAccessToken() {
         axios.post(url + '/api/user/check-login', {
             headers: {
-                "Authorization": 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             }
         }).then(res => {
-            if (res.data === false) {
-                alert("로그인이 필요합니다.");
+            if(res.data.message === '성공'){
+                sessionStorage.setItem("accessToken", res.data.data.accessToken);
+            } else {
+                alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                 location.href = '/';
             }
         }).catch(error => {
-            alert(error);
+            alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+            location.href = '/';
         });
     }
 

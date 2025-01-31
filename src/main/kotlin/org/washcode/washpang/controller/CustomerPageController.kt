@@ -6,11 +6,15 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.LaundryDetailResDTO
+import org.washcode.washpang.domain.laundryshop.service.LaundryShopService
 
 @Controller
 @RequestMapping("/customer")
 @RequiredArgsConstructor
-class CustomerPageController {
+class CustomerPageController (
+    private val laundryShopService: LaundryShopService
+){
     @RequestMapping("/main")
     fun main(): String { return "customer/main" }
 
@@ -64,12 +68,12 @@ class CustomerPageController {
 
     @RequestMapping("/laundryshop-detail/{laundryId}")
     fun laundryshopDetail(@PathVariable("laundryId") laundryId: Int, model: Model):String {
-//        val to : LaundryDetailResDTO = laundryShopService.getLaundryShopById(laundryId)
-//
-//        if(to == null) { return "error"; }
-//
-//        model.addAttribute("laundry", to)
-//        model.addAttribute("laundryId", laundryId)
+        val to = laundryShopService.getLaundryShopById(laundryId)
+
+        if(to == null) { return "error"; }
+
+        model.addAttribute("laundry", to)
+        model.addAttribute("laundryId", laundryId)
         return "customer/laundryshop-detail"
     }
 

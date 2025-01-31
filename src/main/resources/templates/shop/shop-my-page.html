@@ -99,10 +99,10 @@
         });
     }
 
-    function getUserRole (checktoken) {
+    function getUserRole () {
         axios.get(url + '/role', {
             headers: {
-                Authorization: 'Bearer ' + checktoken
+                Authorization: 'Bearer ' + token
             }
         }).then(function(response) {
             document.getElementById('role').innerHTML = response.data.data.role === 'USER' ? '일반회원' : '세탁소'

@@ -38,7 +38,6 @@ class CommPageController(
 
     @RequestMapping("/register")
     fun register(model: Model): String {
-        model.addAttribute("kakaoUserData", null);
         return "glober/register";
     }
 }

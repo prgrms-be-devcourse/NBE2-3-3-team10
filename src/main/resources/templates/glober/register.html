@@ -131,7 +131,7 @@
         </button>
     </form>
 
-    <script>
+    <script th:inline="javascript">
         const url = "http://localhost:8080";
         var isPhoneCertified = false;
 
@@ -183,8 +183,9 @@
         }
 
         function reqRegister() {
-            const kakaoId = /*[[${kakaoUserData?.id}]]*/ '';
-            const kakaoPassword = /*[[${kakaoUserData?.password}]]*/ '';
+            var kakaoId = /*[[${kakaoUserData?.id}]]*/ ""
+            var kakaoPassword = /*[[${kakaoUserData?.password}]]*/ ""
+            console.log(kakaoId + " " + kakaoPassword);
 
             const formData = {
                 email: document.getElementById('email').value,

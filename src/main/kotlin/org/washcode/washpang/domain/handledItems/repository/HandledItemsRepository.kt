@@ -14,7 +14,6 @@ import java.util.*
 interface HandledItemsRepository : JpaRepository<HandledItems, Long> {
     override fun findAll(): List<HandledItems> //모든 데이터 가져오기
 
-
     //세탁소 아이디를 받아서 handledItem 내용 조회(id, laundryshop_id,price, item_name, category)
     @Query("SELECT h FROM HandledItems h WHERE h.laundryshop.id = :laundryshopId")
     fun findByLaundryshopId(@Param("laundryshopId") laundryshopId: Int): List<HandledItems>

@@ -94,8 +94,10 @@
             }
         }).then(res => {
             let orderHtml ='';
+            const orders = res.data.data;
+            console.log(orders);
 
-            $.each(res.data,function(i,row) {
+            $.each(orders, function(i,row) {
                     if(row.status === '주문 취소' || row.status === '픽업 취소'){
                         orderHtml += '<div class="bg-neutral-50 p-4 rounded-lg shadow mb-4 cursor-pointer">' +
                             '<div class="flex justify-between items-center">'+

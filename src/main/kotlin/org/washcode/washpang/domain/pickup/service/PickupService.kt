@@ -15,7 +15,6 @@ import java.util.*
 @Service
 class PickupService(
     private val pickupRepository: PickupRepository,
-//    private val paymentRepository: PaymentRepository,
     private val pickupItemRepository: PickupItemRepository,
     private val paymentRepository: PaymentRepository,
 ) {

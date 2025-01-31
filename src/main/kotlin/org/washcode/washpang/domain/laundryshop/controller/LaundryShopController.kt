@@ -2,6 +2,7 @@ package org.washcode.washpang.domain.laundryshop.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.washcode.washpang.domain.handledItems.dto.HandledItemsResDTO
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
@@ -37,8 +38,8 @@ class LaundryShopController(
 
     //세탁소 정보가 이미 저장되어있는지 확인
     @GetMapping("/")
-    fun checkLaundryExists( /*@AuthenticationPrincipal int id*/): ResponseResult {
-        val id = 1
+    fun checkLaundryExists(@AuthenticationPrincipal id: Int ): ResponseResult {
+
         println("checkLaundryExists: $id")
 
         return ResponseResult(laundryShopService.getLaundryShopByUserId(id))
@@ -48,15 +49,11 @@ class LaundryShopController(
     @PostMapping("/")
     @Operation(summary = "세탁소 정보 저장", description = "세탁소 저장 API 입니다.")
     fun registerLaundry(
-        @RequestBody to: ShopAddReqDTO
-    /*, @AuthenticationPrincipal int id*/
+        @RequestBody to: ShopAddReqDTO,
+        @AuthenticationPrincipal id: Int
     ): ResponseResult
     {
-        val id: Int = 1
-
         val laundryId = laundryShopService.registerLaundryShop(to, id);
-
-
 
         // 성공 응답 반환
         return ResponseResult(ResponseEntity.ok(mapOf("laundryId" to laundryId)))
@@ -75,17 +72,15 @@ class LaundryShopController(
     @PutMapping("/")
     @Operation(summary = "세탁소 정보 수정", description = "세탁소 수정 API 입니다.")
     fun modifyLaundry(
-    @RequestBody to: ShopAddReqDTO
-    /*, @AuthenticationPrincipal int id*/
+    @RequestBody to: ShopAddReqDTO,
+    @AuthenticationPrincipal id: Int
     ): ResponseResult  {
-        val id: Int = 1;
-
         val laundryId = laundryShopService.registerLaundryShop(to, id)
 
         System.out.println(laundryId)
 
         // 성공 응답 반환
-        return ResponseResult(mapOf("laundryId" to laundryId))
+        return ResponseResult(ResponseEntity.ok(mapOf("laundryId" to laundryId)))
     }
 
     //가격표 수정
@@ -101,9 +96,9 @@ class LaundryShopController(
     @GetMapping("/{laundryId}")
     @Operation(summary = "세탁소 상세 조회", description = "세탁소 상세 조회 API 입니다.")
     fun getHandledItems(
-        @PathVariable("laundryId") laundryId: Int /*@AuthenticationPrincipal int id*/
+        @PathVariable("laundryId") laundryId: Int,
+        @AuthenticationPrincipal id: Int
     ): ResponseResult {
-        val id = 1
         val handledItems = handledItemsService.getAllHandledItems(laundryId)
 
         val response: MutableMap<String, Any> = HashMap()

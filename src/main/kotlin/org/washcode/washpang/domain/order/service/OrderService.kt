@@ -1,6 +1,5 @@
 package org.washcode.washpang.domain.order.service
 
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.washcode.washpang.domain.handledItems.entity.HandledItems
@@ -38,12 +37,12 @@ class OrderService(
 ) {
 
     @Transactional
-    fun cancelOrder(userId: Int, pickupId: Int): ResponseEntity<*> {
+    fun cancelOrder(userId: Int, pickupId: Int): ResponseResult {
         val updatedRows = pickupRepository.cancleOrder(pickupId, userId)
         return if (updatedRows == 0) {
-            ResponseEntity.status(500).body("No matching pickup found for pickupId: $pickupId and userId: $userId")
+            ResponseResult(500,"No matching pickup found for pickupId")
         } else {
-            ResponseEntity.ok().body("취소완료")
+            ResponseResult(200, "Order cancelled")
         }
     }
 
@@ -77,7 +76,7 @@ class OrderService(
 
 
 
-//    fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseEntity<*> {
+//    fun createOrder(id: Int, orderReqDTO: OrderDto.OrderReq): ResponseResult {
 //        return try {
 //            val user = fetchUserById(id)
 //            val laundryshop = fetchLaundryShopById(orderReqDTO.laundryshopId)
@@ -89,11 +88,10 @@ class OrderService(
 //            if (pickup != null) {
 //                createAndSavePayment(pickup, handledItem, orderReqDTO)
 //            }
-//
-//            ResponseEntity.ok().body(pickupRepository.findIdByMax())
+//            ResponseResult(pickupRepository.findIdByMax())
 //        } catch (e: Exception) {
 //            println("[Error] ${e.message}")
-//            ResponseEntity.status(500).body("DB 에러")
+//            ResponseResult("DB 에러")
 //        }
 //    }
 
@@ -149,30 +147,30 @@ class OrderService(
 
 
 
-    // 유저 ID 로 주문내역 조회
-//    fun getOrders(id: Int): ResponseEntity<*> {
-//        val result: List<Array<Pickup>> = pickupRepository.findOrderListByUserId(id)
-//
-//        val orderlistResDTOS = result.map { row ->
-//            OrderDto.listRes(
-//                row[1] as Int,
-//                row[0] as String,
-//                (row[2] as PickupStatus).desc,
-//                SimpleDateFormat("yyyy년 MM월 dd일").format(row[3] as Timestamp)
-//            )
-//        }
-//
-//        return ResponseEntity.ok().body(orderlistResDTOS)
-//    }
+//     유저 ID 로 주문내역 조회
+    fun getOrders(id: Int): ResponseResult {
+        val result: List<Array<Pickup>> = pickupRepository.findOrderListByUserId(id)
+
+        val orderlistResDTOS = result.map { row ->
+            OrderDto.listRes(
+                row[1] as Int,
+                row[0] as String,
+                (row[2] as PickupStatus).desc,
+                SimpleDateFormat("yyyy년 MM월 dd일").format(row[3] as Timestamp)
+            )
+        }
+
+        return ResponseResult(orderlistResDTOS)
+    }
 
     // 유저 ID 및 주문 ID로 주문 상세 내역 조회
     @Transactional
-    fun getOrdersDetail(id: Int, pickupId: Int): ResponseEntity<*> {
+    fun getOrdersDetail(id: Int, pickupId: Int): ResponseResult {
         val result = pickupRepository.findOrderDetails(id, pickupId)
 
         // 결과가 비어 있으면 처리
         if (result.isEmpty()) {
-            return ResponseEntity.badRequest().body("No order found.")
+            return ResponseResult(ErrorCode.BAD_REQUEST)
         }
 
         // 여러 Row(픽업 하나에 여러 아이템 등)에서 공통되는 필드들을 임시 변수에 담아둠
@@ -235,12 +233,12 @@ class OrderService(
             paymentDatetime = Timestamp(System.currentTimeMillis())
         )
 
-        return ResponseEntity.ok().body(orderResDTO)
+        return ResponseResult(orderResDTO)
     }
 
     // 결제 대기 -> 결제 완료 바꾸는 메소드
     @Transactional
-    fun updatePaymentStatusComplete(pgToken: String) {
+    fun updatePaymentStatusComplete(pgToken: String):ResponseResult {
         val kakaoPayPgToken = kakaoPayPgTokenRepository.findById("pgToken:$pgToken")
             .orElseThrow { IllegalArgumentException("No matching pgToken found for [pgToken:$pgToken]") }
         kakaoPayPgTokenRepository.deleteById("pgToken:$pgToken")
@@ -251,5 +249,6 @@ class OrderService(
 
 //            .orElseThrow { IllegalArgumentException("No matching payment found for paymentId: $paymentId") }
         pickup.status = PickupStatus.PAYMENT_COMPLETED
+        return ResponseResult("성공")
     }
 }

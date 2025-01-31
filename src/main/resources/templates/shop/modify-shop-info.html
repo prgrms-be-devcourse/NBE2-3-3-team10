@@ -222,13 +222,15 @@
                 }
 
                 // 기존 데이터가 있으면 폼 필드에 채우기
-                if (data) {
-                    document.getElementById("phone").value = data.phone || "";
-                    document.getElementById("address").value = data.address || "";
-                    document.getElementById("shopName").value = data.shopName || "";
-                    document.getElementById("nonOperatingDays").value = data.nonOperatingDays || "";
-                    document.getElementById("userName").value = data.userName;
-                    document.getElementById("businessNumber").value = data.businessNumber;
+                if (data.data.data) {
+                    items = data.data.data;
+                    console.log(data)
+                    document.getElementById("phone").value = items.phone || "";
+                    document.getElementById("address").value = items.address || "";
+                    document.getElementById("shopName").value = items.shopName || "";
+                    document.getElementById("nonOperatingDays").value = items.nonOperatingDays || "";
+                    document.getElementById("userName").value = items.userName;
+                    document.getElementById("businessNumber").value = items.businessNumber;
 
                     btn.innerHTML = `
                 <button class="w-full py-3 mb-4 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600" id="mbtn">
@@ -238,7 +240,7 @@
                     // 상품 정보 테이블 채우기
                     const productTableBody = document.getElementById("productTableBody");
                     productTableBody.innerHTML = ""; // 기존 행 삭제
-                    data.handledItems.forEach(item => {
+                    items.handledItems.forEach(item => {
                         const newRow = document.createElement("tr");
                         newRow.innerHTML = `
                     <td class="border p-2">
@@ -359,7 +361,8 @@
 
                         if (response1.ok) {
                             const data = await response1.json();
-                            const laundryId = data.laundryId;
+                            console.log(data.data.body.laundryId.data)
+                            const laundryId = data.data.body.laundryId.data;
 
                             // 가격표 데이터 전송
                             sendData_register(laundryId);
@@ -459,7 +462,8 @@
 
                             if (response1.ok) {
                                 const data = await response1.json();
-                                const laundryId = data.laundryId;
+                                console.log(data.data.body.laundryId.data)
+                                const laundryId = data.data.body.laundryId.data;
 
                                 // 가격표 데이터 전송
                                 sendData_modify(laundryId);

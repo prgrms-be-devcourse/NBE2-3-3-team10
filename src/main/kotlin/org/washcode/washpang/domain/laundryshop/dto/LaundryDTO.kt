@@ -3,6 +3,7 @@ package org.washcode.washpang.domain.laundryshop.dto
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.global.comm.enums.LaundryCategory
 import java.sql.Timestamp
+import java.time.LocalDateTime
 
 class LaundryDTO private constructor() {
     data class LaundryDetailResDTO(
@@ -39,6 +40,6 @@ class LaundryDTO private constructor() {
 
         val userId: Int,
 
-        val createdAt: Timestamp
+        val createdAt: LocalDateTime =  LocalDateTime.now()
     )
 }

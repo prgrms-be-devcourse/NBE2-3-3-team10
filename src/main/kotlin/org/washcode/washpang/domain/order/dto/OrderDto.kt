@@ -1,6 +1,7 @@
 package org.washcode.washpang.domain.order.dto
 
 import org.washcode.washpang.domain.handledItems.dto.ItemInfoResDTO
+import org.washcode.washpang.global.comm.enums.PickupStatus
 import java.sql.Timestamp
 
 
@@ -25,13 +26,11 @@ class OrderDto private constructor(){
         val shopName: String,
         val status: String,
         val createdAt: String
-    ) {
-        lateinit var updateAt: String
-    }
+    )
 
     data class OrderReq(
         val laundryshopId: Int,
-        val content: String,
+        val content: String?,
         val itemId: Int,
         val quantity: Int,
         val paymentMethod: String
@@ -58,5 +57,12 @@ class OrderDto private constructor(){
         val itemName: String,
         val quantity: Int,
         val totalPrice: Int
+    )
+
+    data class OrderListRes(
+        val shopName: String,
+        val pickupId: Int,
+        val status: PickupStatus,
+        val createdAt: Timestamp
     )
 }

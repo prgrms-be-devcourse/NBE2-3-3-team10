@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import org.washcode.washpang.domain.order.dto.OrderListResDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.global.comm.enums.PickupStatus
 import java.sql.Timestamp
@@ -50,15 +51,15 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
 
     //이용내역 조회
     @Query(
-        "SELECT ls.shopName, p.id, p.status, p.createdAt " +
-                "FROM LaundryShop ls " +
-                "JOIN Pickup p ON ls.id = p.laundryshop.id " +
-                "WHERE p.user.id = :userId " +
-                "ORDER BY p.createdAt DESC"
+        "SELECT new org.washcode.washpang.domain.order.dto.OrderListResDto(ls.shopName, P.id, P.status, P.createdAt) " +
+                "FROM Pickup P " +
+                "JOIN LaundryShop ls ON ls.id = P.laundryshop.id " +
+                "WHERE P.user.id = :userId " +
+                "ORDER BY P.createdAt DESC"
     )
     fun findOrderListByUserId(
         @Param("userId") userId: Int
-    ): List<Array<Pickup>>
+    ): List<OrderListResDto>?
 
 
     // 필터링된 데이터 가져오기(개월 수)

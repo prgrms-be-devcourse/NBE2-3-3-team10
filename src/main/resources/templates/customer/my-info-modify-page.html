@@ -86,7 +86,6 @@
                     id="detailAddress"
                     placeholder="상세 주소를 입력해주세요"
                     class="w-full mt-2 h-10 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    style="display: none;"
             >
         </section>
     </main>
@@ -233,17 +232,18 @@
             }
 
             const passwordField = document.getElementById('password').value;
-            const addressField = document.getElementById('address').value;
+            const addressField = document.getElementById('address').textContent;
             const phoneField = document.getElementById('phone').value;
             const detailAddressField = document.getElementById('detailAddress').value;
 
             const formData = {
                 password: passwordField,
-                address: (detailAddressInput.style.display === "none") ? addressField : (address + detailAddressField),
+                baseAddress: addressField,
+                detailedAddress: detailAddressField,
                 phone: phoneField ? phoneField : phone
             };
 
-            // alert(formData.address + " " + formData.password + " " + formData.phone)
+            // alert(formData.password + " " + formData.baseAddress + " " + formData.detailedAddress + " " + formData.phone)
 
             axios.put(url + '/api/user', formData, {
                 headers: {

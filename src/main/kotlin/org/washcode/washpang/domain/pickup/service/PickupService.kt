@@ -2,8 +2,8 @@ package org.washcode.washpang.domain.pickup.service
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import org.washcode.washpang.domain.order.entity.db.Payment
-import org.washcode.washpang.domain.order.repository.db.PaymentRepository
+import org.washcode.washpang.domain.order.entity.Payment
+import org.washcode.washpang.domain.order.repository.PaymentRepository
 import org.washcode.washpang.domain.pickup.dto.PickupDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem

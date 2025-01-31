@@ -39,7 +39,7 @@ class PickupService(
             pickupId = pickup.id,
             status = pickup.status,
             createdAt = pickup.createdAt,
-            address = pickup.user.detailedAddress,
+            baseAddress = pickup.user.detailedAddress,
             content = pickup.content?:"",
             orderItems = orderItems
         )
@@ -66,7 +66,7 @@ class PickupService(
                 pickupId = pickup.id,
                 shopName = pickup.laundryshop.shopName,
                 createdAt = pickup.createdAt,
-                address = pickup.user.baseAddress,
+                baseAddress = pickup.user.baseAddress,
                 phone = pickup.user.phone,
                 content = pickup.content?:"",
                 orderItems = orderItems,
@@ -116,7 +116,7 @@ class PickupService(
                 pickupId = pickup.id,
                 status = pickup.status,
                 createdAt = pickup.createdAt,
-                address = pickup.user.baseAddress,
+                baseAddress = pickup.user.baseAddress,
                 content = pickup.content?:"",
                 orderItems
             )
@@ -141,7 +141,7 @@ class PickupService(
                 pickupId = pickup.id,
                 shopName = pickup.laundryshop.shopName,
                 createdAt = pickup.createdAt,
-                address = pickup.user.baseAddress,
+                baseAddress = pickup.user.baseAddress,
                 phone = pickup.user.phone,
                 content = pickup.content?:"",
                 orderItems
@@ -175,7 +175,7 @@ class PickupService(
                 pickupId = pickup.id,
                 status = pickup.status,
                 createdAt = pickup.createdAt,
-                address = pickup.user.baseAddress,
+                baseAddress = pickup.user.baseAddress,
                 orderItems
             )
         }

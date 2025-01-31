@@ -44,7 +44,7 @@ class UserDto private constructor(){
         val role: UserRole,
 
         @Schema(description = "카카오 ID")
-        val kakaoId: Long
+        val kakaoId: Long?
     )
 
     data class MyPageRes (

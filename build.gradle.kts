@@ -48,7 +48,7 @@ dependencies {
 
     // Spring OAuth2
     // implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    // implementation ("org.springframework.boot:spring-boot-starter-security")
+    implementation ("org.springframework.boot:spring-boot-starter-security")
 
     // Valid
     // implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -83,6 +83,12 @@ dependencies {
 
     // Feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    // Kafka
+    implementation ("org.springframework.kafka:spring-kafka")
+    implementation ("org.apache.kafka:kafka-streams")
+    implementation ("org.apache.kafka:kafka-clients")
+
 }
 
 kotlin {

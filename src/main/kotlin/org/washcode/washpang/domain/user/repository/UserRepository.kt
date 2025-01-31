@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import org.washcode.washpang.domain.user.dto.UserDto
 import org.washcode.washpang.domain.user.entity.User
+import java.util.*
 
 @Repository
 interface UserRepository: JpaRepository<User, Long> {
@@ -17,11 +18,14 @@ interface UserRepository: JpaRepository<User, Long> {
     @Query("SELECT u.password FROM User u where u.email = :email")
     fun findByPassword(@Param("email") email: String): String
 
-    @Query("SELECT U FROM User U WHERE U.kakao_id = :kakao_id")
-    fun findByKakaoId(@Param("kakao_id") kakao_id: Long): User?
+    @Query("SELECT U FROM User U WHERE U.kakaoId = :kakaoId")
+    fun findByKakaoId(@Param("kakaoId") kakaoId: Long): User?
 
-    @Query("SELECT MyPageRes(U.role, U.name) FROM User U WHERE U.id = :id")
+    @Query("SELECT U.role, U.name FROM User U WHERE U.id = :id")
     fun findRoleAndNameById(id: Int): UserDto.MyPageRes?
+
+    @Query("SELECT U.baseAddress FROM User U WHERE U.id = :id")
+    fun findAddressById(id: Int): String
 
     fun findByEmail(email: String): User?
 

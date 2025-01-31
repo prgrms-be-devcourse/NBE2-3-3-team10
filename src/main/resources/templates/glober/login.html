@@ -53,24 +53,24 @@
                 password: password
             })
             .then(res => {
-                sessionStorage.setItem("accessToken", res.data.accessToken); // 세션 스토리지에 저장
+                sessionStorage.setItem("accessToken", res.data.data.accessToken); // 세션 스토리지에 저장
                 alert("환영합니다");
 
                 axios.get(url + '/api/user/role', {
                     headers: {
-                        Authorization: 'Bearer ' + res.data.accessToken
+                        Authorization: 'Bearer ' + res.data.data.accessToken
                     }
                 }).then(res => {
-                    if(res.data.role==="USER"){
+                    if(res.data.data.role==="USER"){
                         console.log(res.data.role)
                         location.href = "/customer/main";
-                    }else if(res.data.role==="SHOP"){
+                    }else if(res.data.data.role==="SHOP"){
                         location.href = "/shop/shop-main";
                     }
                 })
             })
             .catch (error => {
-                alert(error.response.data);
+                alert(error.response.data.message);
             })
         }
 
@@ -80,8 +80,6 @@
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
-                sessionStorage.setItem("accessToken", res.data.accessToken);
-
                 //location.href = "/customer/main";
             })
         }

@@ -1,16 +1,15 @@
 package org.washcode.washpang.global.module.feign.config
 
-import feign.*
+import feign.Logger
+import feign.RequestInterceptor
+import feign.RequestTemplate
 import org.springframework.context.annotation.Bean
-import org.springframework.http.MediaType
 
-class HeaderConfiguration {
-
+class KakaoPayHeaderConfiguration {
     @Bean
     fun requestInterceptor(): RequestInterceptor {
         return RequestInterceptor { requestTemplate: RequestTemplate ->
-            // 헤더에 Content-Type을 추가
-            requestTemplate.header("Content-Type", "application/x-www-form-urlencoded")
+            requestTemplate.header("Content-Type", "application/json")
         }
     }
 

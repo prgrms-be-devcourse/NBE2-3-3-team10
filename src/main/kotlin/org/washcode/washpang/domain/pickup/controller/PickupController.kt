@@ -25,7 +25,6 @@ class PickupController (
     }
 
     @GetMapping("/pickupList/userId")
-    @ShopTopic // 현식님 체크
     fun getPickupList(/*@AuthenticationPrincipal id: Int*/): ResponseResult {
         val id = 1
         val pickupList: List<PickupDto.DetailRes> = pickupService.getPickupList(id.toLong())

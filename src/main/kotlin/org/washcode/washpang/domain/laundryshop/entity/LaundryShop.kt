@@ -10,23 +10,20 @@ import java.sql.Timestamp
 class LaundryShop (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    var id: Int = 0,
 
     @OneToOne
     @JoinColumn(name="userId", referencedColumnName = "id")
-    val user: User,
-    val shopName: String,
-    val businessNumber: String,
-    val userName: String,
-    val phone: String,
-    val address: String,
-    val nonOperatingDays: String,
+    var user: User,
+    var shopName: String,
+    var businessNumber: String,
+    var userName: String,
+    var phone: String,
+    var address: String,
+    var nonOperatingDays: String,
 
-    val latitude: Double,
-    val longitude: Double,
-//
-//    @CreationTimestamp
-//    var createdAt: Timestamp
+    var latitude: Double,
+    var longitude: Double,
 )
 {
     @CreationTimestamp

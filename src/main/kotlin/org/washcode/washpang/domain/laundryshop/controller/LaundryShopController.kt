@@ -11,6 +11,7 @@ import org.washcode.washpang.domain.laundryshop.dto.LaundryDTO.ShopAddReqDTO
 import org.washcode.washpang.domain.laundryshop.entity.LaundryShop
 import org.washcode.washpang.domain.laundryshop.service.LaundryShopService
 import org.washcode.washpang.global.comm.enums.LaundryCategory
+import org.washcode.washpang.global.exception.ResponseResult
 import java.util.*
 
 @RestController
@@ -26,21 +27,21 @@ class LaundryShopController(
         @RequestParam(value = "shopName", required = false) shopName: String?,
         @RequestParam(value = "userLat") userLat: Double,
         @RequestParam(value = "userLng") userLng: Double
-    ): List<LaundryShop> {
+    ): ResponseResult {
         return if (shopName != null && !shopName.isEmpty()) {
-            laundryShopService.getLaundryShops(shopName, userLat, userLng)
+            ResponseResult(laundryShopService.getLaundryShops(shopName, userLat, userLng))
         } else {
-            laundryShopService.getLaundryShops(userLat, userLng)
+            ResponseResult(laundryShopService.getLaundryShops(userLat, userLng))
         }
     }
 
     //세탁소 정보가 이미 저장되어있는지 확인
     @GetMapping("/")
-    fun checkLaundryExists( /*@AuthenticationPrincipal int id*/): LaundryDetailResDTO? {
+    fun checkLaundryExists( /*@AuthenticationPrincipal int id*/): ResponseResult {
         val id = 1
         println("checkLaundryExists: $id")
 
-        return laundryShopService.getLaundryShopByUserId(id)
+        return ResponseResult(laundryShopService.getLaundryShopByUserId(id))
     }
 
     //세탁소 정보 저장
@@ -49,25 +50,25 @@ class LaundryShopController(
     fun registerLaundry(
         @RequestBody to: ShopAddReqDTO
     /*, @AuthenticationPrincipal int id*/
-    ): ResponseEntity<Map<String, Int>>
+    ): ResponseResult
     {
         val id: Int = 1
 
         val laundryId = laundryShopService.registerLaundryShop(to, id);
 
-        System.out.println(laundryId);
+
 
         // 성공 응답 반환
-        return ResponseEntity.ok(mapOf("laundryId" to laundryId))
+        return ResponseResult(ResponseEntity.ok(mapOf("laundryId" to laundryId)))
     }
 
     //가격표 저장
     @PostMapping("/handled-items")
     @Operation(summary = "가격표 저장", description = "가격표 저장 API 입니다.")
-    fun setHandledItems(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
+    fun setHandledItems(@RequestBody itemsList: List<HandledItemsResDTO>): ResponseResult {
         println("Received items list: $itemsList")
 
-        return laundryShopService.upsertHandledItems(itemsList)
+        return ResponseResult(laundryShopService.upsertHandledItems(itemsList))
     }
 
     //세탁소 정보 수정
@@ -76,7 +77,7 @@ class LaundryShopController(
     fun modifyLaundry(
     @RequestBody to: ShopAddReqDTO
     /*, @AuthenticationPrincipal int id*/
-    ): ResponseEntity<Map<String, Int>>  {
+    ): ResponseResult  {
         val id: Int = 1;
 
         val laundryId = laundryShopService.registerLaundryShop(to, id)
@@ -84,16 +85,16 @@ class LaundryShopController(
         System.out.println(laundryId)
 
         // 성공 응답 반환
-        return ResponseEntity.ok().body(mapOf("laundryId" to laundryId))
+        return ResponseResult(mapOf("laundryId" to laundryId))
     }
 
     //가격표 수정
     @PutMapping("/handled-items")
     @Operation(summary = "가격표 수정", description = "가격표 수정 API 입니다.")
-    fun setHandledItemsModify(@RequestBody itemsList: List<HandledItemsResDTO>): List<HandledItems> {
+    fun setHandledItemsModify(@RequestBody itemsList: List<HandledItemsResDTO>): ResponseResult {
         println("Received items list: $itemsList")
 
-        return laundryShopService.upsertHandledItems(itemsList)
+        return ResponseResult(laundryShopService.upsertHandledItems(itemsList))
     }
 
     //세탁소 상세 조회
@@ -101,7 +102,7 @@ class LaundryShopController(
     @Operation(summary = "세탁소 상세 조회", description = "세탁소 상세 조회 API 입니다.")
     fun getHandledItems(
         @PathVariable("laundryId") laundryId: Int /*@AuthenticationPrincipal int id*/
-    ): MutableMap<String, Any> {
+    ): ResponseResult {
         val id = 1
         val handledItems = handledItemsService.getAllHandledItems(laundryId)
 
@@ -109,16 +110,16 @@ class LaundryShopController(
         response["id"] = id
         response["handledItems"] = handledItems
 
-        return response
+        return ResponseResult(response)
     }
 
     //카테고리별로 세탁소 list 조회
     @GetMapping("/category/{category}")
     @Operation(summary = "세탁소 카테고리별 조회", description = "세탁소 카테고리별 조회 API 입니다.")
-    fun getLaundryShopsCategory(@PathVariable("category") category: String): List<Map<String, Any>> {
+    fun getLaundryShopsCategory(@PathVariable("category") category: String): ResponseResult {
         val laundryCategory = LaundryCategory.valueOf(category.uppercase(Locale.getDefault()))
 
-        val shops = laundryShopService.findLaundryShopsByCategory(laundryCategory)
+        val shops = laundryShopService.findLaundryShopsByCategory(laundryCategory).data as List<LaundryShop>
 
         val result: MutableList<Map<String, Any>> = ArrayList()
 
@@ -127,7 +128,7 @@ class LaundryShopController(
             shopData["shop"] = shop
 
             // 해당 세탁소의 가장 저렴한 항목 조회
-            val handledItems = handledItemsService.getAllHandledItems(shop.id)
+            val handledItems = handledItemsService.getAllHandledItems(shop.id).data as List<HandledItems>
             val cheapestItem = handledItems.minBy { it.price }
 
             shopData["cheapestItem"] = cheapestItem
@@ -135,6 +136,6 @@ class LaundryShopController(
             result.add(shopData)
         }
 
-        return result
+        return ResponseResult(result)
     }
 }

@@ -23,8 +23,12 @@
         <h1 class="text-xl font-bold">리뷰쓰기</h1>
     </div>
     <div class="p-4">
-        <textarea class="w-full p-2 border rounded-lg mb-4" rows="4" placeholder="리뷰를 작성하세요..."></textarea>
+        <form action="#" th:action="@{/api/review/createReview}" method="post">
+        <textarea class="w-full p-2 border rounded-lg mb-4" rows="4" placeholder="리뷰를 작성하세요..." th:value="${review.content}"></textarea>
+            <input type="hidden" name="pickupId" value="1">
+            <input type="hidden" name="laundryShopId" value="1">
         <button class="w-full bg-blue-500 text-white py-2 rounded-lg">리뷰작성</button>
+        </form>
     </div>
 </div>
 <footer class="fixed bottom-0 left-0 right-0 bg-white shadow p-4 flex justify-around overflow-x-auto mx-auto max-w-[448px] rounded-t-lg">

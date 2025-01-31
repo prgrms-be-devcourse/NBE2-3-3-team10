@@ -2,6 +2,8 @@ package org.washcode.washpang.domain.pickup.service
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.washcode.washpang.domain.order.entity.db.Payment
+import org.washcode.washpang.domain.order.repository.db.PaymentRepository
 import org.washcode.washpang.domain.pickup.dto.PickupDto
 import org.washcode.washpang.domain.pickup.entity.Pickup
 import org.washcode.washpang.domain.pickup.entity.PickupItem
@@ -15,6 +17,7 @@ class PickupService(
     private val pickupRepository: PickupRepository,
 //    private val paymentRepository: PaymentRepository,
     private val pickupItemRepository: PickupItemRepository,
+    private val paymentRepository: PaymentRepository,
 ) {
     @Transactional
     fun getPickupDetail(pickupId: Long): PickupDto.Res {
@@ -43,36 +46,36 @@ class PickupService(
         )
     }
 
-//    @Transactional
-//    fun getPickupList(userId: Long): List<PickupDto.DetailRes> {
-//        val pickups: List<Pickup> =
-//            pickupRepository.findAllByUserIdWithFetchJoinAndStatus(userId, PickupStatus.REQUESTED)
-//
-//        return pickups.map { pickup ->
-//            val payment: Payment = paymentRepository.findByPickupId(pickup.id.toLong())
-//            val pickupItems: List<PickupItem> = pickupItemRepository.findByPickupId(pickup.id.toLong())
-//
-//            val orderItems: List<PickupDto.OrderItem> = pickupItems.map { item ->
-//                PickupDto.OrderItem(
-//                    itemName = item.handledItems.itemName,
-//                    quantity = item.quantity,
-//                    totalPrice = item.totalPrice
-//                )
-//            }
-//
-//            PickupDto.DetailRes(
-//                pickupId = pickup.id,
-//                shopName = pickup.laundryshop.shopName,
-//                createdAt = pickup.createdAt,
-//                address = pickup.user.baseAddress,
-//                phone = pickup.user.phone,
-//                content = pickup.content,
-//                orderItems = orderItems,
-//                paymentAmount = payment.amount,
-//                paymentMethod = payment.method
-//            )
-//        }
-//    }
+    @Transactional
+    fun getPickupList(userId: Long): List<PickupDto.DetailRes> {
+        val pickups: List<Pickup> =
+            pickupRepository.findAllByUserIdWithFetchJoinAndStatus(userId, PickupStatus.REQUESTED)
+
+        return pickups.map { pickup ->
+            val payment: Payment? = paymentRepository.findByPickupId(pickup.id.toLong())
+            val pickupItems: List<PickupItem> = pickupItemRepository.findByPickupId(pickup.id.toLong())
+
+            val orderItems: List<PickupDto.OrderItem> = pickupItems.map { item ->
+                PickupDto.OrderItem(
+                    itemName = item.handledItems.itemName,
+                    quantity = item.quantity,
+                    totalPrice = item.totalPrice
+                )
+            }
+
+            PickupDto.DetailRes(
+                pickupId = pickup.id,
+                shopName = pickup.laundryshop.shopName,
+                createdAt = pickup.createdAt,
+                address = pickup.user.baseAddress,
+                phone = pickup.user.phone,
+                content = pickup.content,
+                orderItems = orderItems,
+                paymentAmount = payment?.amount ?: 0,
+                paymentMethod = payment?.method ?: "NONE"
+            )
+        }
+    }
 
     @Transactional
     fun updatePickupStatus(pickupId: Long, newStatus: PickupStatus) {

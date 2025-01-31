@@ -35,12 +35,13 @@ class UserService(
     fun checkLogin(request: HttpServletRequest, response: HttpServletResponse): ResponseResult {
         // 토큰 가져오기
         val accessToken = jwtProvider.resolveAccessToken(request)
-        val cookies = request.cookies
+        val cookies: Array<Cookie>? = request.cookies
         var refreshToken: String? = null
-
-        for (cookie in cookies) {
-            if (cookie.name == "REFRESHTOKEN") {
-                refreshToken = cookie.value
+        if(cookies!=null) {
+            for (cookie in cookies) {
+                if (cookie.name == "REFRESHTOKEN") {
+                    refreshToken = cookie.value
+                }
             }
         }
         // AccessToken 유효성 확인
@@ -53,7 +54,11 @@ class UserService(
 
             // Redis에서 RefreshToken 가져오기
             // 없으면 람다로 에러 발생
-            val token: Token = tokenRepository.findById(userId) ?: throw NoUserDataException()
+            val token: Token = try {
+                tokenRepository.findById(userId) ?: throw NoUserDataException()
+            } catch (e: NoUserDataException) {
+                return ResponseResult(ErrorCode.TOKEN_EXPIRED)
+            }
 
             if (token.getToken().equals(refreshToken)) {
                 val role: UserRole = jwtProvider.getRole(refreshToken)
@@ -75,7 +80,7 @@ class UserService(
 
                 return ResponseResult(responseAccessToken)
             } else {
-                throw IllegalArgumentException(userId.toString() + "번 유저 Redis에 있는 RefreshToken과 다름, 탈취 위험있음")
+                return ResponseResult(ErrorCode.TOKEN_TAMPERED)
             }
             // 모든 토큰 유효성 검사 실패
         } else {

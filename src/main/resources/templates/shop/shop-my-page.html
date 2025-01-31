@@ -79,28 +79,34 @@
     const token = sessionStorage.getItem("accessToken");
 
     function checkAccessToken() {
-        axios.post(url + '/api/user/check-login', {
+        axios.post(url + '/check-login', {
             headers: {
                 Authorization: 'Bearer ' + token
             }
         }).then(res => {
-            if (res.data === false) {
-                alert("로그인이 필요합니다.");
+            if(res.data.message === '토큰 정상'){
+                getUserRole(token)
+            } else if(res.data.message === '성공'){
+                sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                getUserRole(res.data.data.accessToken)
+            } else {
+                alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                 location.href = '/';
             }
         }).catch(error => {
-            alert(error.response.data);
+            alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+            location.href = '/';
         });
     }
 
-    function getUserRole () {
+    function getUserRole (checktoken) {
         axios.get(url + '/role', {
             headers: {
-                Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + checktoken
             }
         }).then(function(response) {
-            document.getElementById('role').innerHTML = response.data.role == 'USER' ? '일반회원' : '세탁소'
-            document.getElementById('name').innerHTML = response.data.name + " 님";
+            document.getElementById('role').innerHTML = response.data.data.role === 'USER' ? '일반회원' : '세탁소'
+            document.getElementById('name').innerHTML = response.data.data.name + " 님";
         }).catch(function(error) {
             console.error(error);
         });
@@ -143,7 +149,7 @@
 
     window.onload = () => {
         changeSvg();
-        getUserRole();
+        checkAccessToken();
     };
 </script>
 </div>

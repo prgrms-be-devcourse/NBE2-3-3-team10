@@ -55,31 +55,41 @@
             .then(res => {
                 sessionStorage.setItem("accessToken", res.data.data.accessToken); // 세션 스토리지에 저장
                 alert("환영합니다");
-
-                axios.get(url + '/api/user/role', {
-                    headers: {
-                        Authorization: 'Bearer ' + res.data.data.accessToken
-                    }
-                }).then(res => {
-                    if(res.data.data.role==="USER"){
-                        location.href = "/customer/main";
-                    }else if(res.data.data.role==="SHOP"){
-                        location.href = "/shop/shop-main";
-                    }
-                })
+                getUserRole(res.data.data.accessToken)
             })
             .catch (error => {
                 alert(error.response.data.message);
             })
         }
 
-        function checkAccessToken(token) {
+        function checkAccessToken() {
+            const token = sessionStorage.getItem("accessToken");
+
             axios.post(url + '/api/user/check-login', {
                 headers: {
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
-                //location.href = "/customer/main";
+                if(res.data.message === '토큰 정상'){
+                    getUserRole(token)
+                } else if(res.data.message === '성공'){
+                    sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                    getUserRole(res.data.data.accessToken)
+                }
+            })
+        }
+
+        function getUserRole(token){
+            axios.get(url + '/api/user/role', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }).then(res => {
+                if(res.data.data.role==="USER"){
+                    location.href = "/customer/main";
+                }else if(res.data.data.role==="SHOP"){
+                    location.href = "/shop/shop-main";
+                }
             })
         }
 
@@ -91,8 +101,7 @@
         });
 
         window.onload = () => {
-            const token = sessionStorage.getItem("accessToken");
-            checkAccessToken(token);
+            checkAccessToken();
         }
     </script>
 </div>

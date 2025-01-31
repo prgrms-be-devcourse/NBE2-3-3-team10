@@ -84,7 +84,9 @@
                 Authorization: 'Bearer ' + token
             }
         }).then(res => {
-            sessionStorage.setItem("accessToken", res.data.accessToken);
+            if(res.data.message === '성공') {
+                sessionStorage.setItem("accessToken", res.data.data.accessToken);
+            }
         }).catch(error => {
             alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
             location.href = '/';

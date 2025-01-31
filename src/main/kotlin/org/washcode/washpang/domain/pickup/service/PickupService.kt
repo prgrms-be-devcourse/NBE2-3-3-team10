@@ -40,7 +40,7 @@ class PickupService(
             status = pickup.status,
             createdAt = pickup.createdAt,
             address = pickup.user.detailedAddress,
-            content = pickup.content,
+            content = pickup.content?:"",
             orderItems = orderItems
         )
     }
@@ -68,7 +68,7 @@ class PickupService(
                 createdAt = pickup.createdAt,
                 address = pickup.user.baseAddress,
                 phone = pickup.user.phone,
-                content = pickup.content,
+                content = pickup.content?:"",
                 orderItems = orderItems,
                 paymentAmount = payment?.amount ?: 0,
                 paymentMethod = payment?.method ?: "NONE"
@@ -117,7 +117,7 @@ class PickupService(
                 status = pickup.status,
                 createdAt = pickup.createdAt,
                 address = pickup.user.baseAddress,
-                content = pickup.content,
+                content = pickup.content?:"",
                 orderItems
             )
         }
@@ -143,7 +143,7 @@ class PickupService(
                 createdAt = pickup.createdAt,
                 address = pickup.user.baseAddress,
                 phone = pickup.user.phone,
-                content = pickup.content,
+                content = pickup.content?:"",
                 orderItems
             )
         }

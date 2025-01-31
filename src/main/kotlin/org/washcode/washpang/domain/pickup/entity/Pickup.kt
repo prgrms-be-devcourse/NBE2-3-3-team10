@@ -42,7 +42,6 @@ class Pickup(
     @Enumerated(EnumType.STRING)
     var status: PickupStatus,
 
-    @Nullable
     var content: String?,
 ){
     @CreationTimestamp

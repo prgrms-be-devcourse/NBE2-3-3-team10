@@ -136,7 +136,7 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
         @Param("statuses") statuses: List<PickupStatus>,
         @Param("year") year: Int,
         @Param("month") month: Int
-    ): List<Any>
+    ): List<Pickup>
 
     @Query("SELECT MAX(p.id) AS pickup_id FROM Pickup p")
     fun findIdByMax(): Int

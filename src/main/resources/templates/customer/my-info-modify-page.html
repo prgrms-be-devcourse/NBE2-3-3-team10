@@ -178,10 +178,6 @@
         function findAddress() {
             const detailAddressInput = document.getElementById("detailAddress");
 
-            if (detailAddressInput.style.display === "none") {
-                detailAddressInput.style.display = "block";
-            }
-
             new daum.Postcode({
                 oncomplete: function(data) {
                     var addr = '';

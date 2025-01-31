@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service
 import org.springframework.ui.Model
 import org.washcode.washpang.domain.user.entity.User
 import org.washcode.washpang.domain.user.repository.UserRepository
+import org.washcode.washpang.global.auth.JwtProvider
 import org.washcode.washpang.global.domain.kakao.dto.KakaoDto
 import org.washcode.washpang.global.domain.kakao.feign.KakaoApiServerClient
 import org.washcode.washpang.global.domain.kakao.feign.KakaoAuthServerClient
@@ -22,7 +23,8 @@ import org.washcode.washpang.global.domain.kakao.feign.KakaoAuthServerClient
 class KakaoClient (
     private val kakaoAuthServerClient: KakaoAuthServerClient,
     private val kakaoApiServerClient: KakaoApiServerClient,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val jwtProvider: JwtProvider
 ) {
     // Log 사용을 위한 선언
     private val log = LoggerFactory.getLogger(this.javaClass)!!
@@ -100,25 +102,20 @@ class KakaoClient (
 
     private fun createJwt(user: User, response: HttpServletResponse): String {
         try {
-            /*
-                1. AccessToken 발행 후, Body로 전송
-                -> "1234" 대신에 accessToken를 넣어야 함 (JWT 구축 후 변경 필요)
-             */
-            // val accessToken = jwtProvider.generateAccessToken(user.getId(),user.getRole())
-            val resAccessToken = Pair("AccessToken", "1234")
 
-            /*
-                2. RefreshToken 발행 후, Header(쿠키)로 전송
-                -> "R1234" 대신에 refreshToken를 넣어야 함 (JWT 구축 후 변경 필요)
-             */
-            // val refreshToken = jwtProvider.generateRefreshToken(user.getId(),user.getRole())
-            val resRefreshToken = RefreshTokenInHeader("R1234", response).toString()
+            // 1. AccessToken 발행 후, Body로 전송
+            val accessToken = jwtProvider.generateAccessToken(user.id, user.role)
+
+
+            // 2. RefreshToken 발행 후, Header(쿠키)로 전송
+            val refreshToken = jwtProvider.generateRefreshToken(user.id, user.role)
+            val resRefreshToken = RefreshTokenInHeader(refreshToken, response).toString()
 
             // 3. RT를 헤더에 쿠키로 추가
             response.addHeader(HttpHeaders.SET_COOKIE, resRefreshToken)
 
             // 4. Body에 AT를 추가
-            return "1234"
+            return accessToken
         } catch (e: Exception) {
             log.error("=================================================================")
             log.error(e.message)

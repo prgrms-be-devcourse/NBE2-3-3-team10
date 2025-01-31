@@ -1,10 +1,10 @@
 package org.washcode.washpang.domain.order.controller
 
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
-import org.washcode.washpang.domain.order.dto.OrderDto
 import org.washcode.washpang.domain.order.service.OrderService
-import org.washcode.washpang.global.domain.kakao.dto.KakaoDto
 import org.washcode.washpang.global.domain.kakaopay.client.KakaoPayClient
 import org.washcode.washpang.global.domain.kakaopay.dto.KakaoPayDto
 import org.washcode.washpang.global.exception.ResponseResult
@@ -16,8 +16,7 @@ class OrderController (
     private val kakaoPayClient: KakaoPayClient
 ) {
     @GetMapping("/info/{laundryId}")
-    fun getInfo(/*@AuthenticationPrincipal id: Int,*/@PathVariable("laundryId") laundryId: Int): ResponseResult {
-        var id = 1
+    fun getInfo( @AuthenticationPrincipal id: Int, @PathVariable("laundryId") laundryId: Int): ResponseResult {
         return orderService.getInfo(id, laundryId)
     }
 
@@ -34,8 +33,7 @@ class OrderController (
 //    }
 
     @GetMapping("/{pickupId}")
-    fun getOrderDetail( /*@AuthenticationPrincipal id: Int,*/ @PathVariable("pickupId") pickupId: Int): ResponseEntity<*> {
-        var id = 1
+    fun getOrderDetail( @AuthenticationPrincipal id: Int, @PathVariable("pickupId") pickupId: Int): ResponseEntity<*> {
         return orderService.getOrdersDetail(id, pickupId)
     }
 
@@ -46,14 +44,12 @@ class OrderController (
     }
 
     @PostMapping("/kakaopay/ready")
-    fun kakaoPayReady( /*@AuthenticationPrincipal id: Int,*/ @RequestBody kakaoPayReqDTO: KakaoPayDto.ReqDto): ResponseResult {
-        var id = 1
-        return kakaoPayClient.payReady(id, kakaoPayReqDTO)
+    fun kakaoPayReady( @AuthenticationPrincipal id: Int, @RequestBody kakaoPayReqDTO: KakaoPayDto.ReqDto, response: HttpServletResponse): ResponseResult {
+        return kakaoPayClient.payReady(id, kakaoPayReqDTO, response)
     }
 
     @PostMapping("/kakaopay/approve")
-    fun kakaoPayApprove( /*@AuthenticationPrincipal id: Int,*/ @RequestBody request: Map<String, String> ): ResponseResult {
-        var id = 1
-        return kakaoPayClient.payCompleted(id, request.getValue("pg_token"))
+    fun kakaoPayApprove( @AuthenticationPrincipal id: Int, @RequestBody request: Map<String, String> ): ResponseResult {
+        return kakaoPayClient.payCompleted(id, request.getValue("token"))
     }
 }

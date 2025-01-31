@@ -29,6 +29,12 @@ class CustomerPageController {
         return "customer/apply-pickup"
     }
 
+    @RequestMapping("/order/completed")
+    fun orderCompleted(@RequestParam("pg_token") token: String?, model: Model): String {
+        model.addAttribute("pg_token", token)
+        return "customer/order-wait"
+    }
+
     @RequestMapping("/order/success")
     fun orderSuccess():  String { return "customer/order-complete" }
 

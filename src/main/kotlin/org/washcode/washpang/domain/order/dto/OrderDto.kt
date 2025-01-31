@@ -52,7 +52,6 @@ class OrderDto private constructor(){
         val paymentDatetime: Timestamp? = Timestamp.valueOf("1925-01-01 00:00:00"),
         val price: Int,
         var orderItems: List<OrderItem>
-
     )
 
     data class OrderItem(

@@ -27,7 +27,6 @@ class Payment (
     private var paymentMethodType: String? = null
     private var createdAt: String? = null
     private var approvedAt: String? = null
-    private var payload: String? = null
 
     // 카카오페이 결제 데이터 업데이트 메서드
     fun updateKakaoPayData(kakaoPayApproveRes: KakaoPayDto.ApproveRes) {
@@ -36,6 +35,5 @@ class Payment (
         this.paymentMethodType = kakaoPayApproveRes.paymentMethodType
         this.createdAt = kakaoPayApproveRes.createdAt
         this.approvedAt = kakaoPayApproveRes.approvedAt
-        this.payload = kakaoPayApproveRes.payload
     }
 }

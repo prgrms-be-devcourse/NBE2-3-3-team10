@@ -1,5 +1,8 @@
 package org.washcode.washpang.global.domain.kakaopay.client
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.servlet.http.HttpServletResponse
+import org.apache.catalina.mapper.Mapper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -15,6 +18,8 @@ import org.washcode.washpang.global.domain.kakaopay.redis.entity.KakaoPaymentInf
 import org.washcode.washpang.global.exception.ErrorCode
 import org.washcode.washpang.global.exception.ResponseResult
 import org.springframework.transaction.annotation.Transactional
+import org.washcode.washpang.global.domain.kakao.dto.KakaoDto
+import org.washcode.washpang.global.domain.kakaopay.redis.entity.KakaoPayPgToken
 
 @Service
 class KakaoPayClient(
@@ -36,7 +41,7 @@ class KakaoPayClient(
     private val secretDev = ""
 
     @Transactional
-    fun payReady(userId: Int, dto: KakaoPayDto.ReqDto): ResponseResult {
+    fun payReady(userId: Int, dto: KakaoPayDto.ReqDto, response: HttpServletResponse): ResponseResult {
         val reqDto = KakaoPayDto.ReadyReq(cid, clientSecret, dto.paymentId, userId.toString(), dto.name, dto.quantity, dto.totalPrice)
         var resBody: KakaoPayDto.ReadyRes? = null
 
@@ -58,7 +63,10 @@ class KakaoPayClient(
             val paymentInfo = KakaoPaymentInfo(redisKey, dto.paymentId.toInt(), resBody.tid)
             kakaoPaymentInfoRepository.save(paymentInfo)
 
-            return ResponseResult("결제 준비 완료")
+            // header에 추가
+            // response.addHeader("readykakaopayres", resBody.toString())
+
+            return ResponseResult(resBody)
         } catch (e: Exception) {
             log.error("=================================================================")
             log.error("카카오페이 Tid Redis에 저장 실패")
@@ -72,25 +80,36 @@ class KakaoPayClient(
     fun payCompleted(userId: Int, token: String): ResponseResult {
         val payInfo: KakaoPaymentInfo?
         val pgToken: String?
+        print(token)
 
         try {
+            print(1)
             val payInfo = kakaoPaymentInfoRepository.findById("$cid:$userId")
                 .orElseThrow { throw KakaoPayApproveRedisErrorException() }
             kakaoPaymentInfoRepository.delete(payInfo)
 
+            print(2)
             val reqDto = KakaoPayDto.ApproveReq(cid, payInfo.tid, payInfo.partnerOrderId, userId, token)
 
+            print(3)
             val resBody = kakaoPayApiClient.approve("SECRET_KEY $secretDev", reqDto)
                 ?: throw KakaoPayApproveFeignException()
 
+            print(4)
+            val jsonNode = ObjectMapper().readTree(resBody)
+            val res = KakaoPayDto.ApproveRes.from(jsonNode)
+
             val payment = paymentRepository.findById(payInfo.partnerOrderId)
                 ?: throw Exception("결제 정보를 찾을 수 없습니다.")
-            payment.updateKakaoPayData(resBody)
-            orderService.updatePaymentStatusComplete(token)
+            payment.updateKakaoPayData(res)
+
+            // 결제 상태를 결제 완료로 변경
+            val kakaoPayPgToken = KakaoPayPgToken(payInfo.tid, payInfo.partnerOrderId)
+            orderService.updatePaymentStatusComplete(kakaoPayPgToken)
 
             val result = mapOf(
-                "aid" to resBody.aid,
-                "approvedAt" to resBody.approvedAt
+                "aid" to res.aid,
+                "approvedAt" to res.approvedAt
             )
 
             return ResponseResult(result)
@@ -105,12 +124,13 @@ class KakaoPayClient(
             log.error(e.message)
 
             return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)
-        } catch (e: Exception) {
-            log.error("=================================================================")
-            log.error("카카오페이 결제 승인 실패")
-            log.error(e.message)
-
-            return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)
         }
+//        } catch (e: Exception) {
+//            log.error("=================================================================")
+//            log.error("카카오페이 결제 승인 실패")
+//            log.error(e.message)
+//
+//            return ResponseResult(ErrorCode.KAKAOPAY_READY_ERROR)
+//        }
     }
 }

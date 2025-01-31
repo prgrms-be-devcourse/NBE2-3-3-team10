@@ -75,6 +75,9 @@ interface PickupRepository : JpaRepository<Pickup, Long> {
 
 
     //이용내역 조회(상세보기)
+    @Query("SELECT P FROM Pickup P WHERE P.user.id = :userId AND P.id = :pickupId")
+    fun findOrderDetail(@Param("userId") userId: Int, @Param("pickupId") pickupId: Int): Pickup?
+    
     @Query(
         "SELECT " +
                 "u.baseAddress AS baseAddress, " +

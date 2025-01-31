@@ -30,8 +30,8 @@
                 if(res.data.message === '토큰 정상'){
                     getLaundryShopDetail();
                 } else if(res.data.message === '성공'){
-                    getLaundryShopDetail();
                     sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                    getLaundryShopDetail();
                 } else {
                     alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                     location.href = '/';

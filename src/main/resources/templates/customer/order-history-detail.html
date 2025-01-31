@@ -207,8 +207,15 @@
                 Authorization: 'Bearer ' + token
             }
         }).then(res => {
-            sessionStorage.setItem("accessToken", res.data.data.accessToken);
-            getOrderDetail();
+            if(res.data.message === '토큰 정상'){
+                getOrderDetail();
+            } else if(res.data.message === '성공'){
+                sessionStorage.setItem("accessToken", res.data.data.accessToken);
+                getOrderDetail();
+            } else {
+                alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+                location.href = '/';
+            }
         }).catch(error => {
             alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
             location.href = '/';

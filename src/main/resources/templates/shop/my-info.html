@@ -71,19 +71,19 @@
 
     <script>
         const url = "http://localhost:8080"
-        const token = sessionStorage.getItem("accessToken");
 
         function checkAccessToken() {
+            const token = sessionStorage.getItem("accessToken");
             axios.post(url + '/api/user/check-login', {
                 headers: {
                     Authorization: 'Bearer ' + token
                 }
             }).then(res => {
                 if(res.data.message === '토큰 정상'){
-                    getUserInfo();
+                    getUserInfo(token);
                 } else if(res.data.message === '성공'){
                     sessionStorage.setItem("accessToken", res.data.data.accessToken);
-                    getUserInfo();
+                    getUserInfo(res.data.data.accessToken);
                 } else {
                     alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
                     location.href = '/';
@@ -94,16 +94,16 @@
             });
         }
 
-        function getUserInfo() {
+        function getUserInfo(checkToken) {
             axios.get(url + '/api/user', {
                 headers: {
-                    Authorization: 'Bearer ' + token
+                    Authorization: 'Bearer ' + checkToken
                 }
             }).then(function(response) {
                 document.getElementById('email').innerHTML = response.data.data.email;
                 document.getElementById('name').innerHTML = response.data.data.name
                 document.getElementById('phone').innerHTML = response.data.data.phone
-                document.getElementById('address').innerHTML = response.data.data.address
+                document.getElementById('address').innerHTML = response.data.data.baseAddress
             }).catch(function(error) {
                 console.error(error);
             });

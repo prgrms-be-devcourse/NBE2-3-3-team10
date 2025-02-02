@@ -39,7 +39,7 @@ class PickupService(
             pickupId = pickup.id,
             status = pickup.status,
             createdAt = pickup.createdAt,
-            baseAddress = pickup.user.detailedAddress,
+            baseAddress = pickup.user.baseAddress,
             content = pickup.content?:"",
             orderItems = orderItems
         )

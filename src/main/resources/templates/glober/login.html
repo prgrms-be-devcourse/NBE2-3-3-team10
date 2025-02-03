@@ -53,9 +53,13 @@
                 password: password
             })
             .then(res => {
-                sessionStorage.setItem("accessToken", res.data.data.accessToken); // 세션 스토리지에 저장
-                alert("환영합니다");
-                getUserRole(res.data.data.accessToken)
+                if(res.data.code === 200) {
+                    sessionStorage.setItem("accessToken", res.data.data.accessToken); // 세션 스토리지에 저장
+                    alert("환영합니다");
+                    getUserRole(res.data.data.accessToken)
+                } else {
+                    alert(res.data.message);
+                }
             })
             .catch (error => {
                 alert(error.response.data.message);
